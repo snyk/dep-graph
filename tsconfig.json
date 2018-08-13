@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "pretty": true,
+    "target": "es5",
+    "lib": [
+      "es2015"
+    ],
+    "module": "commonjs",
+    "sourceMap": true,
+    "declaration": true,
+    "importHelpers": true
+  },
+  "include": [
+    "./src/**/*",
+  ]
+}

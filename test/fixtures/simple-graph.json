@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "1.0.0",
+  "pkgManager": {
+    "name": "maven"
+  },
+  "pkgs": [
+    {
+      "id": "root@0.0.0",
+      "info": {
+        "name": "root",
+        "version": "0.0.0"
+      }
+    },
+    {
+      "id": "e@5.0.0",
+      "info": {
+        "name": "e",
+        "version": "5.0.0"
+      }
+    },
+    {
+      "id": "d@0.0.1",
+      "info": {
+        "name": "d",
+        "version": "0.0.1"
+      }
+    },
+    {
+      "id": "c@1.0.0",
+      "info": {
+        "name": "c",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "a@1.0.0",
+      "info": {
+        "name": "a",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "d@0.0.2",
+      "info": {
+        "name": "d",
+        "version": "0.0.2"
+      }
+    },
+    {
+      "id": "b@1.0.0",
+      "info": {
+        "name": "b",
+        "version": "1.0.0"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "root-node",
+        "pkgId": "root@0.0.0",
+        "deps": [
+          {
+            "nodeId": "a@1.0.0"
+          },
+          {
+            "nodeId": "b@1.0.0"
+          }
+        ]
+      },
+      {
+        "nodeId": "e@5.0.0",
+        "pkgId": "e@5.0.0",
+        "deps": []
+      },
+      {
+        "nodeId": "d@0.0.1",
+        "pkgId": "d@0.0.1",
+        "deps": [
+          {
+            "nodeId": "e@5.0.0"
+          }
+        ]
+      },
+      {
+        "nodeId": "c@1.0.0|1",
+        "pkgId": "c@1.0.0",
+        "deps": [
+          {
+            "nodeId": "d@0.0.1"
+          }
+        ]
+      },
+      {
+        "nodeId": "c@1.0.0|2",
+        "pkgId": "c@1.0.0",
+        "deps": [
+          {
+            "nodeId": "d@0.0.2"
+          }
+        ]
+      },
+      {
+        "nodeId": "a@1.0.0",
+        "pkgId": "a@1.0.0",
+        "deps": [
+          {
+            "nodeId": "c@1.0.0|1"
+          }
+        ]
+      },
+      {
+        "nodeId": "d@0.0.2",
+        "pkgId": "d@0.0.2",
+        "deps": [
+          {
+            "nodeId": "e@5.0.0"
+          }
+        ]
+      },
+      {
+        "nodeId": "b@1.0.0",
+        "pkgId": "b@1.0.0",
+        "deps": [
+          {
+            "nodeId": "c@1.0.0|2"
+          }
+        ]
+      }
+    ]
+  }
+}
