@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "1.0.0",
+  "pkgManager": {
+    "name": "maven",
+    "repositories": [
+      {
+        "alias": "central"
+      }
+    ]
+  },
+  "pkgs": [
+    {
+      "id": "root@0.0.0",
+      "info": {
+        "name": "root",
+        "version": "0.0.0"
+      }
+    },
+    {
+      "id": "e@5.0.0",
+      "info": {
+        "name": "e",
+        "version": "5.0.0"
+      }
+    },
+    {
+      "id": "d@0.0.1",
+      "info": {
+        "name": "d",
+        "version": "0.0.1"
+      }
+    },
+    {
+      "id": "c@1.0.0",
+      "info": {
+        "name": "c",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "a@1.0.0",
+      "info": {
+        "name": "a",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "d@0.0.2",
+      "info": {
+        "name": "d",
+        "version": "0.0.2"
+      }
+    },
+    {
+      "id": "b@1.0.0",
+      "info": {
+        "name": "b",
+        "version": "1.0.0"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "root-node",
+        "pkgId": "root@0.0.0",
+        "deps": [
+          {
+            "nodeId": "a@1.0.0|b1255c18a549f246f6473e9d0ca05bd534a532b4"
+          },
+          {
+            "nodeId": "b@1.0.0|8e2414e3db88db7e521b46a05498222541d7485f"
+          }
+        ]
+      },
+      {
+        "nodeId": "e@5.0.0|da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        "pkgId": "e@5.0.0",
+        "deps": []
+      },
+      {
+        "nodeId": "d@0.0.1|01cb03ef399ff0ac6626342d9c3629c29dc7437b",
+        "pkgId": "d@0.0.1",
+        "deps": [
+          {
+            "nodeId": "e@5.0.0|da39a3ee5e6b4b0d3255bfef95601890afd80709"
+          }
+        ]
+      },
+      {
+        "nodeId": "c@1.0.0|80ad204a36864fc51fce31d35557b11659719090",
+        "pkgId": "c@1.0.0",
+        "deps": [
+          {
+            "nodeId": "d@0.0.1|01cb03ef399ff0ac6626342d9c3629c29dc7437b"
+          }
+        ]
+      },
+      {
+        "nodeId": "a@1.0.0|b1255c18a549f246f6473e9d0ca05bd534a532b4",
+        "pkgId": "a@1.0.0",
+        "deps": [
+          {
+            "nodeId": "c@1.0.0|80ad204a36864fc51fce31d35557b11659719090"
+          }
+        ]
+      },
+      {
+        "nodeId": "d@0.0.2|01cb03ef399ff0ac6626342d9c3629c29dc7437b",
+        "pkgId": "d@0.0.2",
+        "deps": [
+          {
+            "nodeId": "e@5.0.0|da39a3ee5e6b4b0d3255bfef95601890afd80709"
+          }
+        ]
+      },
+      {
+        "nodeId": "c@1.0.0|6d82f284c230ad856866d862cd12bfc5b8f4672a",
+        "pkgId": "c@1.0.0",
+        "deps": [
+          {
+            "nodeId": "d@0.0.2|01cb03ef399ff0ac6626342d9c3629c29dc7437b"
+          }
+        ]
+      },
+      {
+        "nodeId": "b@1.0.0|8e2414e3db88db7e521b46a05498222541d7485f",
+        "pkgId": "b@1.0.0",
+        "deps": [
+          {
+            "nodeId": "c@1.0.0|6d82f284c230ad856866d862cd12bfc5b8f4672a"
+          }
+        ]
+      }
+    ]
+  }
+}
