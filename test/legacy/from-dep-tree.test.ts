@@ -38,6 +38,14 @@ describe('depTreeToGraph simple dysmorphic', () => {
       { name: 'e', version: '5.0.0' },
       { name: 'root', version: '0.0.0' },
     ].sort(helpers.depSort));
+    expect(depGraph.getDepPkgs().sort(helpers.depSort)).toEqual([
+      { name: 'a', version: '1.0.0' },
+      { name: 'b', version: '1.0.0' },
+      { name: 'c', version: '1.0.0' },
+      { name: 'd', version: '0.0.1' },
+      { name: 'd', version: '0.0.2' },
+      { name: 'e', version: '5.0.0' },
+    ].sort(helpers.depSort));
   });
 
   test('getPathsToRoot', async () => {
@@ -113,6 +121,7 @@ describe('depTreeToGraph 0 deps', () => {
     const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
 
     expect(depGraph.getPkgs()).toHaveLength(1);
+    expect(depGraph.getDepPkgs()).toHaveLength(0);
   });
 });
 
@@ -125,6 +134,7 @@ describe('depTreeToGraph goof', () => {
     depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
 
     expect(depGraph.getPkgs()).toHaveLength(439);
+    expect(depGraph.getDepPkgs()).toHaveLength(438);
   });
 
   test('check nodes', async () => {
@@ -181,6 +191,7 @@ describe('depTreeToGraph with pkg that that misses a version', () => {
     const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
 
     expect(depGraph.getPkgs()).toHaveLength(3);
+    expect(depGraph.getDepPkgs()).toHaveLength(2);
 
     const depGraphInternal = depGraph as types.DepGraphInternal;
     expect(depGraphInternal.getPkgNodeIds({name: 'bar'} as any)).toEqual(['bar@']);
@@ -210,6 +221,7 @@ describe('depTreeToGraph with funky pipes in the version', () => {
   test('create', async () => {
     depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'composer');
     expect(depGraph.getPkgs()).toHaveLength(4);
+    expect(depGraph.getDepPkgs()).toHaveLength(3);
   });
 
   test('convert to JSON and back', async () => {
@@ -217,6 +229,7 @@ describe('depTreeToGraph with funky pipes in the version', () => {
     const restoredGraph = await depGraphLib.createFromJSON(graphJson);
 
     expect(restoredGraph.getPkgs().sort()).toEqual(depGraph.getPkgs().sort());
+    expect(restoredGraph.getDepPkgs().sort()).toEqual(depGraph.getDepPkgs().sort());
   });
 });
 
@@ -243,6 +256,12 @@ describe('depTreeToGraph cycle with root', () => {
   test('create', async () => {
     depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'composer');
     expect(depGraph.getPkgs()).toHaveLength(3);
+    // note that despite maple@3 being a dependency of bar@1,
+    //   it's still not returned, as it's the root package.
+    expect(depGraph.getDepPkgs()).toEqual([
+        {name: 'bar', version: '1'},
+        {name: 'foo', version: '2'},
+    ]);
 
     expect(depGraph.countPathsToRoot(depGraph.rootPkg)).toBe(2);
     expect(depGraph.pkgPathsToRoot(depGraph.rootPkg)).toEqual([
@@ -262,6 +281,7 @@ describe('depTreeToGraph cycle with root', () => {
     const restoredGraph = await depGraphLib.createFromJSON(graphJson);
 
     expect(restoredGraph.getPkgs().sort()).toEqual(depGraph.getPkgs().sort());
+    expect(restoredGraph.getDepPkgs().sort()).toEqual(depGraph.getDepPkgs().sort());
   });
 });
 
@@ -293,6 +313,10 @@ describe('depTreeToGraph with (invalid) null dependency', () => {
     depGraph = await depGraphLib.legacy.depTreeToGraph(depTree as any, 'composer');
     expect(_.sortBy(depGraph.getPkgs(), 'name')).toEqual(_.sortBy([
       {name: 'pine', version: '4'},
+      {name: 'foo', version: '1'},
+      {name: 'baz', version: '3'},
+    ], 'name'));
+    expect(_.sortBy(depGraph.getDepPkgs(), 'name')).toEqual(_.sortBy([
       {name: 'foo', version: '1'},
       {name: 'baz', version: '3'},
     ], 'name'));

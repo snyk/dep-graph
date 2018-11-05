@@ -51,7 +51,13 @@ export interface DepGraph {
     name: string;
     version: string | null;
   };
+  // all unique packages in the graph (including root package)
   getPkgs(): Array<{
+    name: string;
+    version: string | null;
+  }>;
+  // all unique packages in the graph, except the root package
+  getDepPkgs(): Array<{
     name: string;
     version: string | null;
   }>;
@@ -59,6 +65,7 @@ export interface DepGraph {
     name: string;
     version: string | null;
   }>>;
+  countPathsToRoot(pkg: Pkg): number;
   toJSON(): DepGraphData;
   equals(other: DepGraph, options?: { compareRoot?: boolean }): boolean;
 }
