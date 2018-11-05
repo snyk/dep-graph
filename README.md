@@ -2,11 +2,11 @@
 
 ***
 
-[![Known Vulnerabilities](https://snyk.io/test/npm/snyk-dep-graph/badge.svg)](https://snyk.io/test/npm/snyk-dep-graph)
+[![Known Vulnerabilities](https://snyk.io/test/npm/@snyk/dep-graph/badge.svg)](https://snyk.io/test/npm/@snyk/dep-graph)
 
 Snyk helps you find, fix and monitor for known vulnerabilities in your dependencies, both on an ad hoc basis and as part of your CI (Build) system.
 
-# snyk-dep-graph
+# Snyk dep-graph
 
 This library provides a time and space efficient representation of a resolved package dependency graph, which can be used to construct, query and de/serialize dep-graphs.
 
