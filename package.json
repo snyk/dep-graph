@@ -1,0 +1,45 @@
+{
+  "author": "snyk.io",
+  "name": "snyk-dep-graph",
+  "description": "Snyk dependency graph library",
+  "homepage": "https://github.com/snyk/dep-graph#readme",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "tslint -p tsconfig.json",
+    "test": "jest --verbose --runInBand",
+    "test:coverage": "npm run test -- --coverage",
+    "prepare": "npm run build"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snyk/dep-graph.git"
+  },
+  "bugs": {
+    "url": "https://github.com/snyk/dep-graph/issues"
+  },
+  "devDependencies": {
+    "@types/graphlib": "^2.1.4",
+    "@types/jest": "^23",
+    "@types/node": "^8",
+    "jest": "^23",
+    "ts-jest": "^23",
+    "ts-node": "^7",
+    "tslint": "^5",
+    "typescript": "^3.1.6"
+  },
+  "dependencies": {
+    "graphlib": "^2.1.5",
+    "lodash": "^4",
+    "source-map-support": "^0.5.9",
+    "tslib": "^1.9.3"
+  }
+}

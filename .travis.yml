@@ -1,0 +1,22 @@
+dist: trusty
+notifications:
+  email: false
+language: node_js
+node_js:
+  - "10"
+  - "8"
+  - "6"
+cache: npm
+script:
+  - "npm run lint"
+  - "npm test"
+jobs:
+  include:
+    - stage: npm release
+      node_js: "10"
+      script: skip
+      after_success:
+        - npx semantic-release
+branches:
+  only:
+    - master
