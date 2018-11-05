@@ -1,6 +1,6 @@
 {
   "author": "snyk.io",
-  "name": "snyk-dep-graph",
+  "name": "@snyk/dep-graph",
   "description": "Snyk dependency graph library",
   "homepage": "https://github.com/snyk/dep-graph#readme",
   "license": "Apache-2.0",
