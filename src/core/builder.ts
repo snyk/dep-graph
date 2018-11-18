@@ -65,11 +65,24 @@ class DepGraphBuilder {
   }
 
   public build(): types.DepGraph {
-    return new DepGraphImpl(
-      this._graph,
-      this._pkgs,
-      this._pkgNodes,
-      this._pkgManager,
-    );
+    const nodeIds = this._graph.nodes();
+
+    const nodes: any = nodeIds.reduce((acc, nodeId: string) => {
+      const deps = (this._graph.successors(nodeId) || [])
+        .map((depNodeId) => ({ nodeId: depNodeId }));
+
+      acc[nodeId] = {
+        pkgId: this._graph.node(nodeId).pkgId,
+        deps,
+      };
+      return acc;
+    }, {});
+
+    return new DepGraphImpl({
+      schemaVersion: '2.0.0',
+      pkgManager: this._pkgManager,
+      pkgs: this._pkgs,
+      graph: nodes,
+    });
   }
 }

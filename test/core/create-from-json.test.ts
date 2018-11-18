@@ -482,7 +482,9 @@ test('fromJSON a pkg missing version field', async () => {
   const depGraph = depGraphLib.createFromJSON(graphJson as any);
   expect(depGraph.getPkgs().sort()).toEqual([
     { name: 'app', version: '1.0.0' },
-    { name: 'foo', version: null },
+    // TODO(shaun): not sure of the value of this
+    // { name: 'foo', version: null },
+    { name: 'foo' },
   ]);
 });
 
@@ -512,4 +514,78 @@ test('fromJSON pkg-id is not name@version of actual package', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/name/);
+});
+
+describe('fromJSON goof', () => {
+  const graphJson = helpers.loadFixture('goof-graph.json');
+  const graph = depGraphLib.createFromJSON(graphJson);
+
+  test('basic properties', async () => {
+    expect(graph.pkgManager.name).toBe('npm');
+
+    expect(graph.rootPkg).toEqual({
+      name: 'goof',
+      version: '0.0.3',
+    });
+  });
+
+  test('getPathsToRoot', async () => {
+    expect(graph.pkgPathsToRoot({ name: 'sprintf-js', version: '1.0.3' })).toEqual([
+      [
+        { name: 'sprintf-js', version: '1.0.3' },
+        { name: 'argparse', version: '1.0.10' },
+        { name: 'js-yaml', version: '3.11.0' },
+        { name: 'cfenv', version: '1.1.0' },
+        { name: 'goof', version: '0.0.3' },
+      ],
+      [
+        { name: 'sprintf-js', version: '1.0.3' },
+        { name: 'argparse', version: '1.0.10' },
+        { name: 'js-yaml', version: '3.11.0' },
+        { name: 'tap', version: '5.8.0' },
+        { name: 'goof', version: '0.0.3' },
+      ],
+      [
+        { name: 'sprintf-js', version: '1.0.3' },
+        { name: 'argparse', version: '1.0.10' },
+        { name: 'js-yaml', version: '3.11.0' },
+        { name: 'tap-parser', version: '1.3.2' },
+        { name: 'tap', version: '5.8.0' },
+        { name: 'goof', version: '0.0.3' },
+      ],
+      [
+        { name: 'sprintf-js', version: '1.0.3' },
+        { name: 'argparse', version: '1.0.10' },
+        { name: 'js-yaml', version: '3.11.0' },
+        { name: 'tap-mocha-reporter', version: '0.0.27' },
+        { name: 'tap', version: '5.8.0' },
+        { name: 'goof', version: '0.0.3' },
+      ],
+      [
+        { name: 'sprintf-js', version: '1.0.3' },
+        { name: 'argparse', version: '1.0.10' },
+        { name: 'js-yaml', version: '3.6.1' },
+        { name: 'coveralls', version: '2.13.3' },
+        { name: 'tap', version: '5.8.0' },
+        { name: 'goof', version: '0.0.3' },
+      ],
+      [
+        { name: 'sprintf-js', version: '1.0.3' },
+        { name: 'argparse', version: '1.0.10' },
+        { name: 'js-yaml', version: '3.11.0' },
+        { name: 'tap-parser', version: '1.3.2' },
+        { name: 'tap-mocha-reporter', version: '0.0.27' },
+        { name: 'tap', version: '5.8.0' },
+        { name: 'goof', version: '0.0.3' },
+      ],
+      [
+        { name: 'sprintf-js', version: '1.0.3' },
+        { name: 'argparse', version: '1.0.7' },
+        { name: 'js-yaml', version: '3.6.1' },
+        { name: 'istanbul', version: '0.4.3' },
+        { name: 'nyc', version: '6.6.1' },
+        { name: 'tap', version: '5.8.0' },
+        { name: 'goof', version: '0.0.3' },
+      ]]);
+  });
 });

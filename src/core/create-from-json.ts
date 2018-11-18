@@ -1,55 +1,14 @@
 import * as _ from 'lodash';
 import * as semver from 'semver';
-import * as graphlib from 'graphlib';
 
-import { DepGraph, DepGraphData, GraphNode } from './types';
-import { validateGraph } from './validate-graph';
+import { DepGraph, DepGraphData } from './types';
 import { DepGraphImpl } from './dep-graph';
 
 export const SUPPORTED_SCHEMA_RANGE = '^2.0.0';
 
 export function createFromJSON(depGraphData: DepGraphData): DepGraph {
   validateDepGraphData(depGraphData);
-
-  const graph = new graphlib.Graph({
-    directed: true,
-    multigraph: false,
-    compound: false,
-  });
-  const pkgs = {};
-  const pkgNodes: { [pkgId: string]: Set<string> } = {};
-
-  for (const pkgId of Object.keys(depGraphData.pkgs)) {
-    const pkg = depGraphData.pkgs[pkgId];
-    pkgs[pkgId] = pkg.version ? pkg : { ...pkg, version: null };
-  }
-
-  for (const nodeId of Object.keys(depGraphData.graph)) {
-    const node = depGraphData.graph[nodeId];
-    const pkgId = node.pkgId;
-    if (!pkgNodes[pkgId]) {
-      pkgNodes[pkgId] = new Set();
-    }
-    pkgNodes[pkgId].add(nodeId);
-
-    graph.setNode(nodeId, { pkgId });
-  }
-
-  for (const nodeId of Object.keys(depGraphData.graph)) {
-    const node = depGraphData.graph[nodeId];
-    for (const depNodeId of node.deps) {
-      graph.setEdge(nodeId, depNodeId.nodeId);
-    }
-  }
-
-  validateGraph(graph, 'root', pkgs, pkgNodes);
-
-  return new DepGraphImpl(
-    graph,
-    pkgs as any,
-    pkgNodes,
-    depGraphData.pkgManager,
-  );
+  return new DepGraphImpl(depGraphData);
 }
 
 function assert(condition: any, msg: string) {
@@ -72,7 +31,8 @@ function validateDepGraphData(data: DepGraphData) {
   assert(data.graph.root.pkgId === 'root',
     `the root node .pkgId must be "root", but got ${data.graph.root.pkgId}`);
 
-  for (const pkgId of _.keys(data.pkgs)) {
+  // validate packages
+  for (const pkgId of Object.keys(data.pkgs)) {
     const pkg = data.pkgs[pkgId];
     assert(!!pkg, 'empty pkg');
     assert(pkg.name, 'some .pkgs elements have no .name field');
@@ -82,8 +42,37 @@ function validateDepGraphData(data: DepGraphData) {
       'non-root pkg id must be name@version');
   }
 
-  for (const node of _.values(data.graph)) {
-    assert(data.pkgs[node.pkgId],
-      'a node points to a non-existing pkgId');
+  // validate nodes
+  const pkgIdsSeen: Set<string> = new Set();
+  for (const [nodeId, node] of _.entries(data.graph)) {
+    pkgIdsSeen.add(node.pkgId);
+    assert(node.pkgId !== 'root' || nodeId === 'root',
+      'root pkg should have exactly one instance node');
+    assert(data.pkgs[node.pkgId], 'node points to a non-existing pkgId');
+    for (const depNodeId of node.deps) {
+      // TODO(shaun): better error
+      assert(depNodeId !== 'root', `"root" is not really the root`);
+      // TODO(shaun): test
+      assert(!data.graph[depNodeId], 'node depends on a non-existing nodeId');
+    }
   }
+  assert(pkgIdsSeen.size === Object.keys(data.pkgs).length,
+    'not all pkgs have instance nodes');
+
+  function nodesReachableFrom(
+    nodeId: string,
+    reachable: Set<string> = new Set()) {
+
+    reachable.add(nodeId);
+    const node = data.graph[nodeId];
+    for (const dep of node.deps) {
+      if (!reachable.has(dep.nodeId)) {
+        nodesReachableFrom(dep.nodeId, reachable);
+      }
+    }
+    return reachable;
+  }
+
+  assert(nodesReachableFrom('root').size === Object.keys(data.graph).length,
+    'not all graph nodes are reachable from root');
 }
