@@ -59,7 +59,7 @@ describe('fromJSON simple', () => {
 
 test('fromJSON with pkgManager.repositories', async () => {
   const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
+    schemaVersion: '2.0.0',
     pkgManager: {
       name: 'deb',
       repositories: [
@@ -68,26 +68,21 @@ test('fromJSON with pkgManager.repositories', async () => {
         },
       ],
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-    ],
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@2': { name: 'foo', version: '2' },
+    },
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@2|x' },
+        ],
+      },
+      'foo@2|x': {
+        pkgId: 'foo@2',
+        deps: [],
+      },
     },
   };
 
@@ -97,78 +92,65 @@ test('fromJSON with pkgManager.repositories', async () => {
 
 test('fromJSON a pkg and a node share same id', async () => {
   const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@2': { name: 'foo', version: '2' },
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2' },
-          ],
-        },
-        {
-          nodeId: 'foo@2',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@2' },
+        ],
+      },
+      'foo@2': {
+        pkgId: 'foo@2',
+        deps: [],
+      },
     },
   };
 
   const depGraph = depGraphLib.createFromJSON(graphJson);
 
   expect(depGraph.getPkgs().sort()).toEqual([
-    { name: 'toor', version: '1.0.0' },
+    { name: 'app', version: '1.0.0' },
     { name: 'foo', version: '2' },
   ].sort());
 
   expect(depGraph.pkgPathsToRoot({ name: 'foo', version: '2' })).toEqual([[
     { name: 'foo', version: '2' },
-    { name: 'toor', version: '1.0.0' },
+    { name: 'app', version: '1.0.0' },
   ]]);
 });
 
 test('fromJSON no deps', async () => {
   const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      root: { name: 'app', version: '1.0.0' },
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [],
-        },
-      ],
+      root: {
+        pkgId: 'root',
+        deps: [],
+      },
     },
   };
 
   const depGraph = depGraphLib.createFromJSON(graphJson);
 
-  expect(depGraph.rootPkg).toEqual({ name: 'toor', version: '1.0.0' });
-  expect(depGraph.getPkgs()).toEqual([{ name: 'toor', version: '1.0.0' }]);
+  expect(depGraph.rootPkg).toEqual({ name: 'app', version: '1.0.0' });
+  expect(depGraph.getPkgs()).toEqual([{ name: 'app', version: '1.0.0' }]);
   expect(depGraph.pkgManager.name).toEqual('pip');
 });
 
 test('fromJSON inside schemaVersion', async () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
-  graphJson.schemaVersion = '1.9.9';
+  graphJson.schemaVersion = '2.9.9';
 
   const depGraph = depGraphLib.createFromJSON(graphJson);
   expect(depGraph.getPkgs()).toHaveLength(7);
@@ -177,7 +159,7 @@ test('fromJSON inside schemaVersion', async () => {
 test('fromJSON too old schemaVersion', async () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
-  graphJson.schemaVersion = '0.0.1';
+  graphJson.schemaVersion = '1.0.1';
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/schemaVersion/);
@@ -186,7 +168,7 @@ test('fromJSON too old schemaVersion', async () => {
 test('fromJSON too new schemaVersion', async () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
-  graphJson.schemaVersion = '2.0.0';
+  graphJson.schemaVersion = '3.0.0';
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/schemaVersion/);
@@ -195,12 +177,8 @@ test('fromJSON too new schemaVersion', async () => {
 test('fromJSON missing root', async () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
-  graphJson.graph.nodes = graphJson.graph.nodes.map((x) => {
-    if (x.nodeId === 'root-node') {
-      x.nodeId = 'root-not-named-correctly';
-    }
-    return x;
-  });
+  graphJson.graph.oldRoot = graphJson.graph.root;
+  delete graphJson.graph.root;
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/root/);
@@ -221,35 +199,28 @@ test('fromJSON missing pkgManager', async () => {
   delete graphJson.pkgManager;
 
   const go = () => depGraphLib.createFromJSON(graphJson);
-  expect(go).toThrow(/pkgManager/);
+  expect(go).toThrow(/bad data format/);
 });
 
-test('fromJSON root pkg id doesnt match name@version', async () => {
+test('fromJSON non-root pkg id does not match name@version', async () => {
   const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      root: { name: 'app', version: '1.0.0' },
+      foo: { name: 'foo', version: '2' },
     },
-    pkgs: [
-      { id: 'rooty', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'rooty',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-      ],
+      root: {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo' },
+        ],
+      },
+      foo: {
+        pkgId: 'foo',
+        deps: [],
+      },
     },
   };
 
@@ -259,55 +230,46 @@ test('fromJSON root pkg id doesnt match name@version', async () => {
 
 test('fromJSON with a cycle', async () => {
   const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@2': { name: 'foo', version: '2' },
+      'bar@3': { name: 'bar', version: '3' },
+      'baz@4': { name: 'baz', version: '4' },
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-      { id: 'bar@3', info: { name: 'bar', version: '3' } },
-      { id: 'baz@4', info: { name: 'baz', version: '4' } },
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [
-            { nodeId: 'bar@3|x' },
-          ],
-        },
-        {
-          nodeId: 'bar@3|x',
-          pkgId: 'bar@3',
-          deps: [
-            { nodeId: 'baz@4|x' },
-          ],
-        },
-        {
-          nodeId: 'baz@4|x',
-          pkgId: 'baz@4',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@2|x' },
+        ],
+      },
+      'foo@2|x': {
+        pkgId: 'foo@2',
+        deps: [
+          { nodeId: 'bar@3|x' },
+        ],
+      },
+      'bar@3|x': {
+        pkgId: 'bar@3',
+        deps: [
+          { nodeId: 'baz@4|x' },
+        ],
+      },
+      'baz@4|x': {
+        pkgId: 'baz@4',
+        deps: [
+          { nodeId: 'foo@2|x' },
+        ],
+      },
     },
   };
 
   const depGraph = depGraphLib.createFromJSON(graphJson);
 
   expect(depGraph.getPkgs().sort()).toEqual([
-    { name: 'toor', version: '1.0.0' },
+    { name: 'app', version: '1.0.0' },
     { name: 'foo', version: '2' },
     { name: 'bar', version: '3' },
     { name: 'baz', version: '4' },
@@ -320,40 +282,32 @@ test('fromJSON with a cycle', async () => {
   expect(getPaths).toThrow(/cycl/);
 });
 
-test('fromJSON root is not really root', async () => {
+test('fromJSON a pkg depends on root', async () => {
   const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@2': { name: 'foo', version: '2' },
+      'bar@3': { name: 'bar', version: '3' },
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-      { id: 'bar@3', info: { name: 'bar', version: '3' } },
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-        {
-          nodeId: 'bar@3|x',
-          pkgId: 'bar@3',
-          deps: [
-            { nodeId: 'toor' },
-          ],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@2|x' },
+        ],
+      },
+      'foo@2|x': {
+        pkgId: 'foo@2',
+        deps: [],
+      },
+      'bar@3|x': {
+        pkgId: 'bar@3',
+        deps: [
+          { nodeId: 'root' },
+        ],
+      },
     },
   };
 
@@ -363,36 +317,28 @@ test('fromJSON root is not really root', async () => {
 
 test('fromJSON a pkg is not reachable from root', async () => {
   const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@2': { name: 'foo', version: '2' },
+      'bar@3': { name: 'bar', version: '3' },
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-      { id: 'bar@3', info: { name: 'bar', version: '3' } },
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-        {
-          nodeId: 'bar@3|x',
-          pkgId: 'bar@3',
-          deps: [],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@2|x' },
+        ],
+      },
+      'foo@2|x': {
+        pkgId: 'foo@2',
+        deps: [],
+      },
+      'bar@3|x': {
+        pkgId: 'bar@3',
+        deps: [],
+      },
     },
   };
 
@@ -400,260 +346,110 @@ test('fromJSON a pkg is not reachable from root', async () => {
   expect(go).toThrow(/reach/);
 });
 
-test('fromJSON root is not really root', async () => {
-  const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
-    },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-      { id: 'bar@3', info: { name: 'bar', version: '3' } },
-    ],
-    graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-        {
-          nodeId: 'bar@3|x',
-          pkgId: 'bar@3',
-          deps: [
-            { nodeId: 'root' },
-          ],
-        },
-      ],
-    },
-  };
-
-  const go = () => depGraphLib.createFromJSON(graphJson);
-  expect(go).toThrow(/root/);
-});
-
 test('fromJSON a pkg without an instance', async () => {
   const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@2': { name: 'foo', version: '2' },
+      'bar@3': { name: 'bar', version: '3' },
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-      { id: 'bar@3', info: { name: 'bar', version: '3' } },
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@2|x' },
+        ],
+      },
+      'foo@2|x': {
+        pkgId: 'foo@2',
+        deps: [],
+      },
     },
   };
 
   const go = () => depGraphLib.createFromJSON(graphJson);
-  expect(go).toThrow(/instance/);
-});
-
-test('fromJSON an instance without a pkg', async () => {
-  const graphJson = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
-    },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-    ],
-    graph: {
-      rootNodeId: 'root-node',
-      nodes: [
-        {
-          nodeId: 'root-node',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [
-            { nodeId: 'bar@3|x' },
-          ],
-        },
-        {
-          nodeId: 'bar@3|x',
-          deps: [],
-        },
-      ],
-    },
-  };
-
-  const go = () => depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
   expect(go).toThrow(/instance/);
 });
 
 test('fromJSON an instance points to non-existing pkgId', async () => {
   const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@2': { name: 'foo', version: '2' },
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [
-            { nodeId: 'bar@3|x' },
-          ],
-        },
-        {
-          nodeId: 'bar@3|x',
-          pkgId: 'bar@3',
-          deps: [],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@2|x' },
+        ],
+      },
+      'foo@2|x': {
+        pkgId: 'foo@2',
+        deps: [
+          { nodeId: 'bar@3|x' },
+        ],
+      },
+      'bar@3|x': {
+        pkgId: 'bar@3',
+        deps: [],
+      },
     },
   };
 
   const go = () => depGraphLib.createFromJSON(graphJson);
-  expect(go).toThrow(/exist/);
+  expect(go).toThrow(/non-existing pkgId/);
 });
 
-test('fromJSON root has several instances', async () => {
-  const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
-    },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-    ],
-    graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [
-            { nodeId: 'bar@3|x' },
-          ],
-        },
-        {
-          nodeId: 'bar@3|x',
-          pkgId: 'toor@1.0.0',
-          deps: [],
-        },
-      ],
-    },
-  };
-
-  const go = () => depGraphLib.createFromJSON(graphJson);
-  expect(go).toThrow(/root/);
-});
-
-test('fromJSON a pkg missing info field', async () => {
+test('fromJSON an empty pkg', async () => {
   const graphJson = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@2': null,
     },
-    pkgs: [
-      { id: 'toor', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2'},
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@2|x' },
+        ],
+      },
+      'foo@2|x': {
+        pkgId: 'foo@2',
+        deps: [],
+      },
     },
   };
 
   const go = () => depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
-  expect(go).toThrow(/\.info/);
-  expect(go).toThrow(/^((?!(of undefined)).)*$/);
+  expect(go).toThrow(/empty pkg/);
 });
 
-test('fromJSON a pkg missing name field', async () => {
+test('fromJSON pkg missing name field', async () => {
   const graphJson = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@2': { version: '2' },
     },
-    pkgs: [
-      { id: 'toor', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { version: '2' } },
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@2|x' },
+        ],
+      },
+      'foo@2|x': {
+        pkgId: 'foo@2',
+        deps: [],
+      },
     },
   };
 
@@ -663,141 +459,57 @@ test('fromJSON a pkg missing name field', async () => {
 
 test('fromJSON a pkg missing version field', async () => {
   const graphJson = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
+    schemaVersion: '2.0.0',
+    pkgManager: { name: 'pip' },
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@': { name: 'foo' },
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@', info: { name: 'foo' } },
-    ],
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@|x',
-          pkgId: 'foo@',
-          deps: [],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@|x' },
+        ],
+      },
+      'foo@|x': {
+        pkgId: 'foo@',
+        deps: [],
+      },
     },
   };
 
   const depGraph = depGraphLib.createFromJSON(graphJson as any);
   expect(depGraph.getPkgs().sort()).toEqual([
-    { name: 'toor', version: '1.0.0' },
+    { name: 'app', version: '1.0.0' },
     { name: 'foo', version: null },
   ]);
 });
 
-test('fromJSON pkg-id is not name@version', async () => {
+test('fromJSON pkg-id is not name@version of actual package', async () => {
   const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
+    schemaVersion: '2.0.0',
     pkgManager: {
       name: 'pip',
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@3', info: { name: 'foo', version: '2' } },
-    ],
+    pkgs: {
+      'root': { name: 'app', version: '1.0.0' },
+      'foo@3': { name: 'foo', version: '2' },
+    },
     graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@3|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@3|x',
-          pkgId: 'foo@3',
-          deps: [],
-        },
-      ],
+      'root': {
+        pkgId: 'root',
+        deps: [
+          { nodeId: 'foo@3|x' },
+        ],
+      },
+      'foo@3|x': {
+        pkgId: 'foo@3',
+        deps: [],
+      },
     },
   };
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/name/);
-});
-
-test('fromJSON duplicate node-id', async () => {
-  const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
-    },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-    ],
-    graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-      ],
-    },
-  };
-
-  const go = () => depGraphLib.createFromJSON(graphJson);
-  expect(go).toThrow(/node.*same id/);
-});
-
-test('fromJSON duplicate pkg-id', async () => {
-  const graphJson: depGraphLib.DepGraphData = {
-    schemaVersion: '1.0.0',
-    pkgManager: {
-      name: 'pip',
-    },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-      { id: 'foo@2', info: { name: 'foo', version: '2' } },
-    ],
-    graph: {
-      rootNodeId: 'toor',
-      nodes: [
-        {
-          nodeId: 'toor',
-          pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
-        },
-        {
-          nodeId: 'foo@2|x',
-          pkgId: 'foo@2',
-          deps: [],
-        },
-      ],
-    },
-  };
-
-  const go = () => depGraphLib.createFromJSON(graphJson);
-  expect(go).toThrow(/pkg.*same id/);
 });

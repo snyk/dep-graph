@@ -7,23 +7,14 @@ export {
 };
 
 class DepGraphBuilder {
-
-  get rootNodeId(): string {
-    return this._rootNodeId;
-  }
-
-  private static _getPkgId(pkg: types.Pkg): string {
-    return `${pkg.name}@${pkg.version || ''}`;
-  }
-
-  private _pkgs: { [pkgId: string]: types.PkgInfo } = {};
+  private _pkgs: {
+    root: types.PkgInfo;
+    [pkgId: string]: types.PkgInfo;
+  };
   private _pkgNodes: { [pkgId: string]: Set<string> } = {};
 
   private _graph: graphlib.Graph;
   private _pkgManager: types.PkgManager;
-
-  private _rootNodeId: string;
-  private _rootPkgId: string;
 
   public constructor(pkgManager: types.PkgManager, rootPkg?: types.PkgInfo) {
     const graph = new graphlib.Graph({
@@ -31,31 +22,27 @@ class DepGraphBuilder {
       multigraph: false,
       compound: false,
     });
-    if (!rootPkg) {
-      rootPkg = {
+
+    this._pkgs = {
+      root: rootPkg || {
         name: '_root',
         version: '0.0.0',
-      };
-    }
+      },
+    };
 
-    this._rootNodeId = 'root-node';
-    this._rootPkgId = DepGraphBuilder._getPkgId(rootPkg);
-    this._pkgs[this._rootPkgId] = rootPkg;
-
-    graph.setNode(this._rootNodeId, { pkgId: this._rootPkgId });
-    this._pkgNodes[this._rootPkgId] = new Set([this._rootNodeId]);
-
+    graph.setNode('root', { pkgId: 'root' });
+    this._pkgNodes.root = new Set(['root']);
     this._graph = graph;
     this._pkgManager = pkgManager;
   }
 
   // TODO: this can create disconnected nodes
   public addPkgNode(pkgInfo: types.PkgInfo, nodeId: string) {
-    if (nodeId === this._rootNodeId) {
+    if (nodeId === 'root') {
       throw new Error('DepGraphBuilder.addPkgNode() cant override root node');
     }
 
-    const pkgId = DepGraphBuilder._getPkgId(pkgInfo);
+    const pkgId = `${pkgInfo.name}@${pkgInfo.version || ''}`;
 
     this._pkgs[pkgId] = pkgInfo;
     this._pkgNodes[pkgId] = this._pkgNodes[pkgId] || new Set();
@@ -80,7 +67,6 @@ class DepGraphBuilder {
   public build(): types.DepGraph {
     return new DepGraphImpl(
       this._graph,
-      this._rootNodeId,
       this._pkgs,
       this._pkgNodes,
       this._pkgManager,

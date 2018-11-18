@@ -31,7 +31,7 @@ export async function graphToDepTree(depGraphInterface: depGraphLib.DepGraph): P
     throw new Error('Conversion to DepTree does not support cyclic graphs yet');
   }
 
-  const depTree = await buildSubtree(depGraph, depGraph.rootNodeId);
+  const depTree = await buildSubtree(depGraph, 'root');
 
   (depTree as any).packageFormatVersion = constructPackageFormatVersion(depGraph);
 
@@ -48,9 +48,11 @@ function constructPackageFormatVersion(depGraph: types.DepGraph): string {
 
 async function buildSubtree(depGraph: types.DepGraphInternal, nodeId: string): Promise<DepTree> {
   const nodePkg = depGraph.getNodePkg(nodeId);
-  const depTree: DepTree = {};
-  depTree.name = nodePkg.name;
-  depTree.version = nodePkg.version;
+  const depTree: DepTree = {
+    name: nodePkg.name,
+    version: nodePkg.version,
+    dependencies: {},
+  };
 
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
   if (!depInstanceIds || depInstanceIds.length === 0) {
@@ -61,10 +63,6 @@ async function buildSubtree(depGraph: types.DepGraphInternal, nodeId: string): P
     const subtree = await buildSubtree(depGraph, depInstId);
     if (!subtree) {
       continue;
-    }
-
-    if (!depTree.dependencies) {
-      depTree.dependencies = {};
     }
 
     depTree.dependencies[subtree.name] = subtree;

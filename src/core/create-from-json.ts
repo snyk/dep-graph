@@ -6,7 +6,7 @@ import { DepGraph, DepGraphData, GraphNode } from './types';
 import { validateGraph } from './validate-graph';
 import { DepGraphImpl } from './dep-graph';
 
-export const SUPPORTED_SCHEMA_RANGE = '^1.0.0';
+export const SUPPORTED_SCHEMA_RANGE = '^2.0.0';
 
 export function createFromJSON(depGraphData: DepGraphData): DepGraph {
   validateDepGraphData(depGraphData);
@@ -17,86 +17,73 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
     compound: false,
   });
   const pkgs = {};
-  const pkgNodes = {};
+  const pkgNodes: { [pkgId: string]: Set<string> } = {};
 
-  for (const { id, info } of depGraphData.pkgs) {
-    pkgs[id] = info.version ? info : { ...info, version: null };
+  for (const pkgId of Object.keys(depGraphData.pkgs)) {
+    const pkg = depGraphData.pkgs[pkgId];
+    pkgs[pkgId] = pkg.version ? pkg : { ...pkg, version: null };
   }
 
-  for (const node of depGraphData.graph.nodes) {
+  for (const nodeId of Object.keys(depGraphData.graph)) {
+    const node = depGraphData.graph[nodeId];
     const pkgId = node.pkgId;
     if (!pkgNodes[pkgId]) {
       pkgNodes[pkgId] = new Set();
     }
-    pkgNodes[pkgId].add(node.nodeId);
+    pkgNodes[pkgId].add(nodeId);
 
-    graph.setNode(node.nodeId, { pkgId });
+    graph.setNode(nodeId, { pkgId });
   }
 
-  for (const node of depGraphData.graph.nodes) {
+  for (const nodeId of Object.keys(depGraphData.graph)) {
+    const node = depGraphData.graph[nodeId];
     for (const depNodeId of node.deps) {
-      graph.setEdge(node.nodeId, depNodeId.nodeId);
+      graph.setEdge(nodeId, depNodeId.nodeId);
     }
   }
 
-  validateGraph(graph, depGraphData.graph.rootNodeId, pkgs, pkgNodes);
+  validateGraph(graph, 'root', pkgs, pkgNodes);
 
   return new DepGraphImpl(
     graph,
-    depGraphData.graph.rootNodeId,
-    pkgs,
+    pkgs as any,
     pkgNodes,
     depGraphData.pkgManager,
   );
 }
 
-function assert(condition: boolean, msg: string) {
+function assert(condition: any, msg: string) {
   if (!condition) {
     throw new Error(msg);
   }
 }
 
-function validateDepGraphData(depGraphData: DepGraphData) {
-  assert(semver.satisfies(depGraphData.schemaVersion, SUPPORTED_SCHEMA_RANGE),
-    `dep-graph schemaVersion not in "${SUPPORTED_SCHEMA_RANGE}"`);
-  assert(depGraphData.pkgManager && !!depGraphData.pkgManager.name, '.pkgManager.name is missing');
+function validateDepGraphData(data: DepGraphData) {
+  assert(data.schemaVersion, `schemaVersion missing`);
+  assert(semver.satisfies(data.schemaVersion, SUPPORTED_SCHEMA_RANGE),
+    `schemaVersion not in "${SUPPORTED_SCHEMA_RANGE}"`);
+  assert(data.pkgManager && data.pkgs && data.graph,
+    'bad data format');
 
-  const pkgsMap = depGraphData.pkgs.reduce((acc, cur) => {
-    assert(!(cur.id in acc), 'more than one pkg with same id');
-    assert(!!cur.info, '.pkgs item missing .info');
+  assert(data.pkgManager.name, '.pkgManager.name is missing');
+  assert(data.pkgs.root, `root pkg missing`);
+  assert(data.pkgs.root.name, `root pkg missing`);
+  assert(data.graph.root, `root graph node is missing`);
+  assert(data.graph.root.pkgId === 'root',
+    `the root node .pkgId must be "root", but got ${data.graph.root.pkgId}`);
 
-    acc[cur.id] = cur.info;
-    return acc;
-  }, {});
+  for (const pkgId of _.keys(data.pkgs)) {
+    const pkg = data.pkgs[pkgId];
+    assert(!!pkg, 'empty pkg');
+    assert(pkg.name, 'some .pkgs elements have no .name field');
+    // NOTE: this name@version check is very strict,
+    // we can relax it later, it just makes things easier now
+    assert(pkgId === 'root' || pkgId === `${pkg.name}@${pkg.version || ''}`,
+      'non-root pkg id must be name@version');
+  }
 
-  const nodesMap = depGraphData.graph.nodes.reduce((acc, cur) => {
-    assert(!(cur.nodeId in acc), 'more than on node with same id');
-
-    acc[cur.nodeId] = cur;
-    return acc;
-  }, {} as { [nodeId: string]: GraphNode });
-
-  const rootNodeId = depGraphData.graph.rootNodeId;
-  const rootNode = nodesMap[rootNodeId];
-  assert(rootNodeId in nodesMap, `.${rootNodeId} root graph node is missing`);
-  const rootPkgId = rootNode.pkgId;
-  assert(rootPkgId in pkgsMap, `.${rootPkgId} root pkg missing`);
-  assert(nodesMap[rootNodeId].pkgId === rootPkgId,
-    `the root node .pkgId should be "${rootPkgId}"`);
-  const pkgIds = _.keys(pkgsMap);
-  // NOTE: this name@version check is very strict,
-  // we can relax it later, it just makes things easier now
-  assert(
-    pkgIds
-      .filter((pkgId) => (pkgId !== DepGraphImpl.getPkgId(pkgsMap[pkgId])))
-      .length === 0,
-    'pkgs ids should be name@version');
-  assert(_.values(nodesMap)
-      .filter((node) => !(node.pkgId in pkgsMap))
-      .length === 0,
-    'some instance nodes belong to non-existing pkgIds');
-  assert(_.values(pkgsMap)
-      .filter((pkg: { name: string }) => !pkg.name)
-      .length === 0,
-    'some .pkgs elements have no .name field');
+  for (const node of _.values(data.graph)) {
+    assert(data.pkgs[node.pkgId],
+      'a node points to a non-existing pkgId');
+  }
 }

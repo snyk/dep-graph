@@ -35,16 +35,6 @@ export interface PkgInfo {
   // }[];
 }
 
-export interface GraphNode {
-  nodeId: string;
-  pkgId: string;
-  deps: Array<{
-    nodeId: string;
-    // NOTE: consider adding later:
-    // meta?: JsonMap;
-  }>;
-}
-
 export interface PkgManager {
   name: string;
   version?: string;
@@ -53,16 +43,25 @@ export interface PkgManager {
   }>;
 }
 
+export interface GraphNode {
+  pkgId: string;
+  deps: Array<{
+    nodeId: string;
+    // NOTE: consider adding later:
+    // meta?: JsonMap;
+  }>;
+}
+
 export interface DepGraphData {
   schemaVersion: string;
   pkgManager: PkgManager;
-  pkgs: Array<{
-    id: string;
-    info: PkgInfo;
-  }>;
+  pkgs: {
+    root: PkgInfo;
+    [pkgId: string]: PkgInfo;
+  };
   graph: {
-    rootNodeId: string;
-    nodes: GraphNode[];
+    root: GraphNode;
+    [nodeId: string]: GraphNode;
   };
 }
 
@@ -77,7 +76,6 @@ export interface DepGraph {
 // NOTE/TODO(shaun): deferring any/all design decisions here
 // Revisit when we actually start using things
 export interface DepGraphInternal extends DepGraph {
-  readonly rootNodeId: string;
   getNodePkg(nodeId: string): PkgInfo;
   getPkgNodeIds(pkg: Pkg): string[];
   getNodeDepsNodeIds(nodeId: string): string[];

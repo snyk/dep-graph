@@ -94,7 +94,7 @@ describe('createFromDepTree simple dysmorphic', () => {
 
   test('convert back to depTree & compare', async () => {
     const restoredDepTree = await helpers.graphToDepTree(depGraph);
-    expect(depTreesEqual(restoredDepTree, simpleDepTree)).toBe(true);
+    expect(restoredDepTree).toEqual(simpleDepTree);
   });
 
   test('compare to expected graph json', async () => {

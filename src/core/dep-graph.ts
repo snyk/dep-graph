@@ -7,13 +7,13 @@ export {
 };
 
 class DepGraphImpl implements types.DepGraphInternal {
-  public static SCHEMA_VERSION = '1.0.0';
+  public static SCHEMA_VERSION = '2.0.0';
 
-  public static getPkgId(pkg: types.Pkg): string {
-    return `${pkg.name}@${pkg.version || ''}`;
-  }
+  private _pkgs: {
+    root: types.PkgInfo;
+    [pkgId: string]: types.PkgInfo;
+  };
 
-  private _pkgs: { [pkgId: string]: types.PkgInfo };
   private _pkgNodes: { [pkgId: string]: Set<string> };
 
   private _pkgList: types.PkgInfo[];
@@ -21,13 +21,12 @@ class DepGraphImpl implements types.DepGraphInternal {
   private _graph: graphlib.Graph;
   private _pkgManager: types.PkgManager;
 
-  private _rootNodeId: string;
-  private _rootPkgId: string;
-
   public constructor(
     graph: graphlib.Graph,
-    rootNodeId: string,
-    pkgs: { [pkgId: string]: types.PkgInfo },
+    pkgs: {
+      root: types.PkgInfo;
+      [pkgId: string]: types.PkgInfo;
+    },
     pkgNodes: { [pkgId: string]: Set<string> },
     pkgManager: types.PkgManager,
   ) {
@@ -35,9 +34,6 @@ class DepGraphImpl implements types.DepGraphInternal {
     this._pkgs = pkgs;
     this._pkgNodes = pkgNodes;
     this._pkgManager = pkgManager;
-
-    this._rootNodeId = rootNodeId;
-    this._rootPkgId = graph.node(rootNodeId).pkgId;
 
     this._pkgList = _.values(pkgs);
   }
@@ -47,11 +43,7 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   get rootPkg(): types.PkgInfo {
-    return this._pkgs[this._rootPkgId];
-  }
-
-  get rootNodeId(): string {
-    return this._rootNodeId;
+    return this._pkgs.root;
   }
 
   public getPkgs(): types.PkgInfo[] {
@@ -68,8 +60,12 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public getPkgNodeIds(pkg: types.Pkg): string[] {
-    const pkgId = DepGraphImpl.getPkgId(pkg);
+    if (pkg === this.rootPkg ||
+      (pkg.name === this.rootPkg.name && pkg.version === this.rootPkg.version)) {
+      return Array.from(this._pkgNodes.root);
+    }
 
+    const pkgId = `${pkg.name}@${pkg.version || ''}`;
     if (!this._pkgs[pkgId]) {
       throw new Error(`no such pkg: ${pkgId}`);
     }
@@ -119,32 +115,22 @@ class DepGraphImpl implements types.DepGraphInternal {
   public toJSON(): types.DepGraphData {
     const nodeIds = this._graph.nodes();
 
-    const nodes = nodeIds.reduce((acc, nodeId: string) => {
+    const graph = nodeIds.reduce((acc, nodeId: string) => {
       const deps = (this._graph.successors(nodeId) || [])
         .map((depNodeId) => ({ nodeId: depNodeId }));
 
-      acc.push({
-        nodeId,
+      acc[nodeId] = {
         pkgId: this._graph.node(nodeId).pkgId,
         deps,
-      });
+      };
       return acc;
-    }, []);
-
-    const pkgs = _.keys(this._pkgs)
-      .map((pkgId) => ({
-        id: pkgId,
-        info: this._pkgs[pkgId],
-      }));
+    }, {});
 
     return {
       schemaVersion: DepGraphImpl.SCHEMA_VERSION,
       pkgManager: this._pkgManager,
-      pkgs,
-      graph: {
-        rootNodeId: this._rootNodeId,
-        nodes,
-      },
+      pkgs: this._pkgs,
+      graph: graph as any,
     };
   }
 

@@ -85,7 +85,7 @@ async function buildGraph(
 
   let pkgNodeId;
   if (isRoot) {
-    pkgNodeId = builder.rootNodeId;
+    pkgNodeId = 'root';
   } else {
     // we don't assume depTree has a .name to support output of `npm list --json`
     const pkg = {
@@ -113,13 +113,12 @@ async function shortenNodeIds(depGraph: types.DepGraphInternal): Promise<types.D
 
   // create nodes with shorter ids
   for (const pkg of depGraph.getPkgs()) {
+    if (pkg === depGraph.rootPkg) {
+      continue;
+    }
     const nodeIds = depGraph.getPkgNodeIds(pkg);
     for (let i = 0; i < nodeIds.length; i++) {
       const nodeId = nodeIds[i];
-      if (nodeId === depGraph.rootNodeId) {
-        continue;
-      }
-
       let newNodeId: string;
       if (nodeIds.length === 1) {
         newNodeId = `${nodeId.split('|')[0]}`;
