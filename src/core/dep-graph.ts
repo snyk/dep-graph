@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import * as graphlib from 'graphlib';
 import * as types from './types';
 
 export {
@@ -9,12 +8,31 @@ export {
 class DepGraphImpl implements types.DepGraphInternal {
   public static SCHEMA_VERSION = '2.0.0';
 
-  private _graphInstance: graphlib.Graph;
   private _pkgValues: types.PkgInfo[];
-  private _pkgNodeIds: { [pkgId: string]: Set<string> };
+  private _pkgNodeIds: { [pkgId: string]: string[] } = {};
+  private _nodeSuccessors: { [nodeId: string]: string[] } = {};
+  private _nodePredecessors: { [nodeId: string]: string[] } = { root: []};
+  private _hasCycles: boolean;
 
   public constructor(private data: types.DepGraphData) {
     this._pkgValues = _.values(data.pkgs);
+
+    for (const [nodeId, node] of _.entries(data.graph)) {
+      // node successors
+      this._nodeSuccessors[nodeId] = node.deps.map((dep) => dep.nodeId);
+      // node predecessors
+      for (const dep of node.deps) {
+        if (!this._nodePredecessors[dep.nodeId]) {
+          this._nodePredecessors[dep.nodeId] = [];
+        }
+        this._nodePredecessors[dep.nodeId].push(nodeId);
+      }
+      // package nodes
+      if (!this._pkgNodeIds[node.pkgId]) {
+        this._pkgNodeIds[node.pkgId] = [];
+      }
+      this._pkgNodeIds[node.pkgId].push(nodeId);
+    }
   }
 
   get pkgManager() {
@@ -40,19 +58,18 @@ class DepGraphImpl implements types.DepGraphInternal {
   public getPkgNodeIds(pkg: types.Pkg): string[] {
     if (pkg === this.rootPkg ||
       (pkg.name === this.rootPkg.name && pkg.version === this.rootPkg.version)) {
-      return Array.from(this.pkgNodeIds.root);
+      return this._pkgNodeIds.root;
     }
 
     const pkgId = `${pkg.name}@${pkg.version || ''}`;
     if (!this.data.pkgs[pkgId]) {
       throw new Error(`no such pkg: ${pkgId}`);
     }
-
-    return Array.from(this.pkgNodeIds[pkgId]);
+    return this._pkgNodeIds[pkgId];
   }
 
   public getNodeDepsNodeIds(nodeId: string): string[] {
-    const deps = this.graphInstance.successors(nodeId);
+    const deps = this._nodeSuccessors[nodeId];
     if (!deps) {
       throw new Error(`no such node: ${nodeId}`);
     }
@@ -60,7 +77,7 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public getNodeParentsNodeIds(nodeId: string): string[] {
-    const parents = this.graphInstance.predecessors(nodeId);
+    const parents = this._nodePredecessors[nodeId];
     if (!parents) {
       throw new Error(`no such node: ${nodeId}`);
     }
@@ -68,7 +85,23 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public hasCycles(): boolean {
-    return !graphlib.alg.isAcyclic(this.graphInstance);
+    if (this._hasCycles !== undefined) {
+      return this._hasCycles;
+    }
+    const graph = this.data.graph;
+    const sanctified: Set<string> = new Set();
+    function check(nodeId: string, predecessors: string[] = []): boolean {
+      const node = graph[nodeId];
+      for (const {nodeId: depNodeId} of node.deps) {
+        if (sanctified.has(depNodeId)) { return false; }
+        if (predecessors.indexOf(depNodeId) >= 0) { return true; }
+        if (check(depNodeId, predecessors.concat(depNodeId))) { return true; }
+        sanctified.add(depNodeId);
+      }
+      return false;
+    }
+    this._hasCycles = check('root');
+    return this._hasCycles;
   }
 
   public pkgPathsToRoot(pkg: types.Pkg): types.PkgInfo[][] {
@@ -107,54 +140,5 @@ class DepGraphImpl implements types.DepGraphInternal {
       allPaths.push(...out);
     });
     return allPaths;
-  }
-
-  private get pkgNodeIds(): { [pkgId: string]: Set<string> } {
-    if (this._pkgNodeIds) {
-      return this._pkgNodeIds;
-    }
-    const pkgNodes: { [pkgId: string]: Set<string> } = {};
-    for (const nodeId of Object.keys(this.data.graph)) {
-      const node = this.data.graph[nodeId];
-      const pkgId = node.pkgId;
-      if (!pkgNodes[pkgId]) {
-        pkgNodes[pkgId] = new Set();
-      }
-      pkgNodes[pkgId].add(nodeId);
-    }
-    this._pkgNodeIds = pkgNodes;
-    return pkgNodes;
-  }
-
-  private get graphInstance(): graphlib.Graph {
-    if (this._graphInstance) {
-      return this._graphInstance;
-    }
-    const graph = new graphlib.Graph({
-      directed: true,
-      multigraph: false,
-      compound: false,
-    });
-    // const pkgs = {};
-
-    // for (const pkgId of Object.keys(this.data.pkgs)) {
-    //   const pkg = this.data.pkgs[pkgId];
-    //   pkgs[pkgId] = pkg.version ? pkg : { ...pkg, version: null };
-    // }
-
-    for (const nodeId of Object.keys(this.data.graph)) {
-      const node = this.data.graph[nodeId];
-      graph.setNode(nodeId, { pkgId: node.pkgId });
-    }
-
-    for (const nodeId of Object.keys(this.data.graph)) {
-      const node = this.data.graph[nodeId];
-      for (const depNodeId of node.deps) {
-        graph.setEdge(nodeId, depNodeId.nodeId);
-      }
-    }
-
-    this._graphInstance = graph;
-    return graph;
   }
 }
