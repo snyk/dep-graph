@@ -181,6 +181,7 @@ test('fromJSON too old schemaVersion', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/schemaVersion/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON too new schemaVersion', async () => {
@@ -190,6 +191,7 @@ test('fromJSON too new schemaVersion', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/schemaVersion/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON missing root', async () => {
@@ -204,6 +206,7 @@ test('fromJSON missing root', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/root/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON missing pkgManager.name', async () => {
@@ -213,6 +216,7 @@ test('fromJSON missing pkgManager.name', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/pkgManager\.name/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON missing pkgManager', async () => {
@@ -222,6 +226,7 @@ test('fromJSON missing pkgManager', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/pkgManager/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON root pkg id doesnt match name@version', async () => {
@@ -255,6 +260,7 @@ test('fromJSON root pkg id doesnt match name@version', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/name@version/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON with a cycle', async () => {
@@ -359,6 +365,7 @@ test('fromJSON root is not really root', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/root/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON a pkg is not reachable from root', async () => {
@@ -398,6 +405,7 @@ test('fromJSON a pkg is not reachable from root', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/reach/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON root is not really root', async () => {
@@ -439,6 +447,7 @@ test('fromJSON root is not really root', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/root/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON a pkg without an instance', async () => {
@@ -473,6 +482,7 @@ test('fromJSON a pkg without an instance', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/instance/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON an instance without a pkg', async () => {
@@ -512,6 +522,7 @@ test('fromJSON an instance without a pkg', async () => {
 
   const go = () => depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
   expect(go).toThrow(/instance/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON an instance points to non-existing pkgId', async () => {
@@ -552,6 +563,7 @@ test('fromJSON an instance points to non-existing pkgId', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/exist/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON root has several instances', async () => {
@@ -592,6 +604,7 @@ test('fromJSON root has several instances', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/root/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON a pkg missing info field', async () => {
@@ -626,6 +639,7 @@ test('fromJSON a pkg missing info field', async () => {
   const go = () => depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
   expect(go).toThrow(/\.info/);
   expect(go).toThrow(/^((?!(of undefined)).)*$/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON a pkg missing name field', async () => {
@@ -659,6 +673,7 @@ test('fromJSON a pkg missing name field', async () => {
 
   const go = () => depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
   expect(go).toThrow(/name/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON a pkg missing version field', async () => {
@@ -728,6 +743,7 @@ test('fromJSON pkg-id is not name@version', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/name/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON duplicate node-id', async () => {
@@ -766,6 +782,7 @@ test('fromJSON duplicate node-id', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/node.*same id/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
 test('fromJSON duplicate pkg-id', async () => {
@@ -800,4 +817,5 @@ test('fromJSON duplicate pkg-id', async () => {
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/pkg.*same id/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });

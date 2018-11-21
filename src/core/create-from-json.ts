@@ -3,6 +3,7 @@ import * as semver from 'semver';
 import * as graphlib from 'graphlib';
 
 import { DepGraph, DepGraphData, GraphNode } from './types';
+import { ValidationError } from './errors';
 import { validateGraph } from './validate-graph';
 import { DepGraphImpl } from './dep-graph';
 
@@ -52,7 +53,7 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
 
 function assert(condition: boolean, msg: string) {
   if (!condition) {
-    throw new Error(msg);
+    throw new ValidationError(msg);
   }
 }
 

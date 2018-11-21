@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
 import * as graphlib from 'graphlib';
+import { ValidationError } from './errors';
 
 function assert(condition: boolean, msg: string) {
   if (!condition) {
-    throw new Error(msg);
+    throw new ValidationError(msg);
   }
 }
 
