@@ -24,6 +24,8 @@ class DepGraphImpl implements types.DepGraphInternal {
   private _rootNodeId: string;
   private _rootPkgId: string;
 
+  private _countNodePathsToRootCache: Map<string, number> = new Map();
+
   public constructor(
     graph: graphlib.Graph,
     rootNodeId: string,
@@ -104,16 +106,26 @@ class DepGraphImpl implements types.DepGraphInternal {
     }
 
     const pathsToRoot: types.PkgInfo[][] = [];
-
-    const nodeIds = this.getPkgNodeIds(pkg);
-    if (nodeIds) {
-      for (const id of nodeIds) {
-        pathsToRoot.push(...this.pathsFromNodeToRoot(id));
-      }
+    for (const id of this.getPkgNodeIds(pkg)) {
+      pathsToRoot.push(...this.pathsFromNodeToRoot(id));
     }
     // note: sorting to get shorter paths first -
     //  it's nicer - and better resembles older behaviour
     return pathsToRoot.sort((a, b) => a.length - b.length);
+  }
+
+  public countPathsToRoot(pkg: types.Pkg): number {
+    // TODO: implement cycles support
+    if (this.hasCycles()) {
+      throw new Error('countPathsToRoot does not support cyclic graphs yet');
+    }
+
+    let count = 0;
+    for (const nodeId of this.getPkgNodeIds(pkg)) {
+      count += this.countNodePathsToRoot(nodeId);
+    }
+
+    return count;
   }
 
   public toJSON(): types.DepGraphData {
@@ -153,6 +165,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     if (parentNodesIds.length === 0) {
       return [[this.getNodePkg(nodeId)]];
     }
+
     const allPaths: types.PkgInfo[][] = [];
     parentNodesIds.map((id) => {
       const out = this.pathsFromNodeToRoot(id).map((path) => {
@@ -160,7 +173,26 @@ class DepGraphImpl implements types.DepGraphInternal {
       });
       allPaths.push(...out);
     });
+
     return allPaths;
   }
 
+  private countNodePathsToRoot(nodeId: string): number {
+    if (this._countNodePathsToRootCache.has(nodeId)) {
+      return this._countNodePathsToRootCache.get(nodeId);
+    }
+
+    const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
+    if (parentNodesIds.length === 0) {
+      this._countNodePathsToRootCache.set(nodeId, 1);
+      return 1;
+    }
+
+    const count = parentNodesIds.reduce((acc, parentNodeId) => {
+      return acc + this.countNodePathsToRoot(parentNodeId);
+    }, 0);
+
+    this._countNodePathsToRootCache.set(nodeId, count);
+    return count;
+  }
 }

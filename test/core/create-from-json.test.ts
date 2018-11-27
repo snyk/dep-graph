@@ -31,12 +31,16 @@ describe('fromJSON simple', () => {
 
   test('getPathsToRoot', async () => {
     expect(graph.pkgPathsToRoot({ name: 'd', version: '0.0.1' })).toHaveLength(1);
+    expect(graph.countPathsToRoot({ name: 'd', version: '0.0.1' })).toBe(1);
 
     expect(graph.pkgPathsToRoot({ name: 'd', version: '0.0.2' })).toHaveLength(1);
+    expect(graph.countPathsToRoot({ name: 'd', version: '0.0.2' })).toBe(1);
 
     expect(graph.pkgPathsToRoot({ name: 'c', version: '1.0.0' })).toHaveLength(2);
+    expect(graph.countPathsToRoot({ name: 'c', version: '1.0.0' })).toBe(2);
 
     expect(graph.pkgPathsToRoot({ name: 'e', version: '5.0.0' })).toHaveLength(2);
+    expect(graph.countPathsToRoot({ name: 'e', version: '5.0.0' })).toBe(2);
 
     expect(graph.pkgPathsToRoot({ name: 'e', version: '5.0.0' })).toEqual([
       [
@@ -135,6 +139,7 @@ test('fromJSON a pkg and a node share same id', async () => {
     { name: 'foo', version: '2' },
     { name: 'toor', version: '1.0.0' },
   ]]);
+  expect(depGraph.countPathsToRoot({ name: 'foo', version: '2' })).toBe(1);
 });
 
 test('fromJSON no deps', async () => {

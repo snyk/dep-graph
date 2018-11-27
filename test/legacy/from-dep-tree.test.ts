@@ -67,12 +67,16 @@ describe('createFromDepTree simple dysmorphic', () => {
 
   test('getPathsToRoot', async () => {
     expect(depGraph.pkgPathsToRoot({ name: 'd', version: '0.0.1' })).toHaveLength(1);
+    expect(depGraph.countPathsToRoot({ name: 'd', version: '0.0.1' })).toBe(1);
 
     expect(depGraph.pkgPathsToRoot({ name: 'd', version: '0.0.2' })).toHaveLength(1);
+    expect(depGraph.countPathsToRoot({ name: 'd', version: '0.0.2' })).toBe(1);
 
     expect(depGraph.pkgPathsToRoot({ name: 'c', version: '1.0.0' })).toHaveLength(2);
+    expect(depGraph.countPathsToRoot({ name: 'c', version: '1.0.0' })).toBe(2);
 
     expect(depGraph.pkgPathsToRoot({ name: 'e', version: '5.0.0' })).toHaveLength(2);
+    expect(depGraph.countPathsToRoot({ name: 'e', version: '5.0.0' })).toBe(2);
 
     expect(depGraph.pkgPathsToRoot({ name: 'e', version: '5.0.0' })).toEqual([
       [
@@ -141,7 +145,7 @@ describe('createFromDepTree goof', () => {
   const depTree = helpers.loadFixture('goof-dep-tree.json');
   const expectedGraph = helpers.loadFixture('goof-graph.json');
 
-  let depGraph;
+  let depGraph: types.DepGraph;
   test('create', async () => {
     depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
 
@@ -152,17 +156,31 @@ describe('createFromDepTree goof', () => {
     const depGraphInternal = depGraph as types.DepGraphInternal;
 
     const stripAnsiPkg = {name: 'strip-ansi', version: '3.0.1'};
-    const stripAnsiNodes = depGraph.getPkgNodeIds(stripAnsiPkg);
+    const stripAnsiNodes = depGraphInternal.getPkgNodeIds(stripAnsiPkg);
     expect(stripAnsiNodes).toHaveLength(2);
 
     const stripAnsiPaths = depGraph.pkgPathsToRoot(stripAnsiPkg);
     expect(stripAnsiPaths).toHaveLength(6);
+    expect(depGraph.countPathsToRoot(stripAnsiPkg)).toBe(6);
 
     expect(depGraph.pkgPathsToRoot({name: 'ansi-regex', version: '2.0.0'})).toHaveLength(4);
+    expect(depGraph.countPathsToRoot({name: 'ansi-regex', version: '2.0.0'})).toBe(4);
     expect(depGraph.pkgPathsToRoot({name: 'ansi-regex', version: '2.1.1'})).toHaveLength(3);
+    expect(depGraph.countPathsToRoot({name: 'ansi-regex', version: '2.1.1'})).toBe(3);
+    expect(depGraph.pkgPathsToRoot({name: 'wrappy', version: '1.0.2'})).toHaveLength(22);
+    expect(depGraph.countPathsToRoot({name: 'wrappy', version: '1.0.2'})).toBe(22);
 
     const expressNodes = depGraphInternal.getPkgNodeIds({name: 'express', version: '4.12.4'});
     expect(expressNodes).toHaveLength(1);
+  });
+
+  test('count paths to root', async () => {
+    for (const pkg of depGraph.getPkgs()) {
+      const firstResult = depGraph.countPathsToRoot(pkg);
+      const secondResult = depGraph.countPathsToRoot(pkg);
+      expect(secondResult).toEqual(firstResult);
+      expect(secondResult).toEqual(depGraph.pkgPathsToRoot(pkg).length);
+    }
   });
 
   test('compare to expected fixture', async () => {
