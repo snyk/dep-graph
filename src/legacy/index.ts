@@ -122,9 +122,9 @@ async function shortenNodeIds(depGraph: types.DepGraphInternal): Promise<types.D
 
       let newNodeId: string;
       if (nodeIds.length === 1) {
-        newNodeId = `${nodeId.split('|')[0]}`;
+        newNodeId = `${trimAfterLastSep(nodeId, '|')}`;
       } else {
-        newNodeId = `${nodeId.split('|')[0]}|${i + 1}`;
+        newNodeId = `${trimAfterLastSep(nodeId, '|')}|${i + 1}`;
       }
 
       nodesMap[nodeId] = newNodeId;
@@ -153,4 +153,8 @@ async function shortenNodeIds(depGraph: types.DepGraphInternal): Promise<types.D
 
 async function spinTheEventLoop() {
   return new Promise((resolve) => setImmediate(resolve));
+}
+
+function trimAfterLastSep(str: string, sep: string) {
+  return str.slice(0, str.lastIndexOf(sep));
 }

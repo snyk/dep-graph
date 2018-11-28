@@ -193,3 +193,36 @@ describe('createFromDepTree with pkg that that misses a version', () => {
     expect(depGraphInternal.getPkgNodeIds({name: 'bar'} as any)).toEqual(['bar@']);
   });
 });
+
+describe('createFromDepTree with funky pipes in the version', () => {
+  const depTree = {
+    name: 'oak',
+    version: '1.0',
+    dependencies: {
+      foo: {
+        version: '2|3',
+      },
+      bar: {
+        version: '1',
+        dependencies: {
+          foo: {
+            version: '2|4',
+          },
+        },
+      },
+    },
+  };
+
+  let depGraph: types.DepGraph;
+  test('create', async () => {
+    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'composer');
+    expect(depGraph.getPkgs()).toHaveLength(4);
+  });
+
+  test('convert to JSON and back', async () => {
+    const graphJson = depGraph.toJSON();
+    const restoredGraph = await depGraphLib.createFromJSON(graphJson);
+
+    expect(restoredGraph.getPkgs().sort()).toEqual(depGraph.getPkgs().sort());
+  });
+});
