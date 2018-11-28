@@ -5,12 +5,12 @@
 
 export interface Pkg {
   name: string;
-  version?: string; // shouldn't be null, but might happen
+  version?: string;
 }
 
 export interface PkgInfo {
   name: string;
-  version: string | null;
+  version?: string;
   // NOTE: consider adding in the future
   // requires?: {
   //   name: string;
