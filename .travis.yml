@@ -13,6 +13,7 @@ script:
 jobs:
   include:
     - stage: npm release
+      if: branch = master
       node_js: "10"
       script: skip
       after_success:
