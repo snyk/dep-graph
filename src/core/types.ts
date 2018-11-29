@@ -72,6 +72,7 @@ export interface DepGraph {
   getPkgs(): PkgInfo[];
   toJSON(): DepGraphData;
   pkgPathsToRoot(pkg: Pkg): PkgInfo[][];
+  countPathsToRoot(pkg: Pkg): number;
 }
 
 // NOTE/TODO(shaun): deferring any/all design decisions here
