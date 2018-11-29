@@ -28,7 +28,7 @@ const depTreesEqual = (a, b) => {
   return true;
 };
 
-describe('createFromDepTree simple dysmorphic', () => {
+describe('depTreeToGraph simple dysmorphic', () => {
   // NOTE: this package tree is "dysmorphic"
   // i.e. it has a package that appears twice in the tree
   // at the exact same version, but with slightly differently resolved
@@ -106,7 +106,7 @@ describe('createFromDepTree simple dysmorphic', () => {
   });
 });
 
-describe('createFromDepTree with .targetOS', () => {
+describe('depTreeToGraph with .targetOS', () => {
   const osDepTree = helpers.loadFixture('simple-dep-tree.json');
   osDepTree.targetOS = {
     name: 'ubuntu',
@@ -128,7 +128,7 @@ describe('createFromDepTree with .targetOS', () => {
   });
 });
 
-describe('createFromDepTree 0 deps', () => {
+describe('depTreeToGraph 0 deps', () => {
   const depTree = {
     name: 'desert',
     version: '2048',
@@ -141,7 +141,7 @@ describe('createFromDepTree 0 deps', () => {
   });
 });
 
-describe('createFromDepTree goof', () => {
+describe('depTreeToGraph goof', () => {
   const depTree = helpers.loadFixture('goof-dep-tree.json');
   const expectedGraph = helpers.loadFixture('goof-graph.json');
 
@@ -188,7 +188,7 @@ describe('createFromDepTree goof', () => {
   });
 });
 
-describe('createFromDepTree with pkg that that misses a version', () => {
+describe('depTreeToGraph with pkg that that misses a version', () => {
   const depTree = {
     name: 'bamboo',
     version: '1.0',
@@ -212,7 +212,7 @@ describe('createFromDepTree with pkg that that misses a version', () => {
   });
 });
 
-describe('createFromDepTree with funky pipes in the version', () => {
+describe('depTreeToGraph with funky pipes in the version', () => {
   const depTree = {
     name: 'oak',
     version: '1.0',
@@ -235,6 +235,51 @@ describe('createFromDepTree with funky pipes in the version', () => {
   test('create', async () => {
     depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'composer');
     expect(depGraph.getPkgs()).toHaveLength(4);
+  });
+
+  test('convert to JSON and back', async () => {
+    const graphJson = depGraph.toJSON();
+    const restoredGraph = await depGraphLib.createFromJSON(graphJson);
+
+    expect(restoredGraph.getPkgs().sort()).toEqual(depGraph.getPkgs().sort());
+  });
+});
+
+describe('depTreeToGraph cycle with root', () => {
+  const depTree = {
+    name: 'maple',
+    version: '3',
+    dependencies: {
+      foo: {
+        version: '2',
+      },
+      bar: {
+        version: '1',
+        dependencies: {
+          maple: {
+            version: '3',
+          },
+        },
+      },
+    },
+  };
+
+  let depGraph: types.DepGraph;
+  test('create', async () => {
+    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'composer');
+    expect(depGraph.getPkgs()).toHaveLength(3);
+
+    expect(depGraph.countPathsToRoot(depGraph.rootPkg)).toBe(2);
+    expect(depGraph.pkgPathsToRoot(depGraph.rootPkg)).toEqual([
+      [
+        {name: 'maple', version: '3'},
+      ],
+      [
+        {name: 'maple', version: '3'},
+        {name: 'bar', version: '1'},
+        {name: 'maple', version: '3'},
+      ],
+    ]);
   });
 
   test('convert to JSON and back', async () => {
