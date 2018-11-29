@@ -607,9 +607,12 @@ test('fromJSON root has several instances', async () => {
     },
   };
 
-  const go = () => depGraphLib.createFromJSON(graphJson);
-  expect(go).toThrow(/root/);
-  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+  const depGraph = depGraphLib.createFromJSON(graphJson);
+  expect(depGraph.getPkgs().sort()).toEqual([
+    {name: 'toor', version: '1.0.0'},
+    {name: 'foo', version: '2'},
+  ].sort());
+  expect(depGraph.countPathsToRoot({name: 'toor', version: '1.0.0'})).toBe(2);
 });
 
 test('fromJSON a pkg missing info field', async () => {

@@ -26,8 +26,4 @@ export function validateGraph(graph: graphlib.Graph,
     .filter((pkgId) => !pkgNodes[pkgId] || pkgNodes[pkgId].size === 0);
   assert(pkgsWithoutInstances.length === 0,
     'not all pkgs have instance nodes');
-
-  const rootPkgId = graph.node(rootNodeId).pkgId;
-  assert(pkgNodes[rootPkgId].size === 1,
-    'root pkg should have exactly one instance node');
 }
