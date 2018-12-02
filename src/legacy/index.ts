@@ -61,8 +61,9 @@ async function buildGraph(
   const hash = crypto.createHash('sha1');
 
   const deps = depTree.dependencies || {};
-  const depNames = _.keys(deps).sort();
-  for (const depName of depNames) {
+  // filter-out invalid null deps (shouldn't happen - but did...)
+  const depNames = _.keys(deps).filter((d) => !!deps[d]);
+  for (const depName of depNames.sort()) {
     const dep = deps[depName];
 
     const subtreeHash = await buildGraph(builder, dep, depName);

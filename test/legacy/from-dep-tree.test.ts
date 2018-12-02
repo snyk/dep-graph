@@ -289,3 +289,29 @@ describe('depTreeToGraph cycle with root', () => {
     expect(restoredGraph.getPkgs().sort()).toEqual(depGraph.getPkgs().sort());
   });
 });
+
+describe('depTreeToGraph with (invalid) null dependency', () => {
+  const depTree = {
+    name: 'pine',
+    version: '4',
+    dependencies: {
+      foo: {
+        version: '1',
+      },
+      bar: null,
+      baz: {
+        version: '3',
+      },
+    },
+  };
+
+  let depGraph: types.DepGraph;
+  test('create', async () => {
+    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'composer');
+    expect(_.sortBy(depGraph.getPkgs(), 'name')).toEqual(_.sortBy([
+      {name: 'pine', version: '4'},
+      {name: 'foo', version: '1'},
+      {name: 'baz', version: '3'},
+    ], 'name'));
+  });
+});
