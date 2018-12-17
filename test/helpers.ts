@@ -1,8 +1,6 @@
+import * as _ from 'lodash';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as depGraphLib from '../src';
-import * as types from '../src/core/types';
-import {DepTree} from '../src/legacy';
 
 export function loadFixture(name: string) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, `fixtures/${name}`), 'utf8'));
@@ -22,58 +20,27 @@ export function depSort(a, b) {
   return 0;
 }
 
-export async function graphToDepTree(depGraphInterface: depGraphLib.DepGraph): Promise<DepTree> {
-
-  const depGraph = (depGraphInterface as types.DepGraphInternal);
-
-  // TODO: implement cycles support
-  if (depGraph.hasCycles()) {
-    throw new Error('Conversion to DepTree does not support cyclic graphs yet');
+export function depTreesEqual(a, b) {
+  if (a.name !== b.name || a.version !== b.version) {
+    return false;
   }
 
-  const depTree = await buildSubtree(depGraph, depGraph.rootNodeId);
+  const aDeps = a.dependencies || {};
+  const bDeps = b.dependencies || {};
 
-  (depTree as any).packageFormatVersion = constructPackageFormatVersion(depGraph);
-
-  return depTree;
-}
-
-function constructPackageFormatVersion(depGraph: types.DepGraph): string {
-  let packageManagerShorthand = depGraph.pkgManager.name;
-  if (depGraph.pkgManager.name === 'maven') {
-    packageManagerShorthand = 'mvn';
-  }
-  return `${packageManagerShorthand}:0.0.1`;
-}
-
-async function buildSubtree(depGraph: types.DepGraphInternal, nodeId: string): Promise<DepTree> {
-  const nodePkg = depGraph.getNodePkg(nodeId);
-  const depTree: DepTree = {};
-  depTree.name = nodePkg.name;
-  depTree.version = nodePkg.version;
-
-  const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
-  if (!depInstanceIds || depInstanceIds.length === 0) {
-    return depTree;
+  if (_.keys(aDeps).sort().join(',') !== _.keys(bDeps).sort().join(',')) {
+    return false;
   }
 
-  for (const depInstId of depInstanceIds) {
-    const subtree = await buildSubtree(depGraph, depInstId);
-    if (!subtree) {
-      continue;
+  for (const depName of _.keys(aDeps)) {
+    const aSubtree = aDeps[depName];
+    const bSubtree = bDeps[depName];
+
+    const isEq = depTreesEqual(aSubtree, bSubtree);
+    if (!isEq) {
+      return false;
     }
-
-    if (!depTree.dependencies) {
-      depTree.dependencies = {};
-    }
-
-    depTree.dependencies[subtree.name] = subtree;
   }
 
-  await spinTheEventLoop();
-  return depTree;
-}
-
-async function spinTheEventLoop() {
-  return new Promise((resolve) => setImmediate(resolve));
+  return true;
 }

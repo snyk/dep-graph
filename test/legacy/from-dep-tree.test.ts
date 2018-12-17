@@ -3,31 +3,6 @@ import * as depGraphLib from '../../src';
 import * as types from '../../src/core/types';
 import * as helpers from '../helpers';
 
-const depTreesEqual = (a, b) => {
-  if (a.name !== b.name || a.version !== b.version) {
-    return false;
-  }
-
-  const aDeps = a.dependencies || {};
-  const bDeps = b.dependencies || {};
-
-  if (_.keys(aDeps).sort().join(',') !== _.keys(bDeps).sort().join(',')) {
-    return false;
-  }
-
-  for (const depName of _.keys(aDeps)) {
-    const aSubtree = aDeps[depName];
-    const bSubtree = bDeps[depName];
-
-    const isEq = depTreesEqual(aSubtree, bSubtree);
-    if (!isEq) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
 describe('depTreeToGraph simple dysmorphic', () => {
   // NOTE: this package tree is "dysmorphic"
   // i.e. it has a package that appears twice in the tree
@@ -97,8 +72,8 @@ describe('depTreeToGraph simple dysmorphic', () => {
   });
 
   test('convert back to depTree & compare', async () => {
-    const restoredDepTree = await helpers.graphToDepTree(depGraph);
-    expect(depTreesEqual(restoredDepTree, simpleDepTree)).toBe(true);
+    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'mvn');
+    expect(helpers.depTreesEqual(restoredDepTree, simpleDepTree)).toBe(true);
   });
 
   test('compare to expected graph json', async () => {

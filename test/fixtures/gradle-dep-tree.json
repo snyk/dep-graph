@@ -1,0 +1,775 @@
+{
+  "dependencies": {
+    "org.springframework.boot:spring-boot-starter-web": {
+      "version": "1.0.0.RC1",
+      "name": "org.springframework.boot:spring-boot-starter-web",
+      "dependencies": {
+        "org.springframework.boot:spring-boot-starter": {
+          "version": "1.0.0.RC1",
+          "name": "org.springframework.boot:spring-boot-starter",
+          "dependencies": {
+            "org.springframework.boot:spring-boot": {
+              "version": "1.0.0.RC1",
+              "name": "org.springframework.boot:spring-boot",
+              "dependencies": {
+                "org.springframework:spring-core": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-core",
+                  "dependencies": {
+                    "commons-logging:commons-logging": {
+                      "version": "1.1.1",
+                      "name": "commons-logging:commons-logging"
+                    }
+                  }
+                },
+                "org.springframework:spring-context": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-context",
+                  "dependencies": {
+                    "org.springframework:spring-aop": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-aop",
+                      "dependencies": {
+                        "aopalliance:aopalliance": {
+                          "version": "1.0",
+                          "name": "aopalliance:aopalliance"
+                        },
+                        "org.springframework:spring-beans": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-beans",
+                          "dependencies": {
+                            "org.springframework:spring-core": {
+                              "version": "4.0.0.RELEASE",
+                              "name": "org.springframework:spring-core",
+                              "dependencies": {
+                                "commons-logging:commons-logging": {
+                                  "version": "1.1.1",
+                                  "name": "commons-logging:commons-logging"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "org.springframework:spring-core": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-core",
+                          "dependencies": {
+                            "commons-logging:commons-logging": {
+                              "version": "1.1.1",
+                              "name": "commons-logging:commons-logging"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "org.springframework:spring-beans": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-beans",
+                      "dependencies": {
+                        "org.springframework:spring-core": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-core",
+                          "dependencies": {
+                            "commons-logging:commons-logging": {
+                              "version": "1.1.1",
+                              "name": "commons-logging:commons-logging"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    },
+                    "org.springframework:spring-expression": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-expression",
+                      "dependencies": {
+                        "org.springframework:spring-core": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-core",
+                          "dependencies": {
+                            "commons-logging:commons-logging": {
+                              "version": "1.1.1",
+                              "name": "commons-logging:commons-logging"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "org.springframework.boot:spring-boot-autoconfigure": {
+              "version": "1.0.0.RC1",
+              "name": "org.springframework.boot:spring-boot-autoconfigure",
+              "dependencies": {
+                "org.springframework.boot:spring-boot": {
+                  "version": "1.0.0.RC1",
+                  "name": "org.springframework.boot:spring-boot",
+                  "dependencies": {
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    },
+                    "org.springframework:spring-context": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-context",
+                      "dependencies": {
+                        "org.springframework:spring-aop": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-aop",
+                          "dependencies": {
+                            "aopalliance:aopalliance": {
+                              "version": "1.0",
+                              "name": "aopalliance:aopalliance"
+                            },
+                            "org.springframework:spring-beans": {
+                              "version": "4.0.0.RELEASE",
+                              "name": "org.springframework:spring-beans",
+                              "dependencies": {
+                                "org.springframework:spring-core": {
+                                  "version": "4.0.0.RELEASE",
+                                  "name": "org.springframework:spring-core",
+                                  "dependencies": {
+                                    "commons-logging:commons-logging": {
+                                      "version": "1.1.1",
+                                      "name": "commons-logging:commons-logging"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "org.springframework:spring-core": {
+                              "version": "4.0.0.RELEASE",
+                              "name": "org.springframework:spring-core",
+                              "dependencies": {
+                                "commons-logging:commons-logging": {
+                                  "version": "1.1.1",
+                                  "name": "commons-logging:commons-logging"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "org.springframework:spring-beans": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-beans",
+                          "dependencies": {
+                            "org.springframework:spring-core": {
+                              "version": "4.0.0.RELEASE",
+                              "name": "org.springframework:spring-core",
+                              "dependencies": {
+                                "commons-logging:commons-logging": {
+                                  "version": "1.1.1",
+                                  "name": "commons-logging:commons-logging"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "org.springframework:spring-core": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-core",
+                          "dependencies": {
+                            "commons-logging:commons-logging": {
+                              "version": "1.1.1",
+                              "name": "commons-logging:commons-logging"
+                            }
+                          }
+                        },
+                        "org.springframework:spring-expression": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-expression",
+                          "dependencies": {
+                            "org.springframework:spring-core": {
+                              "version": "4.0.0.RELEASE",
+                              "name": "org.springframework:spring-core",
+                              "dependencies": {
+                                "commons-logging:commons-logging": {
+                                  "version": "1.1.1",
+                                  "name": "commons-logging:commons-logging"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "org.springframework.boot:spring-boot-starter-logging": {
+              "version": "1.0.0.RC1",
+              "name": "org.springframework.boot:spring-boot-starter-logging",
+              "dependencies": {
+                "org.slf4j:jcl-over-slf4j": {
+                  "version": "1.7.5",
+                  "name": "org.slf4j:jcl-over-slf4j",
+                  "dependencies": {
+                    "org.slf4j:slf4j-api": {
+                      "version": "1.7.5",
+                      "name": "org.slf4j:slf4j-api"
+                    }
+                  }
+                },
+                "org.slf4j:jul-to-slf4j": {
+                  "version": "1.7.5",
+                  "name": "org.slf4j:jul-to-slf4j",
+                  "dependencies": {
+                    "org.slf4j:slf4j-api": {
+                      "version": "1.7.5",
+                      "name": "org.slf4j:slf4j-api"
+                    }
+                  }
+                },
+                "org.slf4j:log4j-over-slf4j": {
+                  "version": "1.7.5",
+                  "name": "org.slf4j:log4j-over-slf4j",
+                  "dependencies": {
+                    "org.slf4j:slf4j-api": {
+                      "version": "1.7.5",
+                      "name": "org.slf4j:slf4j-api"
+                    }
+                  }
+                },
+                "ch.qos.logback:logback-classic": {
+                  "version": "1.0.13",
+                  "name": "ch.qos.logback:logback-classic",
+                  "dependencies": {
+                    "ch.qos.logback:logback-core": {
+                      "version": "1.0.13",
+                      "name": "ch.qos.logback:logback-core"
+                    },
+                    "org.slf4j:slf4j-api": {
+                      "version": "1.7.5",
+                      "name": "org.slf4j:slf4j-api"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "org.springframework.boot:spring-boot-starter-tomcat": {
+          "version": "1.0.0.RC1",
+          "name": "org.springframework.boot:spring-boot-starter-tomcat",
+          "dependencies": {
+            "org.apache.tomcat.embed:tomcat-embed-core": {
+              "version": "7.0.47",
+              "name": "org.apache.tomcat.embed:tomcat-embed-core"
+            },
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli": {
+              "version": "7.0.47",
+              "name": "org.apache.tomcat.embed:tomcat-embed-logging-juli"
+            }
+          }
+        },
+        "com.fasterxml.jackson.core:jackson-databind": {
+          "version": "2.3.1",
+          "name": "com.fasterxml.jackson.core:jackson-databind",
+          "dependencies": {
+            "com.fasterxml.jackson.core:jackson-annotations": {
+              "version": "2.3.0",
+              "name": "com.fasterxml.jackson.core:jackson-annotations"
+            },
+            "com.fasterxml.jackson.core:jackson-core": {
+              "version": "2.3.1",
+              "name": "com.fasterxml.jackson.core:jackson-core"
+            }
+          }
+        },
+        "org.springframework:spring-web": {
+          "version": "4.0.0.RELEASE",
+          "name": "org.springframework:spring-web",
+          "dependencies": {
+            "aopalliance:aopalliance": {
+              "version": "1.0",
+              "name": "aopalliance:aopalliance"
+            },
+            "org.springframework:spring-aop": {
+              "version": "4.0.0.RELEASE",
+              "name": "org.springframework:spring-aop",
+              "dependencies": {
+                "aopalliance:aopalliance": {
+                  "version": "1.0",
+                  "name": "aopalliance:aopalliance"
+                },
+                "org.springframework:spring-beans": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-beans",
+                  "dependencies": {
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    }
+                  }
+                },
+                "org.springframework:spring-core": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-core",
+                  "dependencies": {
+                    "commons-logging:commons-logging": {
+                      "version": "1.1.1",
+                      "name": "commons-logging:commons-logging"
+                    }
+                  }
+                }
+              }
+            },
+            "org.springframework:spring-beans": {
+              "version": "4.0.0.RELEASE",
+              "name": "org.springframework:spring-beans",
+              "dependencies": {
+                "org.springframework:spring-core": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-core",
+                  "dependencies": {
+                    "commons-logging:commons-logging": {
+                      "version": "1.1.1",
+                      "name": "commons-logging:commons-logging"
+                    }
+                  }
+                }
+              }
+            },
+            "org.springframework:spring-context": {
+              "version": "4.0.0.RELEASE",
+              "name": "org.springframework:spring-context",
+              "dependencies": {
+                "org.springframework:spring-aop": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-aop",
+                  "dependencies": {
+                    "aopalliance:aopalliance": {
+                      "version": "1.0",
+                      "name": "aopalliance:aopalliance"
+                    },
+                    "org.springframework:spring-beans": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-beans",
+                      "dependencies": {
+                        "org.springframework:spring-core": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-core",
+                          "dependencies": {
+                            "commons-logging:commons-logging": {
+                              "version": "1.1.1",
+                              "name": "commons-logging:commons-logging"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    }
+                  }
+                },
+                "org.springframework:spring-beans": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-beans",
+                  "dependencies": {
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    }
+                  }
+                },
+                "org.springframework:spring-core": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-core",
+                  "dependencies": {
+                    "commons-logging:commons-logging": {
+                      "version": "1.1.1",
+                      "name": "commons-logging:commons-logging"
+                    }
+                  }
+                },
+                "org.springframework:spring-expression": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-expression",
+                  "dependencies": {
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "org.springframework:spring-core": {
+              "version": "4.0.0.RELEASE",
+              "name": "org.springframework:spring-core",
+              "dependencies": {
+                "commons-logging:commons-logging": {
+                  "version": "1.1.1",
+                  "name": "commons-logging:commons-logging"
+                }
+              }
+            }
+          }
+        },
+        "org.springframework:spring-webmvc": {
+          "version": "4.0.0.RELEASE",
+          "name": "org.springframework:spring-webmvc",
+          "dependencies": {
+            "org.springframework:spring-beans": {
+              "version": "4.0.0.RELEASE",
+              "name": "org.springframework:spring-beans",
+              "dependencies": {
+                "org.springframework:spring-core": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-core",
+                  "dependencies": {
+                    "commons-logging:commons-logging": {
+                      "version": "1.1.1",
+                      "name": "commons-logging:commons-logging"
+                    }
+                  }
+                }
+              }
+            },
+            "org.springframework:spring-context": {
+              "version": "4.0.0.RELEASE",
+              "name": "org.springframework:spring-context",
+              "dependencies": {
+                "org.springframework:spring-aop": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-aop",
+                  "dependencies": {
+                    "aopalliance:aopalliance": {
+                      "version": "1.0",
+                      "name": "aopalliance:aopalliance"
+                    },
+                    "org.springframework:spring-beans": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-beans",
+                      "dependencies": {
+                        "org.springframework:spring-core": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-core",
+                          "dependencies": {
+                            "commons-logging:commons-logging": {
+                              "version": "1.1.1",
+                              "name": "commons-logging:commons-logging"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    }
+                  }
+                },
+                "org.springframework:spring-beans": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-beans",
+                  "dependencies": {
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    }
+                  }
+                },
+                "org.springframework:spring-core": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-core",
+                  "dependencies": {
+                    "commons-logging:commons-logging": {
+                      "version": "1.1.1",
+                      "name": "commons-logging:commons-logging"
+                    }
+                  }
+                },
+                "org.springframework:spring-expression": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-expression",
+                  "dependencies": {
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "org.springframework:spring-core": {
+              "version": "4.0.0.RELEASE",
+              "name": "org.springframework:spring-core",
+              "dependencies": {
+                "commons-logging:commons-logging": {
+                  "version": "1.1.1",
+                  "name": "commons-logging:commons-logging"
+                }
+              }
+            },
+            "org.springframework:spring-expression": {
+              "version": "4.0.0.RELEASE",
+              "name": "org.springframework:spring-expression",
+              "dependencies": {
+                "org.springframework:spring-core": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-core",
+                  "dependencies": {
+                    "commons-logging:commons-logging": {
+                      "version": "1.1.1",
+                      "name": "commons-logging:commons-logging"
+                    }
+                  }
+                }
+              }
+            },
+            "org.springframework:spring-web": {
+              "version": "4.0.0.RELEASE",
+              "name": "org.springframework:spring-web",
+              "dependencies": {
+                "aopalliance:aopalliance": {
+                  "version": "1.0",
+                  "name": "aopalliance:aopalliance"
+                },
+                "org.springframework:spring-aop": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-aop",
+                  "dependencies": {
+                    "aopalliance:aopalliance": {
+                      "version": "1.0",
+                      "name": "aopalliance:aopalliance"
+                    },
+                    "org.springframework:spring-beans": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-beans",
+                      "dependencies": {
+                        "org.springframework:spring-core": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-core",
+                          "dependencies": {
+                            "commons-logging:commons-logging": {
+                              "version": "1.1.1",
+                              "name": "commons-logging:commons-logging"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    }
+                  }
+                },
+                "org.springframework:spring-beans": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-beans",
+                  "dependencies": {
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    }
+                  }
+                },
+                "org.springframework:spring-context": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-context",
+                  "dependencies": {
+                    "org.springframework:spring-aop": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-aop",
+                      "dependencies": {
+                        "aopalliance:aopalliance": {
+                          "version": "1.0",
+                          "name": "aopalliance:aopalliance"
+                        },
+                        "org.springframework:spring-beans": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-beans",
+                          "dependencies": {
+                            "org.springframework:spring-core": {
+                              "version": "4.0.0.RELEASE",
+                              "name": "org.springframework:spring-core",
+                              "dependencies": {
+                                "commons-logging:commons-logging": {
+                                  "version": "1.1.1",
+                                  "name": "commons-logging:commons-logging"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "org.springframework:spring-core": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-core",
+                          "dependencies": {
+                            "commons-logging:commons-logging": {
+                              "version": "1.1.1",
+                              "name": "commons-logging:commons-logging"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "org.springframework:spring-beans": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-beans",
+                      "dependencies": {
+                        "org.springframework:spring-core": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-core",
+                          "dependencies": {
+                            "commons-logging:commons-logging": {
+                              "version": "1.1.1",
+                              "name": "commons-logging:commons-logging"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "org.springframework:spring-core": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-core",
+                      "dependencies": {
+                        "commons-logging:commons-logging": {
+                          "version": "1.1.1",
+                          "name": "commons-logging:commons-logging"
+                        }
+                      }
+                    },
+                    "org.springframework:spring-expression": {
+                      "version": "4.0.0.RELEASE",
+                      "name": "org.springframework:spring-expression",
+                      "dependencies": {
+                        "org.springframework:spring-core": {
+                          "version": "4.0.0.RELEASE",
+                          "name": "org.springframework:spring-core",
+                          "dependencies": {
+                            "commons-logging:commons-logging": {
+                              "version": "1.1.1",
+                              "name": "commons-logging:commons-logging"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "org.springframework:spring-core": {
+                  "version": "4.0.0.RELEASE",
+                  "name": "org.springframework:spring-core",
+                  "dependencies": {
+                    "commons-logging:commons-logging": {
+                      "version": "1.1.1",
+                      "name": "commons-logging:commons-logging"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "org.thymeleaf:thymeleaf-spring4": {
+      "version": "2.1.2.RELEASE",
+      "name": "org.thymeleaf:thymeleaf-spring4",
+      "dependencies": {
+        "org.thymeleaf:thymeleaf": {
+          "version": "2.1.2.RELEASE",
+          "name": "org.thymeleaf:thymeleaf",
+          "dependencies": {
+            "ognl:ognl": {
+              "version": "3.0.6",
+              "name": "ognl:ognl"
+            },
+            "org.javassist:javassist": {
+              "version": "3.16.1-GA",
+              "name": "org.javassist:javassist"
+            },
+            "org.slf4j:slf4j-api": {
+              "version": "1.7.5",
+              "name": "org.slf4j:slf4j-api"
+            }
+          }
+        },
+        "org.slf4j:slf4j-api": {
+          "version": "1.7.5",
+          "name": "org.slf4j:slf4j-api"
+        }
+      }
+    }
+  },
+  "name": "horse-racing",
+  "version": "0.0.0",
+  "packageFormatVersion": "mvn:0.0.1"
+}
