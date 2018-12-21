@@ -1,0 +1,323 @@
+{
+  "packageFormatVersion": "pip:0.0.1",
+  "version": "0.0.0",
+  "name": "pip-app",
+  "dependencies": {
+    "python-etcd": {
+      "version": "0.4.5",
+      "name": "python-etcd",
+      "dependencies": {
+        "dnspython": {
+          "version": "1.15.0",
+          "name": "dnspython"
+        },
+        "urllib3": {
+          "version": "1.23",
+          "name": "urllib3"
+        }
+      }
+    },
+    "testtools": {
+      "version": "2.3.0",
+      "name": "testtools",
+      "dependencies": {
+        "pbr": {
+          "version": "4.0.4",
+          "name": "pbr"
+        },
+        "six": {
+          "version": "1.11.0",
+          "name": "six"
+        },
+        "extras": {
+          "version": "1.0.0",
+          "name": "extras"
+        },
+        "fixtures": {
+          "version": "3.0.0",
+          "name": "fixtures",
+          "dependencies": {
+            "six": {
+              "version": "1.11.0",
+              "name": "six"
+            },
+            "pbr": {
+              "version": "4.0.4",
+              "name": "pbr"
+            }
+          }
+        },
+        "python-mimeparse": {
+          "version": "1.6.0",
+          "name": "python-mimeparse"
+        },
+        "unittest2": {
+          "version": "1.1.0",
+          "name": "unittest2",
+          "dependencies": {
+            "argparse": {
+              "version": "1.4.0",
+              "name": "argparse"
+            },
+            "six": {
+              "version": "1.11.0",
+              "name": "six"
+            },
+            "traceback2": {
+              "version": "1.4.0",
+              "name": "traceback2",
+              "dependencies": {
+                "linecache2": {
+                  "version": "1.0.0",
+                  "name": "linecache2"
+                }
+              }
+            }
+          }
+        },
+        "traceback2": {
+          "version": "1.4.0",
+          "name": "traceback2",
+          "dependencies": {
+            "linecache2": {
+              "version": "1.0.0",
+              "name": "linecache2"
+            }
+          }
+        }
+      }
+    },
+    "django-select2": {
+      "version": "6.0.1",
+      "name": "django-select2",
+      "dependencies": {
+        "django-appconf": {
+          "version": "1.0.2",
+          "name": "django-appconf"
+        }
+      }
+    },
+    "django": {
+      "version": "1.6.1",
+      "name": "django"
+    },
+    "jinja2": {
+      "version": "2.7.2",
+      "name": "jinja2",
+      "dependencies": {
+        "markupsafe": {
+          "version": "1.0",
+          "name": "markupsafe"
+        }
+      }
+    },
+    "irc": {
+      "version": "16.2",
+      "name": "irc",
+      "dependencies": {
+        "more-itertools": {
+          "version": "4.2.0",
+          "name": "more-itertools",
+          "dependencies": {
+            "six": {
+              "version": "1.11.0",
+              "name": "six"
+            }
+          }
+        },
+        "six": {
+          "version": "1.11.0",
+          "name": "six"
+        },
+        "jaraco.text": {
+          "version": "1.10.1",
+          "name": "jaraco.text",
+          "dependencies": {
+            "jaraco.functools": {
+              "version": "1.19",
+              "name": "jaraco.functools",
+              "dependencies": {
+                "more-itertools": {
+                  "version": "4.2.0",
+                  "name": "more-itertools",
+                  "dependencies": {
+                    "six": {
+                      "version": "1.11.0",
+                      "name": "six"
+                    }
+                  }
+                },
+                "backports.functools-lru-cache": {
+                  "version": "1.5",
+                  "name": "backports.functools-lru-cache"
+                }
+              }
+            },
+            "jaraco.collections": {
+              "version": "1.5.3",
+              "name": "jaraco.collections",
+              "dependencies": {
+                "jaraco.classes": {
+                  "version": "1.5",
+                  "name": "jaraco.classes",
+                  "dependencies": {
+                    "six": {
+                      "version": "1.11.0",
+                      "name": "six"
+                    }
+                  }
+                },
+                "six": {
+                  "version": "1.11.0",
+                  "name": "six"
+                }
+              }
+            }
+          }
+        },
+        "pytz": {
+          "version": "2018.4",
+          "name": "pytz"
+        },
+        "jaraco.itertools": {
+          "version": "2.3",
+          "name": "jaraco.itertools",
+          "dependencies": {
+            "more-itertools": {
+              "version": "4.2.0",
+              "name": "more-itertools",
+              "dependencies": {
+                "six": {
+                  "version": "1.11.0",
+                  "name": "six"
+                }
+              }
+            },
+            "inflect": {
+              "version": "0.3.1",
+              "name": "inflect"
+            },
+            "six": {
+              "version": "1.11.0",
+              "name": "six"
+            }
+          }
+        },
+        "jaraco.stream": {
+          "version": "1.2",
+          "name": "jaraco.stream",
+          "dependencies": {
+            "six": {
+              "version": "1.11.0",
+              "name": "six"
+            }
+          }
+        },
+        "jaraco.logging": {
+          "version": "1.5.2",
+          "name": "jaraco.logging",
+          "dependencies": {
+            "six": {
+              "version": "1.11.0",
+              "name": "six"
+            },
+            "tempora": {
+              "version": "1.12",
+              "name": "tempora",
+              "dependencies": {
+                "pytz": {
+                  "version": "2018.4",
+                  "name": "pytz"
+                },
+                "six": {
+                  "version": "1.11.0",
+                  "name": "six"
+                }
+              }
+            }
+          }
+        },
+        "jaraco.collections": {
+          "version": "1.5.3",
+          "name": "jaraco.collections",
+          "dependencies": {
+            "jaraco.classes": {
+              "version": "1.5",
+              "name": "jaraco.classes",
+              "dependencies": {
+                "six": {
+                  "version": "1.11.0",
+                  "name": "six"
+                }
+              }
+            },
+            "six": {
+              "version": "1.11.0",
+              "name": "six"
+            },
+            "jaraco.text": {
+              "version": "1.10.1",
+              "name": "jaraco.text",
+              "dependencies": {
+                "jaraco.functools": {
+                  "version": "1.19",
+                  "name": "jaraco.functools",
+                  "dependencies": {
+                    "more-itertools": {
+                      "version": "4.2.0",
+                      "name": "more-itertools",
+                      "dependencies": {
+                        "six": {
+                          "version": "1.11.0",
+                          "name": "six"
+                        }
+                      }
+                    },
+                    "backports.functools-lru-cache": {
+                      "version": "1.5",
+                      "name": "backports.functools-lru-cache"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "jaraco.functools": {
+          "version": "1.19",
+          "name": "jaraco.functools",
+          "dependencies": {
+            "more-itertools": {
+              "version": "4.2.0",
+              "name": "more-itertools",
+              "dependencies": {
+                "six": {
+                  "version": "1.11.0",
+                  "name": "six"
+                }
+              }
+            },
+            "backports.functools-lru-cache": {
+              "version": "1.5",
+              "name": "backports.functools-lru-cache"
+            }
+          }
+        },
+        "tempora": {
+          "version": "1.12",
+          "name": "tempora",
+          "dependencies": {
+            "pytz": {
+              "version": "2018.4",
+              "name": "pytz"
+            },
+            "six": {
+              "version": "1.11.0",
+              "name": "six"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,77 +1,52 @@
 {
   "dependencies": {
     "dustjs-linkedin": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "dustjs-linkedin",
       "version": "2.5.0"
     },
     "dustjs-helpers": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "dustjs-helpers",
       "version": "1.5.0"
     },
     "ejs": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "ejs",
       "version": "1.0.0"
     },
     "jquery": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "jquery",
       "version": "2.2.4"
     },
     "marked": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "marked",
       "version": "0.3.5"
     },
     "moment": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "moment",
       "version": "2.15.1"
     },
     "ms": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "ms",
       "version": "0.7.3"
     },
     "optional": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "optional",
       "version": "0.1.4"
     },
     "stream-buffers": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "stream-buffers",
       "version": "3.0.2"
     },
     "adm-zip": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "adm-zip",
       "version": "0.4.7"
     },
     "file-type": {
-      "depType": "prod",
-      "dependencies": {},
       "name": "file-type",
       "version": "8.1.0"
     },
     "ejs-locals": {
-      "depType": "prod",
       "dependencies": {
         "ejs": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "ejs",
           "version": "0.8.8"
         }
@@ -80,11 +55,8 @@
       "version": "1.0.2"
     },
     "humanize-ms": {
-      "depType": "prod",
       "dependencies": {
         "ms": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "ms",
           "version": "0.6.2"
         }
@@ -93,17 +65,12 @@
       "version": "1.0.1"
     },
     "cookie-parser": {
-      "depType": "prod",
       "dependencies": {
         "cookie": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "cookie",
           "version": "0.1.2"
         },
         "cookie-signature": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "cookie-signature",
           "version": "1.0.5"
         }
@@ -112,11 +79,8 @@
       "version": "1.3.3"
     },
     "consolidate": {
-      "depType": "prod",
       "dependencies": {
         "bluebird": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "bluebird",
           "version": "3.5.2"
         }
@@ -125,32 +89,22 @@
       "version": "0.14.5"
     },
     "method-override": {
-      "depType": "prod",
       "dependencies": {
         "vary": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "vary",
           "version": "1.1.2"
         },
         "methods": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "methods",
           "version": "1.1.2"
         },
         "parseurl": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "parseurl",
           "version": "1.3.2"
         },
         "debug": {
-          "depType": "prod",
           "dependencies": {
             "ms": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "ms",
               "version": "2.0.0"
             }
@@ -163,26 +117,18 @@
       "version": "3.0.0"
     },
     "morgan": {
-      "depType": "prod",
       "dependencies": {
         "depd": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "depd",
           "version": "1.1.2"
         },
         "on-headers": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "on-headers",
           "version": "1.0.1"
         },
         "debug": {
-          "depType": "prod",
           "dependencies": {
             "ms": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "ms",
               "version": "2.0.0"
             }
@@ -191,11 +137,8 @@
           "version": "2.6.9"
         },
         "on-finished": {
-          "depType": "prod",
           "dependencies": {
             "ee-first": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "ee-first",
               "version": "1.1.1"
             }
@@ -204,11 +147,8 @@
           "version": "2.3.0"
         },
         "basic-auth": {
-          "depType": "prod",
           "dependencies": {
             "safe-buffer": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "safe-buffer",
               "version": "5.1.2"
             }
@@ -221,56 +161,38 @@
       "version": "1.9.1"
     },
     "npmconf": {
-      "depType": "prod",
       "dependencies": {
         "inherits": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "inherits",
           "version": "1.0.2"
         },
         "once": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "once",
           "version": "1.1.1"
         },
         "ini": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "ini",
           "version": "1.1.0"
         },
         "mkdirp": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "mkdirp",
           "version": "0.3.5"
         },
         "osenv": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "osenv",
           "version": "0.0.3"
         },
         "semver": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "semver",
           "version": "1.1.4"
         },
         "config-chain": {
-          "depType": "prod",
           "dependencies": {
             "ini": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "ini",
               "version": "1.3.5"
             },
             "proto-list": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "proto-list",
               "version": "1.2.4"
             }
@@ -279,11 +201,8 @@
           "version": "1.1.12"
         },
         "nopt": {
-          "depType": "prod",
           "dependencies": {
             "abbrev": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "abbrev",
               "version": "1.1.1"
             }
@@ -296,38 +215,26 @@
       "version": "0.0.24"
     },
     "st": {
-      "depType": "prod",
       "dependencies": {
         "graceful-fs": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "graceful-fs",
           "version": "1.2.3"
         },
         "mime": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "mime",
           "version": "1.2.11"
         },
         "negotiator": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "negotiator",
           "version": "0.2.8"
         },
         "fd": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "fd",
           "version": "0.0.3"
         },
         "async-cache": {
-          "depType": "prod",
           "dependencies": {
             "lru-cache": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "lru-cache",
               "version": "2.3.1"
             }
@@ -340,44 +247,30 @@
       "version": "0.2.4"
     },
     "body-parser": {
-      "depType": "prod",
       "dependencies": {
         "bytes": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "bytes",
           "version": "1.0.0"
         },
         "depd": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "depd",
           "version": "1.0.1"
         },
         "iconv-lite": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "iconv-lite",
           "version": "0.4.4"
         },
         "media-typer": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "media-typer",
           "version": "0.3.0"
         },
         "qs": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "qs",
           "version": "2.2.4"
         },
         "on-finished": {
-          "depType": "prod",
           "dependencies": {
             "ee-first": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "ee-first",
               "version": "1.0.5"
             }
@@ -386,17 +279,12 @@
           "version": "2.1.0"
         },
         "raw-body": {
-          "depType": "prod",
           "dependencies": {
             "bytes": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "bytes",
               "version": "1.0.0"
             },
             "iconv-lite": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "iconv-lite",
               "version": "0.4.4"
             }
@@ -405,20 +293,14 @@
           "version": "1.3.0"
         },
         "type-is": {
-          "depType": "prod",
           "dependencies": {
             "media-typer": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "media-typer",
               "version": "0.3.0"
             },
             "mime-types": {
-              "depType": "prod",
               "dependencies": {
                 "mime-db": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "mime-db",
                   "version": "1.12.0"
                 }
@@ -435,35 +317,24 @@
       "version": "1.9.0"
     },
     "cfenv": {
-      "depType": "prod",
       "dependencies": {
         "ports": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "ports",
           "version": "1.1.0"
         },
         "underscore": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "underscore",
           "version": "1.8.3"
         },
         "js-yaml": {
-          "depType": "prod",
           "dependencies": {
             "esprima": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "esprima",
               "version": "4.0.1"
             },
             "argparse": {
-              "depType": "prod",
               "dependencies": {
                 "sprintf-js": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "sprintf-js",
                   "version": "1.0.3"
                 }
@@ -480,29 +351,20 @@
       "version": "1.1.0"
     },
     "errorhandler": {
-      "depType": "prod",
       "dependencies": {
         "escape-html": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "escape-html",
           "version": "1.0.1"
         },
         "accepts": {
-          "depType": "prod",
           "dependencies": {
             "negotiator": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "negotiator",
               "version": "0.4.9"
             },
             "mime-types": {
-              "depType": "prod",
               "dependencies": {
                 "mime-db": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "mime-db",
                   "version": "1.12.0"
                 }
@@ -519,104 +381,70 @@
       "version": "1.2.0"
     },
     "express": {
-      "depType": "prod",
       "dependencies": {
         "cookie-signature": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "cookie-signature",
           "version": "1.0.6"
         },
         "qs": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "qs",
           "version": "2.4.2"
         },
         "content-disposition": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "content-disposition",
           "version": "0.5.0"
         },
         "content-type": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "content-type",
           "version": "1.0.4"
         },
         "cookie": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "cookie",
           "version": "0.1.2"
         },
         "depd": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "depd",
           "version": "1.0.1"
         },
         "escape-html": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "escape-html",
           "version": "1.0.1"
         },
         "fresh": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "fresh",
           "version": "0.2.4"
         },
         "merge-descriptors": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "merge-descriptors",
           "version": "1.0.0"
         },
         "methods": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "methods",
           "version": "1.1.2"
         },
         "parseurl": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "parseurl",
           "version": "1.3.2"
         },
         "path-to-regexp": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "path-to-regexp",
           "version": "0.1.3"
         },
         "range-parser": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "range-parser",
           "version": "1.0.3"
         },
         "utils-merge": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "utils-merge",
           "version": "1.0.0"
         },
         "vary": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "vary",
           "version": "1.0.1"
         },
         "debug": {
-          "depType": "prod",
           "dependencies": {
             "ms": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "ms",
               "version": "0.7.1"
             }
@@ -625,11 +453,8 @@
           "version": "2.2.0"
         },
         "on-finished": {
-          "depType": "prod",
           "dependencies": {
             "ee-first": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "ee-first",
               "version": "1.1.0"
             }
@@ -638,11 +463,8 @@
           "version": "2.2.1"
         },
         "etag": {
-          "depType": "prod",
           "dependencies": {
             "crc": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "crc",
               "version": "3.2.1"
             }
@@ -651,17 +473,12 @@
           "version": "1.6.0"
         },
         "proxy-addr": {
-          "depType": "prod",
           "dependencies": {
             "forwarded": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "forwarded",
               "version": "0.1.2"
             },
             "ipaddr.js": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "ipaddr.js",
               "version": "1.0.5"
             }
@@ -670,20 +487,14 @@
           "version": "1.0.10"
         },
         "accepts": {
-          "depType": "prod",
           "dependencies": {
             "negotiator": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "negotiator",
               "version": "0.5.3"
             },
             "mime-types": {
-              "depType": "prod",
               "dependencies": {
                 "mime-db": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "mime-db",
                   "version": "1.37.0"
                 }
@@ -696,20 +507,14 @@
           "version": "1.2.13"
         },
         "finalhandler": {
-          "depType": "prod",
           "dependencies": {
             "escape-html": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "escape-html",
               "version": "1.0.1"
             },
             "debug": {
-              "depType": "prod",
               "dependencies": {
                 "ms": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "ms",
                   "version": "0.7.1"
                 }
@@ -718,11 +523,8 @@
               "version": "2.2.0"
             },
             "on-finished": {
-              "depType": "prod",
               "dependencies": {
                 "ee-first": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "ee-first",
                   "version": "1.1.0"
                 }
@@ -735,20 +537,14 @@
           "version": "0.3.6"
         },
         "type-is": {
-          "depType": "prod",
           "dependencies": {
             "media-typer": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "media-typer",
               "version": "0.3.0"
             },
             "mime-types": {
-              "depType": "prod",
               "dependencies": {
                 "mime-db": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "mime-db",
                   "version": "1.37.0"
                 }
@@ -761,56 +557,38 @@
           "version": "1.6.16"
         },
         "send": {
-          "depType": "prod",
           "dependencies": {
             "ms": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "ms",
               "version": "0.7.1"
             },
             "depd": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "depd",
               "version": "1.0.1"
             },
             "destroy": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "destroy",
               "version": "1.0.3"
             },
             "escape-html": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "escape-html",
               "version": "1.0.1"
             },
             "fresh": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "fresh",
               "version": "0.2.4"
             },
             "mime": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "mime",
               "version": "1.3.4"
             },
             "range-parser": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "range-parser",
               "version": "1.0.3"
             },
             "debug": {
-              "depType": "prod",
               "dependencies": {
                 "ms": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "ms",
                   "version": "0.7.1"
                 }
@@ -819,11 +597,8 @@
               "version": "2.2.0"
             },
             "on-finished": {
-              "depType": "prod",
               "dependencies": {
                 "ee-first": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "ee-first",
                   "version": "1.1.0"
                 }
@@ -832,11 +607,8 @@
               "version": "2.2.1"
             },
             "etag": {
-              "depType": "prod",
               "dependencies": {
                 "crc": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "crc",
                   "version": "3.2.1"
                 }
@@ -849,77 +621,52 @@
           "version": "0.12.3"
         },
         "serve-static": {
-          "depType": "prod",
           "dependencies": {
             "escape-html": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "escape-html",
               "version": "1.0.1"
             },
             "parseurl": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "parseurl",
               "version": "1.3.2"
             },
             "utils-merge": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "utils-merge",
               "version": "1.0.0"
             },
             "send": {
-              "depType": "prod",
               "dependencies": {
                 "ms": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "ms",
                   "version": "0.7.1"
                 },
                 "depd": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "depd",
                   "version": "1.0.1"
                 },
                 "destroy": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "destroy",
                   "version": "1.0.3"
                 },
                 "escape-html": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "escape-html",
                   "version": "1.0.1"
                 },
                 "fresh": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "fresh",
                   "version": "0.2.4"
                 },
                 "mime": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "mime",
                   "version": "1.3.4"
                 },
                 "range-parser": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "range-parser",
                   "version": "1.0.3"
                 },
                 "debug": {
-                  "depType": "prod",
                   "dependencies": {
                     "ms": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "ms",
                       "version": "0.7.1"
                     }
@@ -928,11 +675,8 @@
                   "version": "2.2.0"
                 },
                 "on-finished": {
-                  "depType": "prod",
                   "dependencies": {
                     "ee-first": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "ee-first",
                       "version": "1.1.0"
                     }
@@ -941,11 +685,8 @@
                   "version": "2.2.1"
                 },
                 "etag": {
-                  "depType": "prod",
                   "dependencies": {
                     "crc": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "crc",
                       "version": "3.2.1"
                     }
@@ -966,95 +707,64 @@
       "version": "4.12.4"
     },
     "mongoose": {
-      "depType": "prod",
       "dependencies": {
         "ms": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "ms",
           "version": "0.7.1"
         },
         "async": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "async",
           "version": "0.9.0"
         },
         "bson": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "bson",
           "version": "0.4.23"
         },
         "hooks-fixed": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "hooks-fixed",
           "version": "1.1.0"
         },
         "kareem": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "kareem",
           "version": "1.0.1"
         },
         "mpath": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "mpath",
           "version": "0.1.1"
         },
         "mpromise": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "mpromise",
           "version": "0.5.4"
         },
         "muri": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "muri",
           "version": "1.0.0"
         },
         "regexp-clone": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "regexp-clone",
           "version": "0.0.1"
         },
         "sliced": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "sliced",
           "version": "0.0.5"
         },
         "mquery": {
-          "depType": "prod",
           "dependencies": {
             "bluebird": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "bluebird",
               "version": "2.9.26"
             },
             "regexp-clone": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "regexp-clone",
               "version": "0.0.1"
             },
             "sliced": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "sliced",
               "version": "0.0.5"
             },
             "debug": {
-              "depType": "prod",
               "dependencies": {
                 "ms": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "ms",
                   "version": "0.7.1"
                 }
@@ -1067,38 +777,26 @@
           "version": "1.6.3"
         },
         "mongodb": {
-          "depType": "prod",
           "dependencies": {
             "es6-promise": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "es6-promise",
               "version": "2.1.1"
             },
             "readable-stream": {
-              "depType": "prod",
               "dependencies": {
                 "core-util-is": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "core-util-is",
                   "version": "1.0.2"
                 },
                 "inherits": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "inherits",
                   "version": "2.0.3"
                 },
                 "isarray": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "isarray",
                   "version": "0.0.1"
                 },
                 "string_decoder": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "string_decoder",
                   "version": "0.10.31"
                 }
@@ -1107,20 +805,14 @@
               "version": "1.0.31"
             },
             "mongodb-core": {
-              "depType": "prod",
               "dependencies": {
                 "bson": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "bson",
                   "version": "0.4.23"
                 },
                 "kerberos": {
-                  "depType": "prod",
                   "dependencies": {
                     "nan": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "nan",
                       "version": "2.10.0"
                     }
@@ -1141,44 +833,30 @@
       "version": "4.2.4"
     },
     "express-fileupload": {
-      "depType": "prod",
       "dependencies": {
         "streamifier": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "streamifier",
           "version": "0.1.1"
         },
         "connect-busboy": {
-          "depType": "prod",
           "dependencies": {
             "busboy": {
-              "depType": "prod",
               "dependencies": {
                 "readable-stream": {
-                  "depType": "prod",
                   "dependencies": {
                     "core-util-is": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "core-util-is",
                       "version": "1.0.2"
                     },
                     "inherits": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "inherits",
                       "version": "2.0.3"
                     },
                     "isarray": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "isarray",
                       "version": "0.0.1"
                     },
                     "string_decoder": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "string_decoder",
                       "version": "0.10.31"
                     }
@@ -1187,38 +865,26 @@
                   "version": "1.1.14"
                 },
                 "dicer": {
-                  "depType": "prod",
                   "dependencies": {
                     "streamsearch": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "streamsearch",
                       "version": "0.1.2"
                     },
                     "readable-stream": {
-                      "depType": "prod",
                       "dependencies": {
                         "core-util-is": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "core-util-is",
                           "version": "1.0.2"
                         },
                         "inherits": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "inherits",
                           "version": "2.0.3"
                         },
                         "isarray": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "isarray",
                           "version": "0.0.1"
                         },
                         "string_decoder": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "string_decoder",
                           "version": "0.10.31"
                         }
@@ -1239,20 +905,14 @@
           "version": "0.0.2"
         },
         "fs-extra": {
-          "depType": "prod",
           "dependencies": {
             "graceful-fs": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "graceful-fs",
               "version": "4.1.11"
             },
             "jsonfile": {
-              "depType": "prod",
               "dependencies": {
                 "graceful-fs": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "graceful-fs",
                   "version": "4.1.11"
                 }
@@ -1261,35 +921,24 @@
               "version": "2.4.0"
             },
             "rimraf": {
-              "depType": "prod",
               "dependencies": {
                 "glob": {
-                  "depType": "prod",
                   "dependencies": {
                     "fs.realpath": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "fs.realpath",
                       "version": "1.0.0"
                     },
                     "inherits": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "inherits",
                       "version": "2.0.3"
                     },
                     "path-is-absolute": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "path-is-absolute",
                       "version": "1.0.1"
                     },
                     "once": {
-                      "depType": "prod",
                       "dependencies": {
                         "wrappy": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "wrappy",
                           "version": "1.0.2"
                         }
@@ -1298,20 +947,14 @@
                       "version": "1.4.0"
                     },
                     "inflight": {
-                      "depType": "prod",
                       "dependencies": {
                         "wrappy": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "wrappy",
                           "version": "1.0.2"
                         },
                         "once": {
-                          "depType": "prod",
                           "dependencies": {
                             "wrappy": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "wrappy",
                               "version": "1.0.2"
                             }
@@ -1324,20 +967,14 @@
                       "version": "1.0.6"
                     },
                     "minimatch": {
-                      "depType": "prod",
                       "dependencies": {
                         "brace-expansion": {
-                          "depType": "prod",
                           "dependencies": {
                             "balanced-match": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "balanced-match",
                               "version": "1.0.0"
                             },
                             "concat-map": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "concat-map",
                               "version": "0.0.1"
                             }
@@ -1366,83 +1003,56 @@
       "version": "0.0.5"
     },
     "tap": {
-      "depType": "prod",
       "dependencies": {
         "bluebird": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "bluebird",
           "version": "3.5.2"
         },
         "clean-yaml-object": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "clean-yaml-object",
           "version": "0.1.0"
         },
         "deeper": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "deeper",
           "version": "2.1.0"
         },
         "isexe": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "isexe",
           "version": "1.1.2"
         },
         "only-shallow": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "only-shallow",
           "version": "1.2.0"
         },
         "opener": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "opener",
           "version": "1.5.1"
         },
         "signal-exit": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "signal-exit",
           "version": "2.1.2"
         },
         "stack-utils": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "stack-utils",
           "version": "0.4.0"
         },
         "supports-color": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "supports-color",
           "version": "1.3.1"
         },
         "tmatch": {
-          "depType": "prod",
-          "dependencies": {},
           "name": "tmatch",
           "version": "2.0.1"
         },
         "js-yaml": {
-          "depType": "prod",
           "dependencies": {
             "esprima": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "esprima",
               "version": "4.0.1"
             },
             "argparse": {
-              "depType": "prod",
               "dependencies": {
                 "sprintf-js": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "sprintf-js",
                   "version": "1.0.3"
                 }
@@ -1455,50 +1065,34 @@
           "version": "3.11.0"
         },
         "readable-stream": {
-          "depType": "prod",
           "dependencies": {
             "isarray": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "isarray",
               "version": "1.0.0"
             },
             "core-util-is": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "core-util-is",
               "version": "1.0.2"
             },
             "inherits": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "inherits",
               "version": "2.0.3"
             },
             "process-nextick-args": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "process-nextick-args",
               "version": "2.0.0"
             },
             "safe-buffer": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "safe-buffer",
               "version": "5.1.2"
             },
             "util-deprecate": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "util-deprecate",
               "version": "1.0.2"
             },
             "string_decoder": {
-              "depType": "prod",
               "dependencies": {
                 "safe-buffer": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "safe-buffer",
                   "version": "5.1.2"
                 }
@@ -1511,23 +1105,16 @@
           "version": "2.3.6"
         },
         "foreground-child": {
-          "depType": "prod",
           "dependencies": {
             "signal-exit": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "signal-exit",
               "version": "3.0.2"
             },
             "cross-spawn": {
-              "depType": "prod",
               "dependencies": {
                 "which": {
-                  "depType": "prod",
                   "dependencies": {
                     "isexe": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "isexe",
                       "version": "2.0.0"
                     }
@@ -1536,17 +1123,12 @@
                   "version": "1.3.1"
                 },
                 "lru-cache": {
-                  "depType": "prod",
                   "dependencies": {
                     "pseudomap": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "pseudomap",
                       "version": "1.0.2"
                     },
                     "yallist": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "yallist",
                       "version": "2.1.2"
                     }
@@ -1563,32 +1145,22 @@
           "version": "1.5.6"
         },
         "glob": {
-          "depType": "prod",
           "dependencies": {
             "fs.realpath": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "fs.realpath",
               "version": "1.0.0"
             },
             "inherits": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "inherits",
               "version": "2.0.3"
             },
             "path-is-absolute": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "path-is-absolute",
               "version": "1.0.1"
             },
             "once": {
-              "depType": "prod",
               "dependencies": {
                 "wrappy": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "wrappy",
                   "version": "1.0.2"
                 }
@@ -1597,20 +1169,14 @@
               "version": "1.4.0"
             },
             "inflight": {
-              "depType": "prod",
               "dependencies": {
                 "wrappy": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "wrappy",
                   "version": "1.0.2"
                 },
                 "once": {
-                  "depType": "prod",
                   "dependencies": {
                     "wrappy": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "wrappy",
                       "version": "1.0.2"
                     }
@@ -1623,20 +1189,14 @@
               "version": "1.0.6"
             },
             "minimatch": {
-              "depType": "prod",
               "dependencies": {
                 "brace-expansion": {
-                  "depType": "prod",
                   "dependencies": {
                     "balanced-match": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "balanced-match",
                       "version": "1.0.0"
                     },
                     "concat-map": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "concat-map",
                       "version": "0.0.1"
                     }
@@ -1653,35 +1213,24 @@
           "version": "7.1.3"
         },
         "tap-parser": {
-          "depType": "prod",
           "dependencies": {
             "events-to-array": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "events-to-array",
               "version": "1.1.2"
             },
             "inherits": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "inherits",
               "version": "2.0.3"
             },
             "js-yaml": {
-              "depType": "prod",
               "dependencies": {
                 "esprima": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "esprima",
                   "version": "4.0.1"
                 },
                 "argparse": {
-                  "depType": "prod",
                   "dependencies": {
                     "sprintf-js": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "sprintf-js",
                       "version": "1.0.3"
                     }
@@ -1694,50 +1243,34 @@
               "version": "3.11.0"
             },
             "readable-stream": {
-              "depType": "prod",
               "dependencies": {
                 "isarray": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "isarray",
                   "version": "1.0.0"
                 },
                 "core-util-is": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "core-util-is",
                   "version": "1.0.2"
                 },
                 "inherits": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "inherits",
                   "version": "2.0.3"
                 },
                 "process-nextick-args": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "process-nextick-args",
                   "version": "2.0.0"
                 },
                 "safe-buffer": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "safe-buffer",
                   "version": "5.1.2"
                 },
                 "util-deprecate": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "util-deprecate",
                   "version": "1.0.2"
                 },
                 "string_decoder": {
-                  "depType": "prod",
                   "dependencies": {
                     "safe-buffer": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "safe-buffer",
                       "version": "5.1.2"
                     }
@@ -1754,32 +1287,22 @@
           "version": "1.3.2"
         },
         "tap-mocha-reporter": {
-          "depType": "prod",
           "dependencies": {
             "color-support": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "color-support",
               "version": "1.1.3"
             },
             "diff": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "diff",
               "version": "1.4.0"
             },
             "escape-string-regexp": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "escape-string-regexp",
               "version": "1.0.5"
             },
             "debug": {
-              "depType": "prod",
               "dependencies": {
                 "ms": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "ms",
                   "version": "0.7.1"
                 }
@@ -1788,29 +1311,20 @@
               "version": "2.2.0"
             },
             "readable-stream": {
-              "depType": "prod",
               "dependencies": {
                 "core-util-is": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "core-util-is",
                   "version": "1.0.2"
                 },
                 "inherits": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "inherits",
                   "version": "2.0.3"
                 },
                 "isarray": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "isarray",
                   "version": "0.0.1"
                 },
                 "string_decoder": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "string_decoder",
                   "version": "0.10.31"
                 }
@@ -1819,20 +1333,14 @@
               "version": "1.1.14"
             },
             "js-yaml": {
-              "depType": "prod",
               "dependencies": {
                 "esprima": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "esprima",
                   "version": "4.0.1"
                 },
                 "argparse": {
-                  "depType": "prod",
                   "dependencies": {
                     "sprintf-js": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "sprintf-js",
                       "version": "1.0.3"
                     }
@@ -1845,20 +1353,14 @@
               "version": "3.11.0"
             },
             "unicode-length": {
-              "depType": "prod",
               "dependencies": {
                 "punycode": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "punycode",
                   "version": "1.4.1"
                 },
                 "strip-ansi": {
-                  "depType": "prod",
                   "dependencies": {
                     "ansi-regex": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "ansi-regex",
                       "version": "2.1.1"
                     }
@@ -1871,32 +1373,22 @@
               "version": "1.0.3"
             },
             "glob": {
-              "depType": "prod",
               "dependencies": {
                 "fs.realpath": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "fs.realpath",
                   "version": "1.0.0"
                 },
                 "inherits": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "inherits",
                   "version": "2.0.3"
                 },
                 "path-is-absolute": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "path-is-absolute",
                   "version": "1.0.1"
                 },
                 "once": {
-                  "depType": "prod",
                   "dependencies": {
                     "wrappy": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "wrappy",
                       "version": "1.0.2"
                     }
@@ -1905,20 +1397,14 @@
                   "version": "1.4.0"
                 },
                 "inflight": {
-                  "depType": "prod",
                   "dependencies": {
                     "wrappy": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "wrappy",
                       "version": "1.0.2"
                     },
                     "once": {
-                      "depType": "prod",
                       "dependencies": {
                         "wrappy": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "wrappy",
                           "version": "1.0.2"
                         }
@@ -1931,20 +1417,14 @@
                   "version": "1.0.6"
                 },
                 "minimatch": {
-                  "depType": "prod",
                   "dependencies": {
                     "brace-expansion": {
-                      "depType": "prod",
                       "dependencies": {
                         "balanced-match": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "balanced-match",
                           "version": "1.0.0"
                         },
                         "concat-map": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "concat-map",
                           "version": "0.0.1"
                         }
@@ -1961,35 +1441,24 @@
               "version": "7.1.3"
             },
             "tap-parser": {
-              "depType": "prod",
               "dependencies": {
                 "events-to-array": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "events-to-array",
                   "version": "1.1.2"
                 },
                 "inherits": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "inherits",
                   "version": "2.0.3"
                 },
                 "js-yaml": {
-                  "depType": "prod",
                   "dependencies": {
                     "esprima": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "esprima",
                       "version": "4.0.1"
                     },
                     "argparse": {
-                      "depType": "prod",
                       "dependencies": {
                         "sprintf-js": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "sprintf-js",
                           "version": "1.0.3"
                         }
@@ -2002,50 +1471,34 @@
                   "version": "3.11.0"
                 },
                 "readable-stream": {
-                  "depType": "prod",
                   "dependencies": {
                     "isarray": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "isarray",
                       "version": "1.0.0"
                     },
                     "core-util-is": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "core-util-is",
                       "version": "1.0.2"
                     },
                     "inherits": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "inherits",
                       "version": "2.0.3"
                     },
                     "process-nextick-args": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "process-nextick-args",
                       "version": "2.0.0"
                     },
                     "safe-buffer": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "safe-buffer",
                       "version": "5.1.2"
                     },
                     "util-deprecate": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "util-deprecate",
                       "version": "1.0.2"
                     },
                     "string_decoder": {
-                      "depType": "prod",
                       "dependencies": {
                         "safe-buffer": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "safe-buffer",
                           "version": "5.1.2"
                         }
@@ -2066,50 +1519,34 @@
           "version": "0.0.27"
         },
         "codecov.io": {
-          "depType": "prod",
           "dependencies": {
             "urlgrey": {
-              "depType": "prod",
               "dependencies": {
                 "tape": {
-                  "depType": "prod",
                   "dependencies": {
                     "deep-equal": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "deep-equal",
                       "version": "0.1.2"
                     },
                     "defined": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "defined",
                       "version": "0.0.0"
                     },
                     "inherits": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "inherits",
                       "version": "2.0.3"
                     },
                     "jsonify": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "jsonify",
                       "version": "0.0.0"
                     },
                     "through": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "through",
                       "version": "2.3.8"
                     },
                     "resumer": {
-                      "depType": "prod",
                       "dependencies": {
                         "through": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "through",
                           "version": "2.3.8"
                         }
@@ -2118,11 +1555,8 @@
                       "version": "0.0.0"
                     },
                     "split": {
-                      "depType": "prod",
                       "dependencies": {
                         "through": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "through",
                           "version": "2.3.8"
                         }
@@ -2131,11 +1565,8 @@
                       "version": "0.2.10"
                     },
                     "stream-combiner": {
-                      "depType": "prod",
                       "dependencies": {
                         "duplexer": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "duplexer",
                           "version": "0.1.1"
                         }
@@ -2152,86 +1583,58 @@
               "version": "0.4.0"
             },
             "request": {
-              "depType": "prod",
               "dependencies": {
                 "mime-types": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "mime-types",
                   "version": "1.0.2"
                 },
                 "qs": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "qs",
                   "version": "1.2.2"
                 },
                 "aws-sign2": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "aws-sign2",
                   "version": "0.5.0"
                 },
                 "caseless": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "caseless",
                   "version": "0.6.0"
                 },
                 "forever-agent": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "forever-agent",
                   "version": "0.5.2"
                 },
                 "json-stringify-safe": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "json-stringify-safe",
                   "version": "5.0.1"
                 },
                 "node-uuid": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "node-uuid",
                   "version": "1.4.8"
                 },
                 "oauth-sign": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "oauth-sign",
                   "version": "0.4.0"
                 },
                 "stringstream": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "stringstream",
                   "version": "0.0.6"
                 },
                 "tunnel-agent": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "tunnel-agent",
                   "version": "0.4.3"
                 },
                 "http-signature": {
-                  "depType": "prod",
                   "dependencies": {
                     "asn1": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "asn1",
                       "version": "0.1.11"
                     },
                     "assert-plus": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "assert-plus",
                       "version": "0.1.5"
                     },
                     "ctype": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "ctype",
                       "version": "0.5.3"
                     }
@@ -2240,17 +1643,12 @@
                   "version": "0.10.1"
                 },
                 "tough-cookie": {
-                  "depType": "prod",
                   "dependencies": {
                     "psl": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "psl",
                       "version": "1.1.29"
                     },
                     "punycode": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "punycode",
                       "version": "1.4.1"
                     }
@@ -2259,32 +1657,22 @@
                   "version": "2.4.3"
                 },
                 "bl": {
-                  "depType": "prod",
                   "dependencies": {
                     "readable-stream": {
-                      "depType": "prod",
                       "dependencies": {
                         "core-util-is": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "core-util-is",
                           "version": "1.0.2"
                         },
                         "inherits": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "inherits",
                           "version": "2.0.3"
                         },
                         "isarray": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "isarray",
                           "version": "0.0.1"
                         },
                         "string_decoder": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "string_decoder",
                           "version": "0.10.31"
                         }
@@ -2297,26 +1685,18 @@
                   "version": "0.9.5"
                 },
                 "form-data": {
-                  "depType": "prod",
                   "dependencies": {
                     "mime": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "mime",
                       "version": "1.2.11"
                     },
                     "async": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "async",
                       "version": "0.9.0"
                     },
                     "combined-stream": {
-                      "depType": "prod",
                       "dependencies": {
                         "delayed-stream": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "delayed-stream",
                           "version": "0.0.5"
                         }
@@ -2329,20 +1709,14 @@
                   "version": "0.1.4"
                 },
                 "hawk": {
-                  "depType": "prod",
                   "dependencies": {
                     "hoek": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "hoek",
                       "version": "0.9.1"
                     },
                     "boom": {
-                      "depType": "prod",
                       "dependencies": {
                         "hoek": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "hoek",
                           "version": "0.9.1"
                         }
@@ -2351,11 +1725,8 @@
                       "version": "0.4.2"
                     },
                     "sntp": {
-                      "depType": "prod",
                       "dependencies": {
                         "hoek": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "hoek",
                           "version": "0.9.1"
                         }
@@ -2364,14 +1735,10 @@
                       "version": "0.2.4"
                     },
                     "cryptiles": {
-                      "depType": "prod",
                       "dependencies": {
                         "boom": {
-                          "depType": "prod",
                           "dependencies": {
                             "hoek": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "hoek",
                               "version": "0.9.1"
                             }
@@ -2396,41 +1763,28 @@
           "version": "0.1.6"
         },
         "coveralls": {
-          "depType": "prod",
           "dependencies": {
             "lcov-parse": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "lcov-parse",
               "version": "0.0.10"
             },
             "log-driver": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "log-driver",
               "version": "1.2.5"
             },
             "minimist": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "minimist",
               "version": "1.2.0"
             },
             "js-yaml": {
-              "depType": "prod",
               "dependencies": {
                 "esprima": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "esprima",
                   "version": "2.7.3"
                 },
                 "argparse": {
-                  "depType": "prod",
                   "dependencies": {
                     "sprintf-js": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "sprintf-js",
                       "version": "1.0.3"
                     }
@@ -2443,92 +1797,62 @@
               "version": "3.6.1"
             },
             "request": {
-              "depType": "prod",
               "dependencies": {
                 "aws-sign2": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "aws-sign2",
                   "version": "0.6.0"
                 },
                 "caseless": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "caseless",
                   "version": "0.11.0"
                 },
                 "forever-agent": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "forever-agent",
                   "version": "0.6.1"
                 },
                 "oauth-sign": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "oauth-sign",
                   "version": "0.8.2"
                 },
                 "qs": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "qs",
                   "version": "6.3.2"
                 },
                 "uuid": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "uuid",
                   "version": "3.3.2"
                 },
                 "aws4": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "aws4",
                   "version": "1.8.0"
                 },
                 "extend": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "extend",
                   "version": "3.0.2"
                 },
                 "is-typedarray": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "is-typedarray",
                   "version": "1.0.0"
                 },
                 "isstream": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "isstream",
                   "version": "0.1.2"
                 },
                 "json-stringify-safe": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "json-stringify-safe",
                   "version": "5.0.1"
                 },
                 "stringstream": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "stringstream",
                   "version": "0.0.6"
                 },
                 "tunnel-agent": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "tunnel-agent",
                   "version": "0.4.3"
                 },
                 "combined-stream": {
-                  "depType": "prod",
                   "dependencies": {
                     "delayed-stream": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "delayed-stream",
                       "version": "1.0.0"
                     }
@@ -2537,11 +1861,8 @@
                   "version": "1.0.7"
                 },
                 "mime-types": {
-                  "depType": "prod",
                   "dependencies": {
                     "mime-db": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "mime-db",
                       "version": "1.37.0"
                     }
@@ -2550,11 +1871,8 @@
                   "version": "2.1.21"
                 },
                 "tough-cookie": {
-                  "depType": "prod",
                   "dependencies": {
                     "punycode": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "punycode",
                       "version": "1.4.1"
                     }
@@ -2563,20 +1881,14 @@
                   "version": "2.3.4"
                 },
                 "form-data": {
-                  "depType": "prod",
                   "dependencies": {
                     "asynckit": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "asynckit",
                       "version": "0.4.0"
                     },
                     "combined-stream": {
-                      "depType": "prod",
                       "dependencies": {
                         "delayed-stream": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "delayed-stream",
                           "version": "1.0.0"
                         }
@@ -2585,11 +1897,8 @@
                       "version": "1.0.7"
                     },
                     "mime-types": {
-                      "depType": "prod",
                       "dependencies": {
                         "mime-db": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "mime-db",
                           "version": "1.37.0"
                         }
@@ -2602,20 +1911,14 @@
                   "version": "2.1.4"
                 },
                 "hawk": {
-                  "depType": "prod",
                   "dependencies": {
                     "hoek": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "hoek",
                       "version": "2.16.3"
                     },
                     "boom": {
-                      "depType": "prod",
                       "dependencies": {
                         "hoek": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "hoek",
                           "version": "2.16.3"
                         }
@@ -2624,11 +1927,8 @@
                       "version": "2.10.1"
                     },
                     "sntp": {
-                      "depType": "prod",
                       "dependencies": {
                         "hoek": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "hoek",
                           "version": "2.16.3"
                         }
@@ -2637,14 +1937,10 @@
                       "version": "1.0.9"
                     },
                     "cryptiles": {
-                      "depType": "prod",
                       "dependencies": {
                         "boom": {
-                          "depType": "prod",
                           "dependencies": {
                             "hoek": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "hoek",
                               "version": "2.16.3"
                             }
@@ -2661,20 +1957,14 @@
                   "version": "3.1.3"
                 },
                 "har-validator": {
-                  "depType": "prod",
                   "dependencies": {
                     "commander": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "commander",
                       "version": "2.19.0"
                     },
                     "pinkie-promise": {
-                      "depType": "prod",
                       "dependencies": {
                         "pinkie": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "pinkie",
                           "version": "2.0.4"
                         }
@@ -2683,32 +1973,22 @@
                       "version": "2.0.1"
                     },
                     "chalk": {
-                      "depType": "prod",
                       "dependencies": {
                         "supports-color": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "supports-color",
                           "version": "2.0.0"
                         },
                         "ansi-styles": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "ansi-styles",
                           "version": "2.2.1"
                         },
                         "escape-string-regexp": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "escape-string-regexp",
                           "version": "1.0.5"
                         },
                         "has-ansi": {
-                          "depType": "prod",
                           "dependencies": {
                             "ansi-regex": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "ansi-regex",
                               "version": "2.1.1"
                             }
@@ -2717,11 +1997,8 @@
                           "version": "2.0.0"
                         },
                         "strip-ansi": {
-                          "depType": "prod",
                           "dependencies": {
                             "ansi-regex": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "ansi-regex",
                               "version": "2.1.1"
                             }
@@ -2734,32 +2011,22 @@
                       "version": "1.1.3"
                     },
                     "is-my-json-valid": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-my-ip-valid": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-my-ip-valid",
                           "version": "1.0.0"
                         },
                         "jsonpointer": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "jsonpointer",
                           "version": "4.0.1"
                         },
                         "xtend": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "xtend",
                           "version": "4.0.1"
                         },
                         "generate-function": {
-                          "depType": "prod",
                           "dependencies": {
                             "is-property": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "is-property",
                               "version": "1.0.2"
                             }
@@ -2768,11 +2035,8 @@
                           "version": "2.3.1"
                         },
                         "generate-object-property": {
-                          "depType": "prod",
                           "dependencies": {
                             "is-property": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "is-property",
                               "version": "1.0.2"
                             }
@@ -2789,53 +2053,36 @@
                   "version": "2.0.6"
                 },
                 "http-signature": {
-                  "depType": "prod",
                   "dependencies": {
                     "assert-plus": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "assert-plus",
                       "version": "0.2.0"
                     },
                     "jsprim": {
-                      "depType": "prod",
                       "dependencies": {
                         "assert-plus": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "assert-plus",
                           "version": "1.0.0"
                         },
                         "extsprintf": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "extsprintf",
                           "version": "1.3.0"
                         },
                         "json-schema": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "json-schema",
                           "version": "0.2.3"
                         },
                         "verror": {
-                          "depType": "prod",
                           "dependencies": {
                             "assert-plus": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "assert-plus",
                               "version": "1.0.0"
                             },
                             "core-util-is": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "core-util-is",
                               "version": "1.0.2"
                             },
                             "extsprintf": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "extsprintf",
                               "version": "1.3.0"
                             }
@@ -2848,38 +2095,26 @@
                       "version": "1.4.1"
                     },
                     "sshpk": {
-                      "depType": "prod",
                       "dependencies": {
                         "assert-plus": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "assert-plus",
                           "version": "1.0.0"
                         },
                         "jsbn": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "jsbn",
                           "version": "0.1.1"
                         },
                         "safer-buffer": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "safer-buffer",
                           "version": "2.1.2"
                         },
                         "tweetnacl": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "tweetnacl",
                           "version": "0.14.5"
                         },
                         "dashdash": {
-                          "depType": "prod",
                           "dependencies": {
                             "assert-plus": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "assert-plus",
                               "version": "1.0.0"
                             }
@@ -2888,11 +2123,8 @@
                           "version": "1.14.1"
                         },
                         "getpass": {
-                          "depType": "prod",
                           "dependencies": {
                             "assert-plus": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "assert-plus",
                               "version": "1.0.0"
                             }
@@ -2901,11 +2133,8 @@
                           "version": "0.1.7"
                         },
                         "asn1": {
-                          "depType": "prod",
                           "dependencies": {
                             "safer-buffer": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "safer-buffer",
                               "version": "2.1.2"
                             }
@@ -2914,11 +2143,8 @@
                           "version": "0.2.4"
                         },
                         "bcrypt-pbkdf": {
-                          "depType": "prod",
                           "dependencies": {
                             "tweetnacl": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "tweetnacl",
                               "version": "0.14.5"
                             }
@@ -2927,17 +2153,12 @@
                           "version": "1.0.2"
                         },
                         "ecc-jsbn": {
-                          "depType": "prod",
                           "dependencies": {
                             "jsbn": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "jsbn",
                               "version": "0.1.1"
                             },
                             "safer-buffer": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "safer-buffer",
                               "version": "2.1.2"
                             }
@@ -2962,44 +2183,30 @@
           "version": "2.13.3"
         },
         "nyc": {
-          "depType": "prod",
           "dependencies": {
             "arrify": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "arrify",
               "version": "1.0.1"
             },
             "convert-source-map": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "convert-source-map",
               "version": "1.2.0"
             },
             "resolve-from": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "resolve-from",
               "version": "2.0.0"
             },
             "signal-exit": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "signal-exit",
               "version": "3.0.0"
             },
             "source-map": {
-              "depType": "prod",
-              "dependencies": {},
               "name": "source-map",
               "version": "0.5.6"
             },
             "md5-hex": {
-              "depType": "prod",
               "dependencies": {
                 "md5-o-matic": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "md5-o-matic",
                   "version": "0.1.1"
                 }
@@ -3008,11 +2215,8 @@
               "version": "1.3.0"
             },
             "mkdirp": {
-              "depType": "prod",
               "dependencies": {
                 "minimist": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "minimist",
                   "version": "0.0.8"
                 }
@@ -3021,14 +2225,10 @@
               "version": "0.5.1"
             },
             "default-require-extensions": {
-              "depType": "prod",
               "dependencies": {
                 "strip-bom": {
-                  "depType": "prod",
                   "dependencies": {
                     "is-utf8": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "is-utf8",
                       "version": "0.2.1"
                     }
@@ -3041,26 +2241,18 @@
               "version": "1.0.0"
             },
             "caching-transform": {
-              "depType": "prod",
               "dependencies": {
                 "write-file-atomic": {
-                  "depType": "prod",
                   "dependencies": {
                     "graceful-fs": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "graceful-fs",
                       "version": "4.1.4"
                     },
                     "imurmurhash": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "imurmurhash",
                       "version": "0.1.4"
                     },
                     "slide": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "slide",
                       "version": "1.1.6"
                     }
@@ -3069,11 +2261,8 @@
                   "version": "1.1.4"
                 },
                 "md5-hex": {
-                  "depType": "prod",
                   "dependencies": {
                     "md5-o-matic": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "md5-o-matic",
                       "version": "0.1.1"
                     }
@@ -3082,11 +2271,8 @@
                   "version": "1.3.0"
                 },
                 "mkdirp": {
-                  "depType": "prod",
                   "dependencies": {
                     "minimist": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "minimist",
                       "version": "0.0.8"
                     }
@@ -3099,17 +2285,12 @@
               "version": "1.0.1"
             },
             "append-transform": {
-              "depType": "prod",
               "dependencies": {
                 "default-require-extensions": {
-                  "depType": "prod",
                   "dependencies": {
                     "strip-bom": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-utf8": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-utf8",
                           "version": "0.2.1"
                         }
@@ -3126,14 +2307,10 @@
               "version": "0.4.0"
             },
             "find-up": {
-              "depType": "prod",
               "dependencies": {
                 "pinkie-promise": {
-                  "depType": "prod",
                   "dependencies": {
                     "pinkie": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "pinkie",
                       "version": "2.0.4"
                     }
@@ -3142,14 +2319,10 @@
                   "version": "2.0.1"
                 },
                 "path-exists": {
-                  "depType": "prod",
                   "dependencies": {
                     "pinkie-promise": {
-                      "depType": "prod",
                       "dependencies": {
                         "pinkie": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "pinkie",
                           "version": "2.0.4"
                         }
@@ -3166,20 +2339,14 @@
               "version": "1.1.2"
             },
             "foreground-child": {
-              "depType": "prod",
               "dependencies": {
                 "signal-exit": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "signal-exit",
                   "version": "2.1.2"
                 },
                 "which": {
-                  "depType": "prod",
                   "dependencies": {
                     "isexe": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "isexe",
                       "version": "1.1.2"
                     }
@@ -3188,20 +2355,14 @@
                   "version": "1.2.10"
                 },
                 "cross-spawn-async": {
-                  "depType": "prod",
                   "dependencies": {
                     "lru-cache": {
-                      "depType": "prod",
                       "dependencies": {
                         "pseudomap": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "pseudomap",
                           "version": "1.0.2"
                         },
                         "yallist": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "yallist",
                           "version": "2.0.0"
                         }
@@ -3210,11 +2371,8 @@
                       "version": "4.0.1"
                     },
                     "which": {
-                      "depType": "prod",
                       "dependencies": {
                         "isexe": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "isexe",
                           "version": "1.1.2"
                         }
@@ -3231,26 +2389,18 @@
               "version": "1.5.1"
             },
             "glob": {
-              "depType": "prod",
               "dependencies": {
                 "inherits": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "inherits",
                   "version": "2.0.1"
                 },
                 "path-is-absolute": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "path-is-absolute",
                   "version": "1.0.0"
                 },
                 "once": {
-                  "depType": "prod",
                   "dependencies": {
                     "wrappy": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "wrappy",
                       "version": "1.0.2"
                     }
@@ -3259,20 +2409,14 @@
                   "version": "1.3.3"
                 },
                 "minimatch": {
-                  "depType": "prod",
                   "dependencies": {
                     "brace-expansion": {
-                      "depType": "prod",
                       "dependencies": {
                         "balanced-match": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "balanced-match",
                           "version": "0.4.1"
                         },
                         "concat-map": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "concat-map",
                           "version": "0.0.1"
                         }
@@ -3285,20 +2429,14 @@
                   "version": "3.0.0"
                 },
                 "inflight": {
-                  "depType": "prod",
                   "dependencies": {
                     "wrappy": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "wrappy",
                       "version": "1.0.2"
                     },
                     "once": {
-                      "depType": "prod",
                       "dependencies": {
                         "wrappy": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "wrappy",
                           "version": "1.0.2"
                         }
@@ -3315,17 +2453,12 @@
               "version": "7.0.3"
             },
             "pkg-up": {
-              "depType": "prod",
               "dependencies": {
                 "find-up": {
-                  "depType": "prod",
                   "dependencies": {
                     "pinkie-promise": {
-                      "depType": "prod",
                       "dependencies": {
                         "pinkie": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "pinkie",
                           "version": "2.0.4"
                         }
@@ -3334,14 +2467,10 @@
                       "version": "2.0.1"
                     },
                     "path-exists": {
-                      "depType": "prod",
                       "dependencies": {
                         "pinkie-promise": {
-                          "depType": "prod",
                           "dependencies": {
                             "pinkie": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pinkie",
                               "version": "2.0.4"
                             }
@@ -3362,29 +2491,20 @@
               "version": "1.0.0"
             },
             "rimraf": {
-              "depType": "prod",
               "dependencies": {
                 "glob": {
-                  "depType": "prod",
                   "dependencies": {
                     "inherits": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "inherits",
                       "version": "2.0.1"
                     },
                     "path-is-absolute": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "path-is-absolute",
                       "version": "1.0.0"
                     },
                     "once": {
-                      "depType": "prod",
                       "dependencies": {
                         "wrappy": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "wrappy",
                           "version": "1.0.2"
                         }
@@ -3393,20 +2513,14 @@
                       "version": "1.3.3"
                     },
                     "minimatch": {
-                      "depType": "prod",
                       "dependencies": {
                         "brace-expansion": {
-                          "depType": "prod",
                           "dependencies": {
                             "balanced-match": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "balanced-match",
                               "version": "0.4.1"
                             },
                             "concat-map": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "concat-map",
                               "version": "0.0.1"
                             }
@@ -3419,20 +2533,14 @@
                       "version": "3.0.0"
                     },
                     "inflight": {
-                      "depType": "prod",
                       "dependencies": {
                         "wrappy": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "wrappy",
                           "version": "1.0.2"
                         },
                         "once": {
-                          "depType": "prod",
                           "dependencies": {
                             "wrappy": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "wrappy",
                               "version": "1.0.2"
                             }
@@ -3453,20 +2561,14 @@
               "version": "2.5.2"
             },
             "find-cache-dir": {
-              "depType": "prod",
               "dependencies": {
                 "commondir": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "commondir",
                   "version": "1.0.1"
                 },
                 "mkdirp": {
-                  "depType": "prod",
                   "dependencies": {
                     "minimist": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "minimist",
                       "version": "0.0.8"
                     }
@@ -3475,17 +2577,12 @@
                   "version": "0.5.1"
                 },
                 "pkg-dir": {
-                  "depType": "prod",
                   "dependencies": {
                     "find-up": {
-                      "depType": "prod",
                       "dependencies": {
                         "pinkie-promise": {
-                          "depType": "prod",
                           "dependencies": {
                             "pinkie": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pinkie",
                               "version": "2.0.4"
                             }
@@ -3494,14 +2591,10 @@
                           "version": "2.0.1"
                         },
                         "path-exists": {
-                          "depType": "prod",
                           "dependencies": {
                             "pinkie-promise": {
-                              "depType": "prod",
                               "dependencies": {
                                 "pinkie": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "pinkie",
                                   "version": "2.0.4"
                                 }
@@ -3526,26 +2619,18 @@
               "version": "0.1.1"
             },
             "spawn-wrap": {
-              "depType": "prod",
               "dependencies": {
                 "os-homedir": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "os-homedir",
                   "version": "1.0.1"
                 },
                 "signal-exit": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "signal-exit",
                   "version": "2.1.2"
                 },
                 "which": {
-                  "depType": "prod",
                   "dependencies": {
                     "isexe": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "isexe",
                       "version": "1.1.2"
                     }
@@ -3554,11 +2639,8 @@
                   "version": "1.2.10"
                 },
                 "mkdirp": {
-                  "depType": "prod",
                   "dependencies": {
                     "minimist": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "minimist",
                       "version": "0.0.8"
                     }
@@ -3567,20 +2649,14 @@
                   "version": "0.5.1"
                 },
                 "foreground-child": {
-                  "depType": "prod",
                   "dependencies": {
                     "signal-exit": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "signal-exit",
                       "version": "2.1.2"
                     },
                     "which": {
-                      "depType": "prod",
                       "dependencies": {
                         "isexe": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "isexe",
                           "version": "1.1.2"
                         }
@@ -3589,20 +2665,14 @@
                       "version": "1.2.10"
                     },
                     "cross-spawn-async": {
-                      "depType": "prod",
                       "dependencies": {
                         "lru-cache": {
-                          "depType": "prod",
                           "dependencies": {
                             "pseudomap": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pseudomap",
                               "version": "1.0.2"
                             },
                             "yallist": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "yallist",
                               "version": "2.0.0"
                             }
@@ -3611,11 +2681,8 @@
                           "version": "4.0.1"
                         },
                         "which": {
-                          "depType": "prod",
                           "dependencies": {
                             "isexe": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "isexe",
                               "version": "1.1.2"
                             }
@@ -3632,29 +2699,20 @@
                   "version": "1.5.1"
                 },
                 "rimraf": {
-                  "depType": "prod",
                   "dependencies": {
                     "glob": {
-                      "depType": "prod",
                       "dependencies": {
                         "inherits": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "inherits",
                           "version": "2.0.1"
                         },
                         "path-is-absolute": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "path-is-absolute",
                           "version": "1.0.0"
                         },
                         "once": {
-                          "depType": "prod",
                           "dependencies": {
                             "wrappy": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "wrappy",
                               "version": "1.0.2"
                             }
@@ -3663,20 +2721,14 @@
                           "version": "1.3.3"
                         },
                         "minimatch": {
-                          "depType": "prod",
                           "dependencies": {
                             "brace-expansion": {
-                              "depType": "prod",
                               "dependencies": {
                                 "balanced-match": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "balanced-match",
                                   "version": "0.4.1"
                                 },
                                 "concat-map": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "concat-map",
                                   "version": "0.0.1"
                                 }
@@ -3689,20 +2741,14 @@
                           "version": "3.0.0"
                         },
                         "inflight": {
-                          "depType": "prod",
                           "dependencies": {
                             "wrappy": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "wrappy",
                               "version": "1.0.2"
                             },
                             "once": {
-                              "depType": "prod",
                               "dependencies": {
                                 "wrappy": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "wrappy",
                                   "version": "1.0.2"
                                 }
@@ -3727,56 +2773,38 @@
               "version": "1.2.3"
             },
             "yargs": {
-              "depType": "prod",
               "dependencies": {
                 "camelcase": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "camelcase",
                   "version": "3.0.0"
                 },
                 "decamelize": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "decamelize",
                   "version": "1.2.0"
                 },
                 "require-main-filename": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "require-main-filename",
                   "version": "1.0.1"
                 },
                 "set-blocking": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "set-blocking",
                   "version": "1.0.0"
                 },
                 "window-size": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "window-size",
                   "version": "0.2.0"
                 },
                 "y18n": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "y18n",
                   "version": "3.2.1"
                 },
                 "lodash.assign": {
-                  "depType": "prod",
                   "dependencies": {
                     "lodash.keys": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "lodash.keys",
                       "version": "4.0.7"
                     },
                     "lodash.rest": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "lodash.rest",
                       "version": "4.0.3"
                     }
@@ -3785,14 +2813,10 @@
                   "version": "4.0.9"
                 },
                 "os-locale": {
-                  "depType": "prod",
                   "dependencies": {
                     "lcid": {
-                      "depType": "prod",
                       "dependencies": {
                         "invert-kv": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "invert-kv",
                           "version": "1.0.0"
                         }
@@ -3805,14 +2829,10 @@
                   "version": "1.4.0"
                 },
                 "string-width": {
-                  "depType": "prod",
                   "dependencies": {
                     "code-point-at": {
-                      "depType": "prod",
                       "dependencies": {
                         "number-is-nan": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "number-is-nan",
                           "version": "1.0.0"
                         }
@@ -3821,11 +2841,8 @@
                       "version": "1.0.0"
                     },
                     "is-fullwidth-code-point": {
-                      "depType": "prod",
                       "dependencies": {
                         "number-is-nan": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "number-is-nan",
                           "version": "1.0.0"
                         }
@@ -3834,11 +2851,8 @@
                       "version": "1.0.0"
                     },
                     "strip-ansi": {
-                      "depType": "prod",
                       "dependencies": {
                         "ansi-regex": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "ansi-regex",
                           "version": "2.0.0"
                         }
@@ -3851,26 +2865,18 @@
                   "version": "1.0.1"
                 },
                 "yargs-parser": {
-                  "depType": "prod",
                   "dependencies": {
                     "camelcase": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "camelcase",
                       "version": "2.1.1"
                     },
                     "lodash.assign": {
-                      "depType": "prod",
                       "dependencies": {
                         "lodash.keys": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "lodash.keys",
                           "version": "4.0.7"
                         },
                         "lodash.rest": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "lodash.rest",
                           "version": "4.0.3"
                         }
@@ -3883,14 +2889,10 @@
                   "version": "2.4.0"
                 },
                 "cliui": {
-                  "depType": "prod",
                   "dependencies": {
                     "strip-ansi": {
-                      "depType": "prod",
                       "dependencies": {
                         "ansi-regex": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "ansi-regex",
                           "version": "2.0.0"
                         }
@@ -3899,14 +2901,10 @@
                       "version": "3.0.1"
                     },
                     "string-width": {
-                      "depType": "prod",
                       "dependencies": {
                         "code-point-at": {
-                          "depType": "prod",
                           "dependencies": {
                             "number-is-nan": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "number-is-nan",
                               "version": "1.0.0"
                             }
@@ -3915,11 +2913,8 @@
                           "version": "1.0.0"
                         },
                         "is-fullwidth-code-point": {
-                          "depType": "prod",
                           "dependencies": {
                             "number-is-nan": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "number-is-nan",
                               "version": "1.0.0"
                             }
@@ -3928,11 +2923,8 @@
                           "version": "1.0.0"
                         },
                         "strip-ansi": {
-                          "depType": "prod",
                           "dependencies": {
                             "ansi-regex": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "ansi-regex",
                               "version": "2.0.0"
                             }
@@ -3945,17 +2937,12 @@
                       "version": "1.0.1"
                     },
                     "wrap-ansi": {
-                      "depType": "prod",
                       "dependencies": {
                         "string-width": {
-                          "depType": "prod",
                           "dependencies": {
                             "code-point-at": {
-                              "depType": "prod",
                               "dependencies": {
                                 "number-is-nan": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "number-is-nan",
                                   "version": "1.0.0"
                                 }
@@ -3964,11 +2951,8 @@
                               "version": "1.0.0"
                             },
                             "is-fullwidth-code-point": {
-                              "depType": "prod",
                               "dependencies": {
                                 "number-is-nan": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "number-is-nan",
                                   "version": "1.0.0"
                                 }
@@ -3977,11 +2961,8 @@
                               "version": "1.0.0"
                             },
                             "strip-ansi": {
-                              "depType": "prod",
                               "dependencies": {
                                 "ansi-regex": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "ansi-regex",
                                   "version": "2.0.0"
                                 }
@@ -4002,41 +2983,28 @@
                   "version": "3.2.0"
                 },
                 "pkg-conf": {
-                  "depType": "prod",
                   "dependencies": {
                     "object-assign": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "object-assign",
                       "version": "4.1.0"
                     },
                     "symbol": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "symbol",
                       "version": "0.2.3"
                     },
                     "load-json-file": {
-                      "depType": "prod",
                       "dependencies": {
                         "graceful-fs": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "graceful-fs",
                           "version": "4.1.4"
                         },
                         "pify": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "pify",
                           "version": "2.3.0"
                         },
                         "pinkie-promise": {
-                          "depType": "prod",
                           "dependencies": {
                             "pinkie": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pinkie",
                               "version": "2.0.4"
                             }
@@ -4045,11 +3013,8 @@
                           "version": "2.0.1"
                         },
                         "strip-bom": {
-                          "depType": "prod",
                           "dependencies": {
                             "is-utf8": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "is-utf8",
                               "version": "0.2.1"
                             }
@@ -4058,14 +3023,10 @@
                           "version": "2.0.0"
                         },
                         "parse-json": {
-                          "depType": "prod",
                           "dependencies": {
                             "error-ex": {
-                              "depType": "prod",
                               "dependencies": {
                                 "is-arrayish": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "is-arrayish",
                                   "version": "0.2.1"
                                 }
@@ -4082,14 +3043,10 @@
                       "version": "1.1.0"
                     },
                     "find-up": {
-                      "depType": "prod",
                       "dependencies": {
                         "pinkie-promise": {
-                          "depType": "prod",
                           "dependencies": {
                             "pinkie": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pinkie",
                               "version": "2.0.4"
                             }
@@ -4098,14 +3055,10 @@
                           "version": "2.0.1"
                         },
                         "path-exists": {
-                          "depType": "prod",
                           "dependencies": {
                             "pinkie-promise": {
-                              "depType": "prod",
                               "dependencies": {
                                 "pinkie": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "pinkie",
                                   "version": "2.0.4"
                                 }
@@ -4126,32 +3079,22 @@
                   "version": "1.1.3"
                 },
                 "read-pkg-up": {
-                  "depType": "prod",
                   "dependencies": {
                     "read-pkg": {
-                      "depType": "prod",
                       "dependencies": {
                         "path-type": {
-                          "depType": "prod",
                           "dependencies": {
                             "graceful-fs": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "graceful-fs",
                               "version": "4.1.4"
                             },
                             "pify": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pify",
                               "version": "2.3.0"
                             },
                             "pinkie-promise": {
-                              "depType": "prod",
                               "dependencies": {
                                 "pinkie": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "pinkie",
                                   "version": "2.0.4"
                                 }
@@ -4164,26 +3107,18 @@
                           "version": "1.1.0"
                         },
                         "load-json-file": {
-                          "depType": "prod",
                           "dependencies": {
                             "graceful-fs": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "graceful-fs",
                               "version": "4.1.4"
                             },
                             "pify": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pify",
                               "version": "2.3.0"
                             },
                             "pinkie-promise": {
-                              "depType": "prod",
                               "dependencies": {
                                 "pinkie": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "pinkie",
                                   "version": "2.0.4"
                                 }
@@ -4192,11 +3127,8 @@
                               "version": "2.0.1"
                             },
                             "strip-bom": {
-                              "depType": "prod",
                               "dependencies": {
                                 "is-utf8": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "is-utf8",
                                   "version": "0.2.1"
                                 }
@@ -4205,14 +3137,10 @@
                               "version": "2.0.0"
                             },
                             "parse-json": {
-                              "depType": "prod",
                               "dependencies": {
                                 "error-ex": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "is-arrayish": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "is-arrayish",
                                       "version": "0.2.1"
                                     }
@@ -4229,26 +3157,18 @@
                           "version": "1.1.0"
                         },
                         "normalize-package-data": {
-                          "depType": "prod",
                           "dependencies": {
                             "hosted-git-info": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "hosted-git-info",
                               "version": "2.1.5"
                             },
                             "semver": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "semver",
                               "version": "5.1.0"
                             },
                             "is-builtin-module": {
-                              "depType": "prod",
                               "dependencies": {
                                 "builtin-modules": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "builtin-modules",
                                   "version": "1.1.1"
                                 }
@@ -4257,14 +3177,10 @@
                               "version": "1.0.0"
                             },
                             "validate-npm-package-license": {
-                              "depType": "prod",
                               "dependencies": {
                                 "spdx-correct": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "spdx-license-ids": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "spdx-license-ids",
                                       "version": "1.2.1"
                                     }
@@ -4273,17 +3189,12 @@
                                   "version": "1.0.2"
                                 },
                                 "spdx-expression-parse": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "spdx-exceptions": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "spdx-exceptions",
                                       "version": "1.0.4"
                                     },
                                     "spdx-license-ids": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "spdx-license-ids",
                                       "version": "1.2.1"
                                     }
@@ -4304,14 +3215,10 @@
                       "version": "1.1.0"
                     },
                     "find-up": {
-                      "depType": "prod",
                       "dependencies": {
                         "pinkie-promise": {
-                          "depType": "prod",
                           "dependencies": {
                             "pinkie": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pinkie",
                               "version": "2.0.4"
                             }
@@ -4320,14 +3227,10 @@
                           "version": "2.0.1"
                         },
                         "path-exists": {
-                          "depType": "prod",
                           "dependencies": {
                             "pinkie-promise": {
-                              "depType": "prod",
                               "dependencies": {
                                 "pinkie": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "pinkie",
                                   "version": "2.0.4"
                                 }
@@ -4352,44 +3255,30 @@
               "version": "4.7.1"
             },
             "istanbul": {
-              "depType": "prod",
               "dependencies": {
                 "abbrev": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "abbrev",
                   "version": "1.0.7"
                 },
                 "async": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "async",
                   "version": "1.5.2"
                 },
                 "esprima": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "esprima",
                   "version": "2.7.2"
                 },
                 "resolve": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "resolve",
                   "version": "1.1.7"
                 },
                 "wordwrap": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "wordwrap",
                   "version": "1.0.0"
                 },
                 "once": {
-                  "depType": "prod",
                   "dependencies": {
                     "wrappy": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "wrappy",
                       "version": "1.0.2"
                     }
@@ -4398,11 +3287,8 @@
                   "version": "1.3.3"
                 },
                 "supports-color": {
-                  "depType": "prod",
                   "dependencies": {
                     "has-flag": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "has-flag",
                       "version": "1.0.0"
                     }
@@ -4411,11 +3297,8 @@
                   "version": "3.1.2"
                 },
                 "which": {
-                  "depType": "prod",
                   "dependencies": {
                     "isexe": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "isexe",
                       "version": "1.1.2"
                     }
@@ -4424,11 +3307,8 @@
                   "version": "1.2.10"
                 },
                 "mkdirp": {
-                  "depType": "prod",
                   "dependencies": {
                     "minimist": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "minimist",
                       "version": "0.0.8"
                     }
@@ -4437,11 +3317,8 @@
                   "version": "0.5.1"
                 },
                 "nopt": {
-                  "depType": "prod",
                   "dependencies": {
                     "abbrev": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "abbrev",
                       "version": "1.0.7"
                     }
@@ -4450,20 +3327,14 @@
                   "version": "3.0.6"
                 },
                 "js-yaml": {
-                  "depType": "prod",
                   "dependencies": {
                     "esprima": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "esprima",
                       "version": "2.7.2"
                     },
                     "argparse": {
-                      "depType": "prod",
                       "dependencies": {
                         "sprintf-js": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "sprintf-js",
                           "version": "1.0.3"
                         }
@@ -4476,32 +3347,22 @@
                   "version": "3.6.1"
                 },
                 "escodegen": {
-                  "depType": "prod",
                   "dependencies": {
                     "estraverse": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "estraverse",
                       "version": "1.9.3"
                     },
                     "esutils": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "esutils",
                       "version": "2.0.2"
                     },
                     "esprima": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "esprima",
                       "version": "2.7.2"
                     },
                     "source-map": {
-                      "depType": "prod",
                       "dependencies": {
                         "amdefine": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "amdefine",
                           "version": "1.0.0"
                         }
@@ -4510,38 +3371,26 @@
                       "version": "0.2.0"
                     },
                     "optionator": {
-                      "depType": "prod",
                       "dependencies": {
                         "deep-is": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "deep-is",
                           "version": "0.1.3"
                         },
                         "fast-levenshtein": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "fast-levenshtein",
                           "version": "1.1.3"
                         },
                         "prelude-ls": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "prelude-ls",
                           "version": "1.1.2"
                         },
                         "wordwrap": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "wordwrap",
                           "version": "1.0.0"
                         },
                         "type-check": {
-                          "depType": "prod",
                           "dependencies": {
                             "prelude-ls": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "prelude-ls",
                               "version": "1.1.2"
                             }
@@ -4550,20 +3399,14 @@
                           "version": "0.3.2"
                         },
                         "levn": {
-                          "depType": "prod",
                           "dependencies": {
                             "prelude-ls": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "prelude-ls",
                               "version": "1.1.2"
                             },
                             "type-check": {
-                              "depType": "prod",
                               "dependencies": {
                                 "prelude-ls": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "prelude-ls",
                                   "version": "1.1.2"
                                 }
@@ -4584,23 +3427,16 @@
                   "version": "1.8.0"
                 },
                 "fileset": {
-                  "depType": "prod",
                   "dependencies": {
                     "minimatch": {
-                      "depType": "prod",
                       "dependencies": {
                         "brace-expansion": {
-                          "depType": "prod",
                           "dependencies": {
                             "balanced-match": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "balanced-match",
                               "version": "0.4.1"
                             },
                             "concat-map": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "concat-map",
                               "version": "0.0.1"
                             }
@@ -4613,26 +3449,18 @@
                       "version": "2.0.10"
                     },
                     "glob": {
-                      "depType": "prod",
                       "dependencies": {
                         "inherits": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "inherits",
                           "version": "2.0.1"
                         },
                         "path-is-absolute": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "path-is-absolute",
                           "version": "1.0.0"
                         },
                         "once": {
-                          "depType": "prod",
                           "dependencies": {
                             "wrappy": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "wrappy",
                               "version": "1.0.2"
                             }
@@ -4641,20 +3469,14 @@
                           "version": "1.3.3"
                         },
                         "minimatch": {
-                          "depType": "prod",
                           "dependencies": {
                             "brace-expansion": {
-                              "depType": "prod",
                               "dependencies": {
                                 "balanced-match": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "balanced-match",
                                   "version": "0.4.1"
                                 },
                                 "concat-map": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "concat-map",
                                   "version": "0.0.1"
                                 }
@@ -4667,20 +3489,14 @@
                           "version": "2.0.10"
                         },
                         "inflight": {
-                          "depType": "prod",
                           "dependencies": {
                             "wrappy": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "wrappy",
                               "version": "1.0.2"
                             },
                             "once": {
-                              "depType": "prod",
                               "dependencies": {
                                 "wrappy": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "wrappy",
                                   "version": "1.0.2"
                                 }
@@ -4701,26 +3517,18 @@
                   "version": "0.2.1"
                 },
                 "handlebars": {
-                  "depType": "prod",
                   "dependencies": {
                     "async": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "async",
                       "version": "1.5.2"
                     },
                     "optimist": {
-                      "depType": "prod",
                       "dependencies": {
                         "minimist": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "minimist",
                           "version": "0.0.10"
                         },
                         "wordwrap": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "wordwrap",
                           "version": "0.0.3"
                         }
@@ -4729,11 +3537,8 @@
                       "version": "0.6.1"
                     },
                     "source-map": {
-                      "depType": "prod",
                       "dependencies": {
                         "amdefine": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "amdefine",
                           "version": "1.0.0"
                         }
@@ -4742,86 +3547,58 @@
                       "version": "0.4.4"
                     },
                     "uglify-js": {
-                      "depType": "prod",
                       "dependencies": {
                         "async": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "async",
                           "version": "0.2.10"
                         },
                         "source-map": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "source-map",
                           "version": "0.5.6"
                         },
                         "uglify-to-browserify": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "uglify-to-browserify",
                           "version": "1.0.2"
                         },
                         "yargs": {
-                          "depType": "prod",
                           "dependencies": {
                             "camelcase": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "camelcase",
                               "version": "1.2.1"
                             },
                             "decamelize": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "decamelize",
                               "version": "1.2.0"
                             },
                             "window-size": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "window-size",
                               "version": "0.1.0"
                             },
                             "cliui": {
-                              "depType": "prod",
                               "dependencies": {
                                 "wordwrap": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "wordwrap",
                                   "version": "0.0.2"
                                 },
                                 "center-align": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "lazy-cache": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "lazy-cache",
                                       "version": "1.0.4"
                                     },
                                     "align-text": {
-                                      "depType": "prod",
                                       "dependencies": {
                                         "longest": {
-                                          "depType": "prod",
-                                          "dependencies": {},
                                           "name": "longest",
                                           "version": "1.0.1"
                                         },
                                         "repeat-string": {
-                                          "depType": "prod",
-                                          "dependencies": {},
                                           "name": "repeat-string",
                                           "version": "1.5.4"
                                         },
                                         "kind-of": {
-                                          "depType": "prod",
                                           "dependencies": {
                                             "is-buffer": {
-                                              "depType": "prod",
-                                              "dependencies": {},
                                               "name": "is-buffer",
                                               "version": "1.1.3"
                                             }
@@ -4838,29 +3615,20 @@
                                   "version": "0.1.3"
                                 },
                                 "right-align": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "align-text": {
-                                      "depType": "prod",
                                       "dependencies": {
                                         "longest": {
-                                          "depType": "prod",
-                                          "dependencies": {},
                                           "name": "longest",
                                           "version": "1.0.1"
                                         },
                                         "repeat-string": {
-                                          "depType": "prod",
-                                          "dependencies": {},
                                           "name": "repeat-string",
                                           "version": "1.5.4"
                                         },
                                         "kind-of": {
-                                          "depType": "prod",
                                           "dependencies": {
                                             "is-buffer": {
-                                              "depType": "prod",
-                                              "dependencies": {},
                                               "name": "is-buffer",
                                               "version": "1.1.3"
                                             }
@@ -4897,38 +3665,26 @@
               "version": "0.4.3"
             },
             "micromatch": {
-              "depType": "prod",
               "dependencies": {
                 "array-unique": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "array-unique",
                   "version": "0.2.1"
                 },
                 "filename-regex": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "filename-regex",
                   "version": "2.0.0"
                 },
                 "is-extglob": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "is-extglob",
                   "version": "1.0.0"
                 },
                 "normalize-path": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "normalize-path",
                   "version": "2.0.1"
                 },
                 "arr-diff": {
-                  "depType": "prod",
                   "dependencies": {
                     "arr-flatten": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "arr-flatten",
                       "version": "1.0.1"
                     }
@@ -4937,11 +3693,8 @@
                   "version": "2.0.0"
                 },
                 "expand-brackets": {
-                  "depType": "prod",
                   "dependencies": {
                     "is-posix-bracket": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "is-posix-bracket",
                       "version": "0.1.1"
                     }
@@ -4950,11 +3703,8 @@
                   "version": "0.1.5"
                 },
                 "kind-of": {
-                  "depType": "prod",
                   "dependencies": {
                     "is-buffer": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "is-buffer",
                       "version": "1.1.3"
                     }
@@ -4963,11 +3713,8 @@
                   "version": "3.0.3"
                 },
                 "extglob": {
-                  "depType": "prod",
                   "dependencies": {
                     "is-extglob": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "is-extglob",
                       "version": "1.0.0"
                     }
@@ -4976,11 +3723,8 @@
                   "version": "0.3.2"
                 },
                 "is-glob": {
-                  "depType": "prod",
                   "dependencies": {
                     "is-extglob": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "is-extglob",
                       "version": "1.0.0"
                     }
@@ -4989,20 +3733,14 @@
                   "version": "2.0.1"
                 },
                 "object.omit": {
-                  "depType": "prod",
                   "dependencies": {
                     "is-extendable": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "is-extendable",
                       "version": "0.1.1"
                     },
                     "for-own": {
-                      "depType": "prod",
                       "dependencies": {
                         "for-in": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "for-in",
                           "version": "0.1.5"
                         }
@@ -5015,20 +3753,14 @@
                   "version": "2.0.0"
                 },
                 "regex-cache": {
-                  "depType": "prod",
                   "dependencies": {
                     "is-primitive": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "is-primitive",
                       "version": "2.0.0"
                     },
                     "is-equal-shallow": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-primitive": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-primitive",
                           "version": "2.0.0"
                         }
@@ -5041,26 +3773,18 @@
                   "version": "0.4.3"
                 },
                 "parse-glob": {
-                  "depType": "prod",
                   "dependencies": {
                     "is-dotfile": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "is-dotfile",
                       "version": "1.0.2"
                     },
                     "is-extglob": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "is-extglob",
                       "version": "1.0.0"
                     },
                     "is-glob": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-extglob": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-extglob",
                           "version": "1.0.0"
                         }
@@ -5069,14 +3793,10 @@
                       "version": "2.0.1"
                     },
                     "glob-base": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-glob": {
-                          "depType": "prod",
                           "dependencies": {
                             "is-extglob": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "is-extglob",
                               "version": "1.0.0"
                             }
@@ -5085,14 +3805,10 @@
                           "version": "2.0.1"
                         },
                         "glob-parent": {
-                          "depType": "prod",
                           "dependencies": {
                             "is-glob": {
-                              "depType": "prod",
                               "dependencies": {
                                 "is-extglob": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "is-extglob",
                                   "version": "1.0.0"
                                 }
@@ -5113,44 +3829,30 @@
                   "version": "3.0.4"
                 },
                 "braces": {
-                  "depType": "prod",
                   "dependencies": {
                     "preserve": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "preserve",
                       "version": "0.2.0"
                     },
                     "repeat-element": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "repeat-element",
                       "version": "1.1.2"
                     },
                     "expand-range": {
-                      "depType": "prod",
                       "dependencies": {
                         "fill-range": {
-                          "depType": "prod",
                           "dependencies": {
                             "repeat-string": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "repeat-string",
                               "version": "1.5.4"
                             },
                             "repeat-element": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "repeat-element",
                               "version": "1.1.2"
                             },
                             "isobject": {
-                              "depType": "prod",
                               "dependencies": {
                                 "isarray": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "isarray",
                                   "version": "1.0.0"
                                 }
@@ -5159,14 +3861,10 @@
                               "version": "2.1.0"
                             },
                             "is-number": {
-                              "depType": "prod",
                               "dependencies": {
                                 "kind-of": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "is-buffer": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "is-buffer",
                                       "version": "1.1.3"
                                     }
@@ -5179,14 +3877,10 @@
                               "version": "2.1.0"
                             },
                             "randomatic": {
-                              "depType": "prod",
                               "dependencies": {
                                 "kind-of": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "is-buffer": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "is-buffer",
                                       "version": "1.1.3"
                                     }
@@ -5195,14 +3889,10 @@
                                   "version": "3.0.3"
                                 },
                                 "is-number": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "kind-of": {
-                                      "depType": "prod",
                                       "dependencies": {
                                         "is-buffer": {
-                                          "depType": "prod",
-                                          "dependencies": {},
                                           "name": "is-buffer",
                                           "version": "1.1.3"
                                         }
@@ -5235,32 +3925,22 @@
               "version": "2.3.8"
             },
             "test-exclude": {
-              "depType": "prod",
               "dependencies": {
                 "require-main-filename": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "require-main-filename",
                   "version": "1.0.1"
                 },
                 "arrify": {
-                  "depType": "prod",
-                  "dependencies": {},
                   "name": "arrify",
                   "version": "1.0.1"
                 },
                 "lodash.assign": {
-                  "depType": "prod",
                   "dependencies": {
                     "lodash.keys": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "lodash.keys",
                       "version": "4.0.7"
                     },
                     "lodash.rest": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "lodash.rest",
                       "version": "4.0.3"
                     }
@@ -5269,32 +3949,22 @@
                   "version": "4.0.9"
                 },
                 "read-pkg-up": {
-                  "depType": "prod",
                   "dependencies": {
                     "read-pkg": {
-                      "depType": "prod",
                       "dependencies": {
                         "path-type": {
-                          "depType": "prod",
                           "dependencies": {
                             "graceful-fs": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "graceful-fs",
                               "version": "4.1.4"
                             },
                             "pify": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pify",
                               "version": "2.3.0"
                             },
                             "pinkie-promise": {
-                              "depType": "prod",
                               "dependencies": {
                                 "pinkie": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "pinkie",
                                   "version": "2.0.4"
                                 }
@@ -5307,26 +3977,18 @@
                           "version": "1.1.0"
                         },
                         "load-json-file": {
-                          "depType": "prod",
                           "dependencies": {
                             "graceful-fs": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "graceful-fs",
                               "version": "4.1.4"
                             },
                             "pify": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pify",
                               "version": "2.3.0"
                             },
                             "pinkie-promise": {
-                              "depType": "prod",
                               "dependencies": {
                                 "pinkie": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "pinkie",
                                   "version": "2.0.4"
                                 }
@@ -5335,11 +3997,8 @@
                               "version": "2.0.1"
                             },
                             "strip-bom": {
-                              "depType": "prod",
                               "dependencies": {
                                 "is-utf8": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "is-utf8",
                                   "version": "0.2.1"
                                 }
@@ -5348,14 +4007,10 @@
                               "version": "2.0.0"
                             },
                             "parse-json": {
-                              "depType": "prod",
                               "dependencies": {
                                 "error-ex": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "is-arrayish": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "is-arrayish",
                                       "version": "0.2.1"
                                     }
@@ -5372,26 +4027,18 @@
                           "version": "1.1.0"
                         },
                         "normalize-package-data": {
-                          "depType": "prod",
                           "dependencies": {
                             "hosted-git-info": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "hosted-git-info",
                               "version": "2.1.5"
                             },
                             "semver": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "semver",
                               "version": "5.1.0"
                             },
                             "is-builtin-module": {
-                              "depType": "prod",
                               "dependencies": {
                                 "builtin-modules": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "builtin-modules",
                                   "version": "1.1.1"
                                 }
@@ -5400,14 +4047,10 @@
                               "version": "1.0.0"
                             },
                             "validate-npm-package-license": {
-                              "depType": "prod",
                               "dependencies": {
                                 "spdx-correct": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "spdx-license-ids": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "spdx-license-ids",
                                       "version": "1.2.1"
                                     }
@@ -5416,17 +4059,12 @@
                                   "version": "1.0.2"
                                 },
                                 "spdx-expression-parse": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "spdx-exceptions": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "spdx-exceptions",
                                       "version": "1.0.4"
                                     },
                                     "spdx-license-ids": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "spdx-license-ids",
                                       "version": "1.2.1"
                                     }
@@ -5447,14 +4085,10 @@
                       "version": "1.1.0"
                     },
                     "find-up": {
-                      "depType": "prod",
                       "dependencies": {
                         "pinkie-promise": {
-                          "depType": "prod",
                           "dependencies": {
                             "pinkie": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "pinkie",
                               "version": "2.0.4"
                             }
@@ -5463,14 +4097,10 @@
                           "version": "2.0.1"
                         },
                         "path-exists": {
-                          "depType": "prod",
                           "dependencies": {
                             "pinkie-promise": {
-                              "depType": "prod",
                               "dependencies": {
                                 "pinkie": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "pinkie",
                                   "version": "2.0.4"
                                 }
@@ -5491,38 +4121,26 @@
                   "version": "1.0.1"
                 },
                 "micromatch": {
-                  "depType": "prod",
                   "dependencies": {
                     "array-unique": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "array-unique",
                       "version": "0.2.1"
                     },
                     "filename-regex": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "filename-regex",
                       "version": "2.0.0"
                     },
                     "is-extglob": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "is-extglob",
                       "version": "1.0.0"
                     },
                     "normalize-path": {
-                      "depType": "prod",
-                      "dependencies": {},
                       "name": "normalize-path",
                       "version": "2.0.1"
                     },
                     "arr-diff": {
-                      "depType": "prod",
                       "dependencies": {
                         "arr-flatten": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "arr-flatten",
                           "version": "1.0.1"
                         }
@@ -5531,11 +4149,8 @@
                       "version": "2.0.0"
                     },
                     "expand-brackets": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-posix-bracket": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-posix-bracket",
                           "version": "0.1.1"
                         }
@@ -5544,11 +4159,8 @@
                       "version": "0.1.5"
                     },
                     "kind-of": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-buffer": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-buffer",
                           "version": "1.1.3"
                         }
@@ -5557,11 +4169,8 @@
                       "version": "3.0.3"
                     },
                     "extglob": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-extglob": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-extglob",
                           "version": "1.0.0"
                         }
@@ -5570,11 +4179,8 @@
                       "version": "0.3.2"
                     },
                     "is-glob": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-extglob": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-extglob",
                           "version": "1.0.0"
                         }
@@ -5583,20 +4189,14 @@
                       "version": "2.0.1"
                     },
                     "object.omit": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-extendable": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-extendable",
                           "version": "0.1.1"
                         },
                         "for-own": {
-                          "depType": "prod",
                           "dependencies": {
                             "for-in": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "for-in",
                               "version": "0.1.5"
                             }
@@ -5609,20 +4209,14 @@
                       "version": "2.0.0"
                     },
                     "regex-cache": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-primitive": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-primitive",
                           "version": "2.0.0"
                         },
                         "is-equal-shallow": {
-                          "depType": "prod",
                           "dependencies": {
                             "is-primitive": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "is-primitive",
                               "version": "2.0.0"
                             }
@@ -5635,26 +4229,18 @@
                       "version": "0.4.3"
                     },
                     "parse-glob": {
-                      "depType": "prod",
                       "dependencies": {
                         "is-dotfile": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-dotfile",
                           "version": "1.0.2"
                         },
                         "is-extglob": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "is-extglob",
                           "version": "1.0.0"
                         },
                         "is-glob": {
-                          "depType": "prod",
                           "dependencies": {
                             "is-extglob": {
-                              "depType": "prod",
-                              "dependencies": {},
                               "name": "is-extglob",
                               "version": "1.0.0"
                             }
@@ -5663,14 +4249,10 @@
                           "version": "2.0.1"
                         },
                         "glob-base": {
-                          "depType": "prod",
                           "dependencies": {
                             "is-glob": {
-                              "depType": "prod",
                               "dependencies": {
                                 "is-extglob": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "is-extglob",
                                   "version": "1.0.0"
                                 }
@@ -5679,14 +4261,10 @@
                               "version": "2.0.1"
                             },
                             "glob-parent": {
-                              "depType": "prod",
                               "dependencies": {
                                 "is-glob": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "is-extglob": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "is-extglob",
                                       "version": "1.0.0"
                                     }
@@ -5707,44 +4285,30 @@
                       "version": "3.0.4"
                     },
                     "braces": {
-                      "depType": "prod",
                       "dependencies": {
                         "preserve": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "preserve",
                           "version": "0.2.0"
                         },
                         "repeat-element": {
-                          "depType": "prod",
-                          "dependencies": {},
                           "name": "repeat-element",
                           "version": "1.1.2"
                         },
                         "expand-range": {
-                          "depType": "prod",
                           "dependencies": {
                             "fill-range": {
-                              "depType": "prod",
                               "dependencies": {
                                 "repeat-string": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "repeat-string",
                                   "version": "1.5.4"
                                 },
                                 "repeat-element": {
-                                  "depType": "prod",
-                                  "dependencies": {},
                                   "name": "repeat-element",
                                   "version": "1.1.2"
                                 },
                                 "isobject": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "isarray": {
-                                      "depType": "prod",
-                                      "dependencies": {},
                                       "name": "isarray",
                                       "version": "1.0.0"
                                     }
@@ -5753,14 +4317,10 @@
                                   "version": "2.1.0"
                                 },
                                 "is-number": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "kind-of": {
-                                      "depType": "prod",
                                       "dependencies": {
                                         "is-buffer": {
-                                          "depType": "prod",
-                                          "dependencies": {},
                                           "name": "is-buffer",
                                           "version": "1.1.3"
                                         }
@@ -5773,14 +4333,10 @@
                                   "version": "2.1.0"
                                 },
                                 "randomatic": {
-                                  "depType": "prod",
                                   "dependencies": {
                                     "kind-of": {
-                                      "depType": "prod",
                                       "dependencies": {
                                         "is-buffer": {
-                                          "depType": "prod",
-                                          "dependencies": {},
                                           "name": "is-buffer",
                                           "version": "1.1.3"
                                         }
@@ -5789,14 +4345,10 @@
                                       "version": "3.0.3"
                                     },
                                     "is-number": {
-                                      "depType": "prod",
                                       "dependencies": {
                                         "kind-of": {
-                                          "depType": "prod",
                                           "dependencies": {
                                             "is-buffer": {
-                                              "depType": "prod",
-                                              "dependencies": {},
                                               "name": "is-buffer",
                                               "version": "1.1.3"
                                             }
@@ -5841,7 +4393,7 @@
       "version": "5.8.0"
     }
   },
-  "hasDevDependencies": true,
   "name": "goof",
-  "version": "0.0.3"
+  "version": "0.0.3",
+  "packageFormatVersion": "npm:0.0.1"
 }

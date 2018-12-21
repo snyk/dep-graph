@@ -5,6 +5,7 @@ import { DepGraphBuilder } from '../core/builder';
 
 export {
   depTreeToGraph,
+  graphToDepTree,
   DepTree,
 };
 
@@ -17,6 +18,7 @@ interface DepTreeDep {
 }
 
 interface DepTree extends DepTreeDep {
+  packageFormatVersion?: string;
   targetOS?: {
     name: string;
     version: string;
@@ -150,6 +152,77 @@ async function shortenNodeIds(depGraph: types.DepGraphInternal): Promise<types.D
   }
 
   return builder.build();
+}
+
+async function graphToDepTree(depGraphInterface: types.DepGraph, pkgType: string): Promise<DepTree> {
+  const depGraph = (depGraphInterface as types.DepGraphInternal);
+
+  // TODO: implement cycles support
+  if (depGraph.hasCycles()) {
+    throw new Error('Conversion to DepTree does not support cyclic graphs yet');
+  }
+
+  const depTree = await buildSubtree(depGraph, depGraph.rootNodeId);
+
+  depTree.packageFormatVersion = constructPackageFormatVersion(pkgType);
+
+  const targetOS = constructTargetOS(depGraph);
+  if (targetOS) {
+    depTree.targetOS = targetOS;
+  }
+
+  return depTree;
+}
+
+function constructPackageFormatVersion(pkgType: string): string {
+  if (pkgType === 'maven') {
+    pkgType = 'mvn';
+  }
+  return `${pkgType}:0.0.1`;
+}
+
+function constructTargetOS(depGraph: types.DepGraph): { name: string; version: string; } {
+  if (['apk', 'apt', 'deb', 'rpm'].indexOf(depGraph.pkgManager.name) === -1) {
+    // .targetOS is undefined unless its a linux pkgManager
+    return;
+  }
+
+  if (!depGraph.pkgManager.repositories
+    || !depGraph.pkgManager.repositories.length
+    || !depGraph.pkgManager.repositories[0].alias) {
+      throw new Error('Incomplete .pkgManager, could not create .targetOS');
+  }
+
+  const [name, version] = depGraph.pkgManager.repositories[0].alias.split(':');
+  return { name, version };
+}
+
+async function buildSubtree(depGraph: types.DepGraphInternal, nodeId: string): Promise<DepTree> {
+  const nodePkg = depGraph.getNodePkg(nodeId);
+  const depTree: DepTree = {};
+  depTree.name = nodePkg.name;
+  depTree.version = nodePkg.version;
+
+  const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
+  if (!depInstanceIds || depInstanceIds.length === 0) {
+    return depTree;
+  }
+
+  for (const depInstId of depInstanceIds) {
+    const subtree = await buildSubtree(depGraph, depInstId);
+    if (!subtree) {
+      continue;
+    }
+
+    if (!depTree.dependencies) {
+      depTree.dependencies = {};
+    }
+
+    depTree.dependencies[subtree.name] = subtree;
+  }
+
+  await spinTheEventLoop();
+  return depTree;
 }
 
 async function spinTheEventLoop() {

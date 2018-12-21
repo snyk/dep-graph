@@ -1,7 +1,11 @@
 {
   "name": "root",
   "version": "0.0.0",
-  "packageFormatVersion": "mvn:0.0.1",
+  "packageFormatVersion": "apk:0.0.1",
+  "targetOS": {
+    "name": "ubuntu",
+    "version": "18.04"
+  },
   "dependencies": {
     "a": {
       "name": "a",
