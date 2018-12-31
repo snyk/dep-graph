@@ -80,6 +80,9 @@ describe('dep-trees survive serialisation through dep-graphs', () => {
       const outputGraph = depGraphLib.createFromJSON(outputJSON);
       const outputTree = await depGraphLib.legacy.graphToDepTree(outputGraph, fixture.pkgType);
 
+      expect(outputTree.type).toEqual(fixture.pkgManagerName);
+      delete outputTree.type;
+
       expect(outputTree).toEqual(inputTree);
     });
   }
@@ -95,6 +98,8 @@ test('graphToDepTree simple dysmorphic', async () => {
   const expectedDepTree = helpers.loadFixture('simple-dep-tree.json');
 
   const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven');
+  expect(depTree.type).toEqual('maven');
+  delete depTree.type;
   expect(depTree).toEqual(expectedDepTree);
 });
 
@@ -105,6 +110,9 @@ describe('graphToDepTree with a linux pkgManager', () => {
     const expectedDepTree = helpers.loadFixture('os-deb-dep-tree.json');
 
     const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'deb');
+
+    expect(depTree.type).toEqual('deb');
+    delete depTree.type;
     expect(depTree).toEqual(expectedDepTree);
   });
 

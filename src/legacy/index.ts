@@ -18,6 +18,7 @@ interface DepTreeDep {
 }
 
 interface DepTree extends DepTreeDep {
+  type?: string;
   packageFormatVersion?: string;
   targetOS?: {
     name: string;
@@ -164,6 +165,7 @@ async function graphToDepTree(depGraphInterface: types.DepGraph, pkgType: string
 
   const depTree = await buildSubtree(depGraph, depGraph.rootNodeId);
 
+  depTree.type = depGraph.pkgManager.name;
   depTree.packageFormatVersion = constructPackageFormatVersion(pkgType);
 
   const targetOS = constructTargetOS(depGraph);
