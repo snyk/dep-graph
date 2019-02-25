@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as crypto from 'crypto';
 import * as types from '../core/types';
 import { DepGraphBuilder } from '../core/builder';
+import { EventLoopSpinner } from './event-loop-spinner';
 
 export {
   depTreeToGraph,
@@ -47,15 +48,20 @@ async function depTreeToGraph(depTree: DepTree, pkgManagerName: string): Promise
 
   const builder = new DepGraphBuilder(pkgManagerInfo, rootPkg);
 
-  await buildGraph(builder, depTree, depTree.name, true);
+  const eventLoopSpinner = new EventLoopSpinner();
+  await buildGraph(builder, depTree, depTree.name, eventLoopSpinner, true);
 
   const depGraph = await builder.build();
 
-  return shortenNodeIds(depGraph as types.DepGraphInternal);
+  return shortenNodeIds(depGraph as types.DepGraphInternal, eventLoopSpinner);
 }
 
 async function buildGraph(
-  builder: DepGraphBuilder, depTree: DepTreeDep, pkgName: string, isRoot = false): Promise<string> {
+    builder: DepGraphBuilder,
+    depTree: DepTreeDep,
+    pkgName: string,
+    eventLoopSpinner: EventLoopSpinner,
+    isRoot = false): Promise<string> {
 
   const getNodeId = (name, version, hashId) => `${name}@${version || ''}|${hashId}`;
 
@@ -69,7 +75,7 @@ async function buildGraph(
   for (const depName of depNames.sort()) {
     const dep = deps[depName];
 
-    const subtreeHash = await buildGraph(builder, dep, depName);
+    const subtreeHash = await buildGraph(builder, dep, depName, eventLoopSpinner);
 
     const depPkg = {
       name: depName,
@@ -104,13 +110,14 @@ async function buildGraph(
     builder.connectDep(pkgNodeId, depNodeId);
   }
 
-  if (depNodesIds.length > 0) {
-    await spinTheEventLoop();
+  if (depNodesIds.length > 0 && eventLoopSpinner.isStarving()) {
+    await eventLoopSpinner.spin();
   }
   return treeHash;
 }
 
-async function shortenNodeIds(depGraph: types.DepGraphInternal): Promise<types.DepGraph> {
+async function shortenNodeIds(
+    depGraph: types.DepGraphInternal, eventLoopSpinner: EventLoopSpinner): Promise<types.DepGraph> {
   const builder = new DepGraphBuilder(depGraph.pkgManager, depGraph.rootPkg);
 
   const nodesMap: {[key: string]: string} = {};
@@ -135,7 +142,9 @@ async function shortenNodeIds(depGraph: types.DepGraphInternal): Promise<types.D
       builder.addPkgNode(pkg, newNodeId);
     }
 
-    await spinTheEventLoop();
+    if (eventLoopSpinner.isStarving()) {
+      await eventLoopSpinner.spin();
+    }
   }
 
   // connect nodes
@@ -149,7 +158,9 @@ async function shortenNodeIds(depGraph: types.DepGraphInternal): Promise<types.D
       }
     }
 
-    await spinTheEventLoop();
+    if (eventLoopSpinner.isStarving()) {
+      await eventLoopSpinner.spin();
+    }
   }
 
   return builder.build();
@@ -163,7 +174,8 @@ async function graphToDepTree(depGraphInterface: types.DepGraph, pkgType: string
     throw new Error('Conversion to DepTree does not support cyclic graphs yet');
   }
 
-  const depTree = await buildSubtree(depGraph, depGraph.rootNodeId);
+  const eventLoopSpinner = new EventLoopSpinner();
+  const depTree = await buildSubtree(depGraph, depGraph.rootNodeId, eventLoopSpinner);
 
   depTree.type = depGraph.pkgManager.name;
   depTree.packageFormatVersion = constructPackageFormatVersion(pkgType);
@@ -199,7 +211,8 @@ function constructTargetOS(depGraph: types.DepGraph): { name: string; version: s
   return { name, version };
 }
 
-async function buildSubtree(depGraph: types.DepGraphInternal, nodeId: string): Promise<DepTree> {
+async function buildSubtree(
+    depGraph: types.DepGraphInternal, nodeId: string, eventLoopSpinner: EventLoopSpinner): Promise<DepTree> {
   const nodePkg = depGraph.getNodePkg(nodeId);
   const depTree: DepTree = {};
   depTree.name = nodePkg.name;
@@ -211,7 +224,7 @@ async function buildSubtree(depGraph: types.DepGraphInternal, nodeId: string): P
   }
 
   for (const depInstId of depInstanceIds) {
-    const subtree = await buildSubtree(depGraph, depInstId);
+    const subtree = await buildSubtree(depGraph, depInstId, eventLoopSpinner);
     if (!subtree) {
       continue;
     }
@@ -223,12 +236,10 @@ async function buildSubtree(depGraph: types.DepGraphInternal, nodeId: string): P
     depTree.dependencies[subtree.name] = subtree;
   }
 
-  await spinTheEventLoop();
+  if (eventLoopSpinner.isStarving()) {
+    await eventLoopSpinner.spin();
+  }
   return depTree;
-}
-
-async function spinTheEventLoop() {
-  return new Promise((resolve) => setImmediate(resolve));
 }
 
 function trimAfterLastSep(str: string, sep: string) {
