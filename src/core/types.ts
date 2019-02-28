@@ -11,6 +11,8 @@ export interface Pkg {
 export interface PkgInfo {
   name: string;
   version?: string;
+  dockerLayerId?: number;
+
   // NOTE: consider adding in the future
   // requires?: {
   //   name: string;
