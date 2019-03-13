@@ -827,3 +827,11 @@ test('fromJSON duplicate pkg-id', async () => {
   expect(go).toThrow(/pkg.*same id/);
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
+
+describe('schema backwards compatibility', () => {
+  test('1.0.0', () => {
+    const graphJson = helpers.loadFixture('old-schema-compat/simple-graph-1.0.0.json');
+    const go = () => depGraphLib.createFromJSON(graphJson);
+    expect(go).not.toThrow();
+  });
+});

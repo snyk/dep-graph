@@ -31,7 +31,7 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
     }
     pkgNodes[pkgId].add(node.nodeId);
 
-    graph.setNode(node.nodeId, { pkgId });
+    graph.setNode(node.nodeId, { pkgId, info: node.info });
   }
 
   for (const node of depGraphData.graph.nodes) {

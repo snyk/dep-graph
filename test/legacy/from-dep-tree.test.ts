@@ -290,3 +290,17 @@ describe('depTreeToGraph with (invalid) null dependency', () => {
     ], 'name'));
   });
 });
+
+describe('snapshots', () => {
+  test('with versionProvenance', async () => {
+    const depTree = helpers.loadFixture('maven-dep-tree.json');
+    const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'maven');
+    expect(depGraph.toJSON()).toMatchSnapshot();
+  });
+
+  test('without versionProvenance', async () => {
+    const depTree = helpers.loadFixture('goof-dep-tree.json');
+    const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
+    expect(depGraph.toJSON()).toMatchSnapshot();
+  });
+});

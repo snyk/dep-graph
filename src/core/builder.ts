@@ -50,7 +50,7 @@ class DepGraphBuilder {
   }
 
   // TODO: this can create disconnected nodes
-  public addPkgNode(pkgInfo: types.PkgInfo, nodeId: string) {
+  public addPkgNode(pkgInfo: types.PkgInfo, nodeId: string, nodeInfo?: types.NodeInfo) {
     if (nodeId === this._rootNodeId) {
       throw new Error('DepGraphBuilder.addPkgNode() cant override root node');
     }
@@ -61,7 +61,7 @@ class DepGraphBuilder {
     this._pkgNodes[pkgId] = this._pkgNodes[pkgId] || new Set();
     this._pkgNodes[pkgId].add(nodeId);
 
-    this._graph.setNode(nodeId, { pkgId });
+    this._graph.setNode(nodeId, { pkgId, info: nodeInfo });
   }
 
   // TODO: this can create cycles

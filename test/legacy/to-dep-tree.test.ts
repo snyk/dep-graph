@@ -52,6 +52,12 @@ describe('dep-trees survive serialisation through dep-graphs', () => {
       pkgType: 'maven',
     },
     {
+      description: 'maven dep-tree different version provenance for same package',
+      path: 'maven-dep-tree-wonky.json',
+      pkgManagerName: 'maven',
+      pkgType: 'maven',
+    },
+    {
       description: 'sbt dep-tree',
       path: 'sbt-dep-tree.json',
       pkgManagerName: 'sbt',
@@ -71,6 +77,22 @@ describe('dep-trees survive serialisation through dep-graphs', () => {
     },
   ];
 
+  // Recursively delete named properties and properties pointing to
+  // empty objects
+  function cleanDepTree(tree: any, keys: string[]): void {
+    for (const k of Object.keys(tree)) {
+      if (keys.indexOf(k) !== -1) {
+        delete tree[k];
+      } else if (typeof tree[k] === 'object') {
+        if (Object.keys(tree[k]).length === 0) {
+          delete tree[k];
+        } else {
+          cleanDepTree(tree[k], keys);
+        }
+      }
+    }
+  }
+
   for (const fixture of depTreeFixtures) {
     test(fixture.description, async () => {
       const inputTree = helpers.loadFixture(fixture.path);
@@ -81,7 +103,11 @@ describe('dep-trees survive serialisation through dep-graphs', () => {
       const outputTree = await depGraphLib.legacy.graphToDepTree(outputGraph, fixture.pkgType);
 
       expect(outputTree.type).toEqual(fixture.pkgManagerName);
-      delete outputTree.type;
+      if (!inputTree.type) {
+        delete outputTree.type;
+      }
+
+      cleanDepTree(inputTree, ['modules']);
 
       expect(outputTree).toEqual(inputTree);
     });
@@ -137,7 +163,7 @@ describe('graphToDepTree with a linux pkgManager', () => {
         .toThrow('Incomplete .pkgManager, could not create .targetOS');
     });
   });
-})
+});
 
 test('graphs with cycles are not supported', async () => {
   const cyclicDepGraphData = helpers.loadFixture('cyclic-dep-graph.json');

@@ -89,6 +89,15 @@ export interface DepGraphData {
     nodes: Array<{
       nodeId: string;
       pkgId: string;
+      info?: {
+        versionProvenance?: {
+          type: string;
+          location: string;
+          property?: {
+            name: string;
+          };
+        };
+      };
       deps: Array<{
         nodeId: string;
       }>;
