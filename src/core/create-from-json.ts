@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as semver from 'semver';
 import * as graphlib from 'graphlib';
+import * as types from './types';
 
 import { DepGraph, DepGraphData, GraphNode } from './types';
 import { ValidationError } from './errors';
@@ -17,11 +18,12 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
     multigraph: false,
     compound: false,
   });
-  const pkgs = {};
-  const pkgNodes = {};
+  const pkgs: {[pkgId: string]: types.PkgInfo} = {};
+  const pkgNodes: {[pkgId: string]: Set<string>} = {};
 
   for (const { id, info } of depGraphData.pkgs) {
-    pkgs[id] = info.version ? info : { ...info, version: null };
+    // TODO: avoid this, instead just use `info` as is
+    pkgs[id] = info.version ? info : { ...info, version: null } as any;
   }
 
   for (const node of depGraphData.graph.nodes) {
@@ -68,7 +70,7 @@ function validateDepGraphData(depGraphData: DepGraphData) {
 
     acc[cur.id] = cur.info;
     return acc;
-  }, {});
+  }, {} as {[pkdId: string]: types.PkgInfo});
 
   const nodesMap = depGraphData.graph.nodes.reduce((acc, cur) => {
     assert(!(cur.nodeId in acc), 'more than on node with same id');

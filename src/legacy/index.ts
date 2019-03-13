@@ -32,7 +32,7 @@ interface DepTree extends DepTreeDep {
 
 async function depTreeToGraph(depTree: DepTree, pkgManagerName: string): Promise<types.DepGraph> {
   const rootPkg = {
-    name: depTree.name,
+    name: depTree.name!,
     version: depTree.version,
   };
 
@@ -52,7 +52,7 @@ async function depTreeToGraph(depTree: DepTree, pkgManagerName: string): Promise
   const builder = new DepGraphBuilder(pkgManagerInfo, rootPkg);
 
   const eventLoopSpinner = new EventLoopSpinner();
-  await buildGraph(builder, depTree, depTree.name, eventLoopSpinner, true);
+  await buildGraph(builder, depTree, depTree.name!, eventLoopSpinner, true);
 
   const depGraph = await builder.build();
 
@@ -66,7 +66,8 @@ async function buildGraph(
     eventLoopSpinner: EventLoopSpinner,
     isRoot = false): Promise<string> {
 
-  const getNodeId = (name, version, hashId) => `${name}@${version || ''}|${hashId}`;
+  const getNodeId = (name: string, version: string | undefined, hashId: string) =>
+    `${name}@${version || ''}|${hashId}`;
 
   const depNodesIds = [];
 
@@ -215,7 +216,7 @@ function constructPackageFormatVersion(pkgType: string): string {
   return `${pkgType}:0.0.1`;
 }
 
-function constructTargetOS(depGraph: types.DepGraph): { name: string; version: string; } {
+function constructTargetOS(depGraph: types.DepGraph): { name: string; version: string; } | void {
   if (['apk', 'apt', 'deb', 'rpm'].indexOf(depGraph.pkgManager.name) === -1) {
     // .targetOS is undefined unless its a linux pkgManager
     return;
@@ -257,7 +258,7 @@ async function buildSubtree(
       depTree.dependencies = {};
     }
 
-    depTree.dependencies[subtree.name] = subtree;
+    depTree.dependencies[subtree.name!] = subtree;
   }
 
   if (eventLoopSpinner.isStarving()) {

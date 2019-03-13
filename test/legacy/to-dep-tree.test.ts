@@ -156,7 +156,7 @@ describe('graphToDepTree with a linux pkgManager', () => {
     test('missing repository alias', async () => {
       const depGraphData = helpers.loadFixture('os-deb-graph.json');
       const depGraph = depGraphLib.createFromJSON(depGraphData);
-      delete depGraph.pkgManager.repositories[0].alias;
+      delete depGraph.pkgManager.repositories![0].alias;
 
       await expect(depGraphLib.legacy.graphToDepTree(depGraph, 'deb'))
         .rejects

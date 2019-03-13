@@ -1,5 +1,5 @@
 export class CustomError extends Error {
-  constructor(message) {
+  constructor(message: string) {
     super(message);
     Object.setPrototypeOf(this, CustomError.prototype);
     Error.captureStackTrace(this, this.constructor);

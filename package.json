@@ -29,7 +29,10 @@
   "devDependencies": {
     "@types/graphlib": "^2.1.4",
     "@types/jest": "^23",
+    "@types/lodash": "^4",
     "@types/node": "^8",
+    "@types/object-hash": "^1.2.0",
+    "@types/semver": "^5.5.0",
     "jest": "^23",
     "ts-jest": "^23",
     "ts-node": "^7",

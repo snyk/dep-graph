@@ -6,7 +6,7 @@ export function loadFixture(name: string) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, `fixtures/${name}`), 'utf8'));
 }
 
-export function depSort(a, b) {
+export function depSort(a: any, b: any) {
   if (a.name < b.name) {
     return -1;
   } else if (a.name > b.name) {
@@ -20,7 +20,7 @@ export function depSort(a, b) {
   return 0;
 }
 
-export function depTreesEqual(a, b) {
+export function depTreesEqual(a: any, b: any) {
   if (a.name !== b.name || a.version !== b.version) {
     return false;
   }

@@ -196,7 +196,7 @@ class DepGraphImpl implements types.DepGraphInternal {
 
   private countNodePathsToRoot(nodeId: string): number {
     if (this._countNodePathsToRootCache.has(nodeId)) {
-      return this._countNodePathsToRootCache.get(nodeId);
+      return this._countNodePathsToRootCache.get(nodeId) || 0;
     }
 
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);

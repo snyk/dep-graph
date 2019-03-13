@@ -282,7 +282,7 @@ describe('depTreeToGraph with (invalid) null dependency', () => {
 
   let depGraph: types.DepGraph;
   test('create', async () => {
-    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'composer');
+    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree as any, 'composer');
     expect(_.sortBy(depGraph.getPkgs(), 'name')).toEqual(_.sortBy([
       {name: 'pine', version: '4'},
       {name: 'foo', version: '1'},
