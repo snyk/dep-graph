@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.1.0",
+  "schemaVersion": "1.2.0",
   "pkgManager": {
     "name": "maven"
   },
@@ -72,7 +72,12 @@
       {
         "nodeId": "e@5.0.0",
         "pkgId": "e@5.0.0",
-        "deps": []
+        "deps": [],
+        "info": {
+          "labels": {
+            "key": "value"
+          }
+        }
       },
       {
         "nodeId": "d@0.0.1",

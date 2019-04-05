@@ -19,6 +19,9 @@ interface DepTreeDep {
   dependencies?: {
     [depName: string]: DepTreeDep,
   };
+  labels?: {
+    [key: string]: string;
+  };
 }
 
 interface DepTree extends DepTreeDep {
@@ -75,6 +78,9 @@ async function buildGraph(
   if (depTree.versionProvenance) {
     hash.update(objectHash(depTree.versionProvenance));
   }
+  if (depTree.labels) {
+    hash.update(objectHash(depTree.labels));
+  }
 
   const deps = depTree.dependencies || {};
   // filter-out invalid null deps (shouldn't happen - but did...)
@@ -84,7 +90,7 @@ async function buildGraph(
 
     const subtreeHash = await buildGraph(builder, dep, depName, eventLoopSpinner);
 
-    const depPkg = {
+    const depPkg: types.PkgInfo = {
       name: depName,
       version: dep.version,
     };
@@ -97,6 +103,9 @@ async function buildGraph(
 
     if (dep.versionProvenance) {
       nodeInfo.versionProvenance = dep.versionProvenance;
+    }
+    if (dep.labels) {
+      nodeInfo.labels = dep.labels;
     }
 
     builder.addPkgNode(depPkg, depNodeId, nodeInfo);
@@ -121,6 +130,9 @@ async function buildGraph(
 
     if (depTree.versionProvenance) {
       nodeInfo.versionProvenance = depTree.versionProvenance;
+    }
+    if (depTree.labels) {
+      nodeInfo.labels = depTree.labels;
     }
 
     builder.addPkgNode(pkg, pkgNodeId, nodeInfo);
@@ -241,6 +253,9 @@ async function buildSubtree(
   depTree.version = nodePkg.version;
   if (nodeInfo.versionProvenance) {
     depTree.versionProvenance = nodeInfo.versionProvenance;
+  }
+  if (nodeInfo.labels) {
+    depTree.labels = nodeInfo.labels;
   }
 
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
