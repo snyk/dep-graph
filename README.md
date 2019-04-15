@@ -89,6 +89,15 @@ export interface DepGraphData {
     nodes: Array<{
       nodeId: string;
       pkgId: string;
+      info?: {
+        versionProvenance?: {
+          type: string;
+          location: string;
+          property?: {
+            name: string;
+          };
+        };
+      };
       deps: Array<{
         nodeId: string;
       }>;
@@ -118,3 +127,7 @@ interface DepTree {
   };
 }
 ```
+
+The `legacy` conversion functions aim to maintain extra data that might be attached to the dep-tree and is dependant upon in code that wasn't yet updated to use solely dep-graphs:
+* `targetOS` which exists on tree roots for Docker scans
+* `versionProvenance` which might exist on the nodes of maven trees, storing information about the source manifest that caused the specfic version to be resolved

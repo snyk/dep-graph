@@ -6,8 +6,13 @@ export {
   DepGraphImpl,
 };
 
+interface Node {
+  pkgId: string;
+  info?: types.NodeInfo;
+}
+
 class DepGraphImpl implements types.DepGraphInternal {
-  public static SCHEMA_VERSION = '1.0.0';
+  public static SCHEMA_VERSION = '1.1.0';
 
   public static getPkgId(pkg: types.Pkg): string {
     return `${pkg.name}@${pkg.version || ''}`;
@@ -39,7 +44,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     this._pkgManager = pkgManager;
 
     this._rootNodeId = rootNodeId;
-    this._rootPkgId = graph.node(rootNodeId).pkgId;
+    this._rootPkgId = (graph.node(rootNodeId) as Node).pkgId;
 
     this._pkgList = _.values(pkgs);
   }
@@ -60,13 +65,12 @@ class DepGraphImpl implements types.DepGraphInternal {
     return this._pkgList;
   }
 
-  public getNodePkg(nodeId: string): types.PkgInfo {
-    const node = this._graph.node(nodeId);
-    if (!node) {
-      throw new Error(`no such node: ${nodeId}`);
-    }
+  public getNode(nodeId: string): types.NodeInfo {
+    return this.getGraphNode(nodeId).info || {};
+  }
 
-    return this._pkgs[node.pkgId];
+  public getNodePkg(nodeId: string): types.PkgInfo {
+    return this._pkgs[this.getGraphNode(nodeId).pkgId];
   }
 
   public getPkgNodeIds(pkg: types.Pkg): string[] {
@@ -131,20 +135,25 @@ class DepGraphImpl implements types.DepGraphInternal {
   public toJSON(): types.DepGraphData {
     const nodeIds = this._graph.nodes();
 
-    const nodes = nodeIds.reduce((acc, nodeId: string) => {
+    const nodes = nodeIds.reduce((acc: types.GraphNode[], nodeId: string) => {
       const deps = (this._graph.successors(nodeId) || [])
         .map((depNodeId) => ({ nodeId: depNodeId }));
 
-      acc.push({
+      const node = this._graph.node(nodeId) as Node;
+      const elem: types.GraphNode = {
         nodeId,
-        pkgId: this._graph.node(nodeId).pkgId,
+        pkgId: node.pkgId,
         deps,
-      });
+      };
+      if (!_.isEmpty(node.info)) {
+        elem.info = node.info;
+      }
+      acc.push(elem);
       return acc;
     }, []);
 
-    const pkgs = _.keys(this._pkgs)
-      .map((pkgId) => ({
+    const pkgs: Array<{ id: string; info: types.PkgInfo; }> = _.keys(this._pkgs)
+      .map((pkgId: string) => ({
         id: pkgId,
         info: this._pkgs[pkgId],
       }));
@@ -158,6 +167,14 @@ class DepGraphImpl implements types.DepGraphInternal {
         nodes,
       },
     };
+  }
+
+  private getGraphNode(nodeId: string): Node {
+    const node = this._graph.node(nodeId) as Node;
+    if (!node) {
+      throw new Error(`no such node: ${nodeId}`);
+    }
+    return node;
   }
 
   private pathsFromNodeToRoot(nodeId: string): types.PkgInfo[][] {
@@ -179,7 +196,7 @@ class DepGraphImpl implements types.DepGraphInternal {
 
   private countNodePathsToRoot(nodeId: string): number {
     if (this._countNodePathsToRootCache.has(nodeId)) {
-      return this._countNodePathsToRootCache.get(nodeId);
+      return this._countNodePathsToRootCache.get(nodeId) || 0;
     }
 
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);

@@ -282,11 +282,25 @@ describe('depTreeToGraph with (invalid) null dependency', () => {
 
   let depGraph: types.DepGraph;
   test('create', async () => {
-    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'composer');
+    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree as any, 'composer');
     expect(_.sortBy(depGraph.getPkgs(), 'name')).toEqual(_.sortBy([
       {name: 'pine', version: '4'},
       {name: 'foo', version: '1'},
       {name: 'baz', version: '3'},
     ], 'name'));
+  });
+});
+
+describe('snapshots', () => {
+  test('with versionProvenance', async () => {
+    const depTree = helpers.loadFixture('maven-dep-tree.json');
+    const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'maven');
+    expect(depGraph.toJSON()).toMatchSnapshot();
+  });
+
+  test('without versionProvenance', async () => {
+    const depTree = helpers.loadFixture('goof-dep-tree.json');
+    const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
+    expect(depGraph.toJSON()).toMatchSnapshot();
   });
 });

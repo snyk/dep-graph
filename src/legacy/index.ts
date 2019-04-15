@@ -4,6 +4,8 @@ import * as types from '../core/types';
 import { DepGraphBuilder } from '../core/builder';
 import { EventLoopSpinner } from './event-loop-spinner';
 
+import objectHash = require('object-hash');
+
 export {
   depTreeToGraph,
   graphToDepTree,
@@ -13,6 +15,7 @@ export {
 interface DepTreeDep {
   name?: string; // shouldn't, but might happen
   version?: string; // shouldn't, but might happen
+  versionProvenance?: types.VersionProvenance;
   dependencies?: {
     [depName: string]: DepTreeDep,
   };
@@ -29,7 +32,7 @@ interface DepTree extends DepTreeDep {
 
 async function depTreeToGraph(depTree: DepTree, pkgManagerName: string): Promise<types.DepGraph> {
   const rootPkg = {
-    name: depTree.name,
+    name: depTree.name!,
     version: depTree.version,
   };
 
@@ -49,7 +52,7 @@ async function depTreeToGraph(depTree: DepTree, pkgManagerName: string): Promise
   const builder = new DepGraphBuilder(pkgManagerInfo, rootPkg);
 
   const eventLoopSpinner = new EventLoopSpinner();
-  await buildGraph(builder, depTree, depTree.name, eventLoopSpinner, true);
+  await buildGraph(builder, depTree, depTree.name!, eventLoopSpinner, true);
 
   const depGraph = await builder.build();
 
@@ -63,11 +66,15 @@ async function buildGraph(
     eventLoopSpinner: EventLoopSpinner,
     isRoot = false): Promise<string> {
 
-  const getNodeId = (name, version, hashId) => `${name}@${version || ''}|${hashId}`;
+  const getNodeId = (name: string, version: string | undefined, hashId: string) =>
+    `${name}@${version || ''}|${hashId}`;
 
   const depNodesIds = [];
 
   const hash = crypto.createHash('sha1');
+  if (depTree.versionProvenance) {
+    hash.update(objectHash(depTree.versionProvenance));
+  }
 
   const deps = depTree.dependencies || {};
   // filter-out invalid null deps (shouldn't happen - but did...)
@@ -86,12 +93,18 @@ async function buildGraph(
 
     depNodesIds.push(depNodeId);
 
-    builder.addPkgNode(depPkg, depNodeId);
+    const nodeInfo: types.NodeInfo = {};
+
+    if (dep.versionProvenance) {
+      nodeInfo.versionProvenance = dep.versionProvenance;
+    }
+
+    builder.addPkgNode(depPkg, depNodeId, nodeInfo);
 
     hash.update(depNodeId);
   }
 
-  const treeHash = depNames.length ? hash.digest('hex') : 'leaf';
+  const treeHash = hash.digest('hex');
 
   let pkgNodeId;
   if (isRoot) {
@@ -103,7 +116,14 @@ async function buildGraph(
       version: depTree.version,
     };
     pkgNodeId = getNodeId(pkg.name, pkg.version, treeHash);
-    builder.addPkgNode(pkg, pkgNodeId);
+
+    const nodeInfo: types.NodeInfo = {};
+
+    if (depTree.versionProvenance) {
+      nodeInfo.versionProvenance = depTree.versionProvenance;
+    }
+
+    builder.addPkgNode(pkg, pkgNodeId, nodeInfo);
   }
 
   for (const depNodeId of depNodesIds) {
@@ -130,6 +150,7 @@ async function shortenNodeIds(
       if (nodeId === depGraph.rootNodeId) {
         continue;
       }
+      const nodeInfo = depGraph.getNode(nodeId);
 
       let newNodeId: string;
       if (nodeIds.length === 1) {
@@ -139,7 +160,7 @@ async function shortenNodeIds(
       }
 
       nodesMap[nodeId] = newNodeId;
-      builder.addPkgNode(pkg, newNodeId);
+      builder.addPkgNode(pkg, newNodeId, nodeInfo);
     }
 
     if (eventLoopSpinner.isStarving()) {
@@ -195,7 +216,7 @@ function constructPackageFormatVersion(pkgType: string): string {
   return `${pkgType}:0.0.1`;
 }
 
-function constructTargetOS(depGraph: types.DepGraph): { name: string; version: string; } {
+function constructTargetOS(depGraph: types.DepGraph): { name: string; version: string; } | void {
   if (['apk', 'apt', 'deb', 'rpm'].indexOf(depGraph.pkgManager.name) === -1) {
     // .targetOS is undefined unless its a linux pkgManager
     return;
@@ -214,9 +235,13 @@ function constructTargetOS(depGraph: types.DepGraph): { name: string; version: s
 async function buildSubtree(
     depGraph: types.DepGraphInternal, nodeId: string, eventLoopSpinner: EventLoopSpinner): Promise<DepTree> {
   const nodePkg = depGraph.getNodePkg(nodeId);
+  const nodeInfo = depGraph.getNode(nodeId);
   const depTree: DepTree = {};
   depTree.name = nodePkg.name;
   depTree.version = nodePkg.version;
+  if (nodeInfo.versionProvenance) {
+    depTree.versionProvenance = nodeInfo.versionProvenance;
+  }
 
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
   if (!depInstanceIds || depInstanceIds.length === 0) {
@@ -233,7 +258,7 @@ async function buildSubtree(
       depTree.dependencies = {};
     }
 
-    depTree.dependencies[subtree.name] = subtree;
+    depTree.dependencies[subtree.name!] = subtree;
   }
 
   if (eventLoopSpinner.isStarving()) {

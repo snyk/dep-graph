@@ -23,10 +23,6 @@ export interface PkgInfo {
   //   url: string;
   // };
   // parentManifestUri?: string;
-  // versionProvenance?: {
-  //   type: string;
-  //   location: string;
-  // };
   // issues?: {
   //   id: string;
   //   type: string;
@@ -35,9 +31,22 @@ export interface PkgInfo {
   // }[];
 }
 
+export interface VersionProvenance {
+  type: string;
+  location: string;
+  property?: {
+    name: string;
+  };
+}
+
+export interface NodeInfo {
+  versionProvenance?: VersionProvenance;
+}
+
 export interface GraphNode {
   nodeId: string;
   pkgId: string;
+  info?: NodeInfo;
   deps: Array<{
     nodeId: string;
     // NOTE: consider adding later:
@@ -79,6 +88,7 @@ export interface DepGraph {
 // Revisit when we actually start using things
 export interface DepGraphInternal extends DepGraph {
   readonly rootNodeId: string;
+  getNode(nodeId: string): NodeInfo;
   getNodePkg(nodeId: string): PkgInfo;
   getPkgNodeIds(pkg: Pkg): string[];
   getNodeDepsNodeIds(nodeId: string): string[];
