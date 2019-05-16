@@ -77,9 +77,12 @@ async function buildGraph(
   }
 
   const deps = depTree.dependencies || {};
-  // filter-out invalid null deps (shouldn't happen - but did...)
-  const depNames = _.keys(deps).filter((d) => !!deps[d]);
-  for (const depName of depNames.sort()) {
+  for (const depName of Object.keys(deps)) {
+    // filter-out invalid null deps (shouldn't happen - but did...)
+    if (!deps[depName]) {
+      continue;
+    }
+
     const dep = deps[depName];
 
     const subtreeHash = await buildGraph(builder, dep, depName, eventLoopSpinner);
