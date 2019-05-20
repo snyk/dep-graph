@@ -1,16 +1,22 @@
 export class EventLoopSpinner {
-  private lastSpin: number;
+  private afterLastSpin: number;
 
   constructor(private thresholdMs: number = 10) {
-    this.lastSpin = Date.now();
+    this.afterLastSpin = Date.now();
   }
 
   public isStarving(): boolean {
-    return (Date.now() - this.lastSpin) > this.thresholdMs;
+    return (Date.now() - this.afterLastSpin) > this.thresholdMs;
+  }
+
+  public reset() {
+    this.afterLastSpin = Date.now();
   }
 
   public async spin() {
-    this.lastSpin = Date.now();
-    return new Promise((resolve) => setImmediate(resolve));
+    return new Promise((resolve) => setImmediate(() => {
+      this.reset();
+      resolve();
+    }));
   }
 }
