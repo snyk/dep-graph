@@ -31,6 +31,8 @@ class DepGraphImpl implements types.DepGraphInternal {
 
   private _countNodePathsToRootCache: Map<string, number> = new Map();
 
+  private _hasCycles: boolean | undefined;
+
   public constructor(
     graph: graphlib.Graph,
     rootNodeId: string,
@@ -100,7 +102,11 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public hasCycles(): boolean {
-    return !graphlib.alg.isAcyclic(this._graph);
+    // `isAcyclic` is expensive, so memoize
+    if (this._hasCycles === undefined) {
+      this._hasCycles = !graphlib.alg.isAcyclic(this._graph);
+    }
+    return this._hasCycles;
   }
 
   public pkgPathsToRoot(pkg: types.Pkg): types.PkgInfo[][] {
