@@ -1,12 +1,7 @@
 {
   "schemaVersion": "1.2.0",
   "pkgManager": {
-    "name": "deb",
-    "repositories": [
-      {
-        "alias": "ubuntu:18.04"
-      }
-    ]
+    "name": "maven"
   },
   "pkgs": [
     {
@@ -24,10 +19,10 @@
       }
     },
     {
-      "id": "d@0.0.1",
+      "id": "d@2.0.0",
       "info": {
         "name": "d",
-        "version": "0.0.1"
+        "version": "2.0.0"
       }
     },
     {
@@ -42,13 +37,6 @@
       "info": {
         "name": "a",
         "version": "1.0.0"
-      }
-    },
-    {
-      "id": "d@0.0.2",
-      "info": {
-        "name": "d",
-        "version": "0.0.2"
       }
     },
     {
@@ -77,23 +65,47 @@
       {
         "nodeId": "e@5.0.0",
         "pkgId": "e@5.0.0",
-        "deps": []
+        "deps": [],
+        "info": {
+          "labels": {
+            "key": "value"
+          }
+        }
       },
       {
-        "nodeId": "d@0.0.1",
-        "pkgId": "d@0.0.1",
+        "nodeId": "d@2.0.0|1",
+        "pkgId": "d@2.0.0",
         "deps": [
           {
             "nodeId": "e@5.0.0"
           }
-        ]
+        ],
+        "info": {
+          "labels": {
+            "key": "value1"
+          }
+        }
+      },
+      {
+        "nodeId": "d@2.0.0|2",
+        "pkgId": "d@2.0.0",
+        "deps": [
+          {
+            "nodeId": "e@5.0.0"
+          }
+        ],
+        "info": {
+          "labels": {
+            "key": "value2"
+          }
+        }
       },
       {
         "nodeId": "c@1.0.0|1",
         "pkgId": "c@1.0.0",
         "deps": [
           {
-            "nodeId": "d@0.0.1"
+            "nodeId": "d@2.0.0|1"
           }
         ]
       },
@@ -102,7 +114,7 @@
         "pkgId": "c@1.0.0",
         "deps": [
           {
-            "nodeId": "d@0.0.2"
+            "nodeId": "d@2.0.0|2"
           }
         ]
       },
@@ -112,15 +124,6 @@
         "deps": [
           {
             "nodeId": "c@1.0.0|1"
-          }
-        ]
-      },
-      {
-        "nodeId": "d@0.0.2",
-        "pkgId": "d@0.0.2",
-        "deps": [
-          {
-            "nodeId": "e@5.0.0"
           }
         ]
       },

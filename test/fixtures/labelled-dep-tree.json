@@ -13,7 +13,10 @@
           "dependencies": {
             "d": {
               "name": "d",
-              "version": "0.0.1",
+              "version": "2.0.0",
+              "labels": {
+                "key": "value1"
+              },
               "dependencies": {
                 "e": {
                   "name": "e",
@@ -38,7 +41,10 @@
           "dependencies": {
             "d": {
               "name": "d",
-              "version": "0.0.2",
+              "version": "2.0.0",
+              "labels": {
+                "key": "value2"
+              },
               "dependencies": {
                 "e": {
                   "name": "e",

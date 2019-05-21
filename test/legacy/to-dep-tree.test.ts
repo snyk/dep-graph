@@ -75,6 +75,12 @@ describe('dep-trees survive serialisation through dep-graphs', () => {
       pkgManagerName: 'pip',
       pkgType: 'pip',
     },
+    {
+      description: 'dep-tree different labels for same package',
+      path: 'labelled-dep-tree.json',
+      pkgManagerName: 'maven',
+      pkgType: 'maven',
+    },
   ];
 
   // Recursively delete named properties and properties pointing to
@@ -122,6 +128,20 @@ test('graphToDepTree simple dysmorphic', async () => {
   const depGraphData = helpers.loadFixture('simple-graph.json');
   const depGraph = depGraphLib.createFromJSON(depGraphData);
   const expectedDepTree = helpers.loadFixture('simple-dep-tree.json');
+
+  const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven');
+  expect(depTree.type).toEqual('maven');
+  delete depTree.type;
+  expect(depTree).toEqual(expectedDepTree);
+});
+
+test('graphToDepTree labelled dysmorphic', async () => {
+  // NOTE: this package tree is "dysmorphic"
+  // i.e. it has a package that appears twice in the tree
+  // at the exact same version, but with slightly different labels
+  const depGraphData = helpers.loadFixture('labelled-graph.json');
+  const depGraph = depGraphLib.createFromJSON(depGraphData);
+  const expectedDepTree = helpers.loadFixture('labelled-dep-tree.json');
 
   const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven');
   expect(depTree.type).toEqual('maven');

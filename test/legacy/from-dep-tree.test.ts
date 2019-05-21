@@ -303,4 +303,10 @@ describe('snapshots', () => {
     const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
     expect(depGraph.toJSON()).toMatchSnapshot();
   });
+
+  test('with labels', async () => {
+    const depTree = helpers.loadFixture('labelled-dep-tree.json');
+    const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'maven');
+    expect(depGraph.toJSON()).toMatchSnapshot();
+  });
 });

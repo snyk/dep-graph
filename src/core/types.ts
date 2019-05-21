@@ -41,6 +41,9 @@ export interface VersionProvenance {
 
 export interface NodeInfo {
   versionProvenance?: VersionProvenance;
+  labels?: {
+    [key: string]: string;
+  };
 }
 
 export interface GraphNode {

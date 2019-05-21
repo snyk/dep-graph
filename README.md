@@ -96,6 +96,9 @@ export interface DepGraphData {
           property?: {
             name: string;
           };
+        },
+        labels?: {
+          [key: string]: string;
         };
       };
       deps: Array<{
