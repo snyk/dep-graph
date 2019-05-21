@@ -59,15 +59,20 @@ async function depTreeToGraph(depTree: DepTree, pkgManagerName: string): Promise
   return shortenNodeIds(depGraph as types.DepGraphInternal, eventLoopSpinner);
 }
 
+// While constructing the graph, we form node IDs using hashes of the subtrees.
+// This ensures deduplication: identical tree branches will be represented by a single graph path.
+function hashBasedNodeId(name: string, version: string | undefined, hashId: string) {
+  return `${name}@${version || ''}|${hashId}`;
+}
+
+// Traverses a sub-tree of the dependency tree and add the nodes data to the graph builder.
+// Returns the hash of the sub-tree content.
 async function buildGraph(
     builder: DepGraphBuilder,
     depTree: DepTreeDep,
     pkgName: string,
     eventLoopSpinner: EventLoopSpinner,
     isRoot = false): Promise<string> {
-
-  const getNodeId = (name: string, version: string | undefined, hashId: string) =>
-    `${name}@${version || ''}|${hashId}`;
 
   const depNodesIds = [];
 
@@ -78,7 +83,9 @@ async function buildGraph(
 
   const deps = depTree.dependencies || {};
   // filter-out invalid null deps (shouldn't happen - but did...)
-  const depNames = _.keys(deps).filter((d) => !!deps[d]);
+  const depNames = Object.keys(deps).filter((d) => !!deps[d]);
+
+  // Dependencies are sorted to ensure the graph is built in deterministic fashion.
   for (const depName of depNames.sort()) {
     const dep = deps[depName];
 
@@ -89,7 +96,7 @@ async function buildGraph(
       version: dep.version,
     };
 
-    const depNodeId = getNodeId(depPkg.name, depPkg.version, subtreeHash);
+    const depNodeId = hashBasedNodeId(depPkg.name, depPkg.version, subtreeHash);
 
     depNodesIds.push(depNodeId);
 
@@ -107,6 +114,7 @@ async function buildGraph(
   const treeHash = hash.digest('hex');
 
   let pkgNodeId;
+  let shouldAddEdges = true;
   if (isRoot) {
     pkgNodeId = builder.rootNodeId;
   } else {
@@ -115,7 +123,7 @@ async function buildGraph(
       name: pkgName,
       version: depTree.version,
     };
-    pkgNodeId = getNodeId(pkg.name, pkg.version, treeHash);
+    pkgNodeId = hashBasedNodeId(pkg.name, pkg.version, treeHash);
 
     const nodeInfo: types.NodeInfo = {};
 
@@ -123,11 +131,16 @@ async function buildGraph(
       nodeInfo.versionProvenance = depTree.versionProvenance;
     }
 
-    builder.addPkgNode(pkg, pkgNodeId, nodeInfo);
+    // If a node with a matching hash-based ID already exists in the graph,
+    // we have already processed an identical subtree and there is no need to add the edges
+    // for the node's dependencies.
+    shouldAddEdges = builder.addPkgNode(pkg, pkgNodeId, nodeInfo);
   }
 
-  for (const depNodeId of depNodesIds) {
-    builder.connectDep(pkgNodeId, depNodeId);
+  if (shouldAddEdges) {
+    for (const depNodeId of depNodesIds) {
+      builder.connectDep(pkgNodeId, depNodeId);
+    }
   }
 
   if (depNodesIds.length > 0 && eventLoopSpinner.isStarving()) {
@@ -136,6 +149,7 @@ async function buildGraph(
   return treeHash;
 }
 
+// For the sake of compactness, hashes in node IDs are replaced with sequential integer IDs.
 async function shortenNodeIds(
     depGraph: types.DepGraphInternal, eventLoopSpinner: EventLoopSpinner): Promise<types.DepGraph> {
   const builder = new DepGraphBuilder(depGraph.pkgManager, depGraph.rootPkg);

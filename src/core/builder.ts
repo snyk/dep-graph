@@ -50,7 +50,9 @@ class DepGraphBuilder {
   }
 
   // TODO: this can create disconnected nodes
-  public addPkgNode(pkgInfo: types.PkgInfo, nodeId: string, nodeInfo?: types.NodeInfo) {
+  // Adds a node to the graph, returns true if the node was added,
+  // false if the node with such ID already existed and was just updated.
+  public addPkgNode(pkgInfo: types.PkgInfo, nodeId: string, nodeInfo?: types.NodeInfo): boolean {
     if (nodeId === this._rootNodeId) {
       throw new Error('DepGraphBuilder.addPkgNode() cant override root node');
     }
@@ -61,7 +63,9 @@ class DepGraphBuilder {
     this._pkgNodes[pkgId] = this._pkgNodes[pkgId] || new Set();
     this._pkgNodes[pkgId].add(nodeId);
 
+    const didExist = this._graph.hasNode(nodeId);
     this._graph.setNode(nodeId, { pkgId, info: nodeInfo });
+    return !didExist;
   }
 
   // TODO: this can create cycles
