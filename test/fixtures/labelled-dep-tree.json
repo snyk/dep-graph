@@ -1,0 +1,63 @@
+{
+  "name": "root",
+  "version": "0.0.0",
+  "packageFormatVersion": "mvn:0.0.1",
+  "dependencies": {
+    "a": {
+      "name": "a",
+      "version": "1.0.0",
+      "dependencies": {
+        "c": {
+          "name": "c",
+          "version": "1.0.0",
+          "dependencies": {
+            "d": {
+              "name": "d",
+              "version": "2.0.0",
+              "labels": {
+                "key": "value1"
+              },
+              "dependencies": {
+                "e": {
+                  "name": "e",
+                  "version": "5.0.0",
+                  "labels": {
+                    "key": "value"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "b": {
+      "name": "b",
+      "version": "1.0.0",
+      "dependencies": {
+        "c": {
+          "name": "c",
+          "version": "1.0.0",
+          "dependencies": {
+            "d": {
+              "name": "d",
+              "version": "2.0.0",
+              "labels": {
+                "key": "value2"
+              },
+              "dependencies": {
+                "e": {
+                  "name": "e",
+                  "version": "5.0.0",
+                  "labels": {
+                    "key": "value"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

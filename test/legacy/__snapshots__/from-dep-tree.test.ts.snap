@@ -1,5 +1,149 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`snapshots with labels 1`] = `
+Object {
+  "graph": Object {
+    "nodes": Array [
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "a@1.0.0",
+          },
+          Object {
+            "nodeId": "b@1.0.0",
+          },
+        ],
+        "nodeId": "root-node",
+        "pkgId": "root@0.0.0",
+      },
+      Object {
+        "deps": Array [],
+        "info": Object {
+          "labels": Object {
+            "key": "value",
+          },
+        },
+        "nodeId": "e@5.0.0",
+        "pkgId": "e@5.0.0",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "e@5.0.0",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "key": "value1",
+          },
+        },
+        "nodeId": "d@2.0.0|1",
+        "pkgId": "d@2.0.0",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "e@5.0.0",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "key": "value2",
+          },
+        },
+        "nodeId": "d@2.0.0|2",
+        "pkgId": "d@2.0.0",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "d@2.0.0|1",
+          },
+        ],
+        "nodeId": "c@1.0.0|1",
+        "pkgId": "c@1.0.0",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "d@2.0.0|2",
+          },
+        ],
+        "nodeId": "c@1.0.0|2",
+        "pkgId": "c@1.0.0",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "c@1.0.0|1",
+          },
+        ],
+        "nodeId": "a@1.0.0",
+        "pkgId": "a@1.0.0",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "c@1.0.0|2",
+          },
+        ],
+        "nodeId": "b@1.0.0",
+        "pkgId": "b@1.0.0",
+      },
+    ],
+    "rootNodeId": "root-node",
+  },
+  "pkgManager": Object {
+    "name": "maven",
+  },
+  "pkgs": Array [
+    Object {
+      "id": "root@0.0.0",
+      "info": Object {
+        "name": "root",
+        "version": "0.0.0",
+      },
+    },
+    Object {
+      "id": "e@5.0.0",
+      "info": Object {
+        "name": "e",
+        "version": "5.0.0",
+      },
+    },
+    Object {
+      "id": "d@2.0.0",
+      "info": Object {
+        "name": "d",
+        "version": "2.0.0",
+      },
+    },
+    Object {
+      "id": "c@1.0.0",
+      "info": Object {
+        "name": "c",
+        "version": "1.0.0",
+      },
+    },
+    Object {
+      "id": "a@1.0.0",
+      "info": Object {
+        "name": "a",
+        "version": "1.0.0",
+      },
+    },
+    Object {
+      "id": "b@1.0.0",
+      "info": Object {
+        "name": "b",
+        "version": "1.0.0",
+      },
+    },
+  ],
+  "schemaVersion": "1.2.0",
+}
+`;
+
 exports[`snapshots with versionProvenance 1`] = `
 Object {
   "graph": Object {
