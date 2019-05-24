@@ -60,7 +60,9 @@ function assert(condition: boolean, msg: string) {
 }
 
 function validateDepGraphData(depGraphData: DepGraphData) {
-  assert(semver.satisfies(depGraphData.schemaVersion, SUPPORTED_SCHEMA_RANGE),
+  assert(
+    !!semver.valid(depGraphData.schemaVersion)
+      && semver.satisfies(depGraphData.schemaVersion, SUPPORTED_SCHEMA_RANGE),
     `dep-graph schemaVersion not in "${SUPPORTED_SCHEMA_RANGE}"`);
   assert(depGraphData.pkgManager && !!depGraphData.pkgManager.name, '.pkgManager.name is missing');
 
