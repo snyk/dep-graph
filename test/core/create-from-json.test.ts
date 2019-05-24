@@ -199,6 +199,26 @@ test('fromJSON too new schemaVersion', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
+test('fromJSON no schemaVersion', async () => {
+  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
+
+  delete graphJson.schemaVersion;
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/schemaVersion/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON bad schemaVersion', async () => {
+  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
+
+  graphJson.schemaVersion = 'foo';
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/schemaVersion/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
 test('fromJSON missing root', async () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
