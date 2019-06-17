@@ -85,6 +85,7 @@ export interface DepGraph {
   toJSON(): DepGraphData;
   pkgPathsToRoot(pkg: Pkg): PkgInfo[][];
   countPathsToRoot(pkg: Pkg): number;
+  equals(other: DepGraph, compareRoot?: boolean): boolean;
 }
 
 // NOTE/TODO(shaun): deferring any/all design decisions here

@@ -138,6 +138,11 @@ class DepGraphImpl implements types.DepGraphInternal {
     return count;
   }
 
+  public equals(other: types.DepGraph, compareRoot: boolean = false): boolean {
+    const otherDepGraph = other as types.DepGraphInternal;
+    return this.nodeEquals(this, this.rootNodeId, otherDepGraph, otherDepGraph.rootNodeId, compareRoot);
+  }
+
   public toJSON(): types.DepGraphData {
     const nodeIds = this._graph.nodes();
 
@@ -173,6 +178,66 @@ class DepGraphImpl implements types.DepGraphInternal {
         nodes,
       },
     };
+  }
+
+  private nodeEquals(
+    graphA: types.DepGraphInternal,
+    nodeIdA: string,
+    graphB: types.DepGraphInternal,
+    nodeIdB: string,
+    compareRoot: boolean,
+    traversedNodes = new Set<string>(),
+  ): boolean {
+    // Skip root nodes comparision.
+    if (compareRoot || (nodeIdA !== graphA.rootNodeId && nodeIdB !== graphB.rootNodeId)) {
+      const pkgA = graphA.getNodePkg(nodeIdA);
+      const pkgB = graphB.getNodePkg(nodeIdB);
+
+      // Compare PkgInfo (name and version).
+      if (!_.isEqual(pkgA, pkgB)) {
+        return false;
+      }
+
+      const infoA = graphA.getNode(nodeIdA);
+      const infoB = graphB.getNode(nodeIdB);
+
+      // Compare NodeInfo (VersionProvenance and labels).
+      if (!_.isEqual(infoA, infoB)) {
+        return false;
+      }
+    }
+
+    let depsA = graphA.getNodeDepsNodeIds(nodeIdA);
+    let depsB = graphB.getNodeDepsNodeIds(nodeIdA);
+
+    // Number of dependencies should be the same.
+    if (depsA.length !== depsB.length) {
+      return false;
+    }
+
+    // Sort dependencies by name@version string.
+    const sortFn = (graph: types.DepGraphInternal) => (idA: string, idB: string) => {
+      const pkgA = graph.getNodePkg(idA);
+      const pkgB = graph.getNodePkg(idB);
+      return `${pkgA.name}@${pkgA.version}`.localeCompare(`${pkgB.name}@${pkgB.version}`);
+    };
+
+    depsA = depsA.sort(sortFn(graphA));
+    depsB = depsB.sort(sortFn(graphB));
+
+    // Compare Each dependency recursively.
+    for (let i = 0; i < depsA.length; i++) {
+      // Prevent cycles.
+      if (!traversedNodes.has(depsA[i])) {
+        traversedNodes.add(depsA[i]);
+
+        if (!this.nodeEquals(graphA, depsA[i], graphB, depsB[i], compareRoot, traversedNodes)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   private getGraphNode(nodeId: string): Node {

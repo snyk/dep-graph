@@ -60,6 +60,7 @@ export interface DepGraph {
     version: string | null;
   }>>;
   toJSON(): DepGraphData;
+  isSame(other: DepGraph): boolean;
 }
 ```
 
