@@ -33,7 +33,9 @@
             "c": {
               "name": "c",
               "version": "1.0.0",
-              "pruned": true
+              "labels": {
+                "pruned": "true"
+              }
             }
           }
         }

@@ -22,9 +22,6 @@ interface DepTreeDep {
   labels?: {
     [key: string]: string;
   };
-
-  // Identical subtree already presents within the deduplication scope (a top-level dependency)
-  pruned?: boolean;
 }
 
 interface DepTree extends DepTreeDep {
@@ -34,6 +31,13 @@ interface DepTree extends DepTreeDep {
     name: string;
     version: string;
   };
+}
+
+function addLabel(dep: DepTreeDep, key: string, value: string) {
+  if (!dep.labels) {
+    dep.labels = {};
+  }
+  dep.labels[key] = value;
 }
 
 async function depTreeToGraph(depTree: DepTree, pkgManagerName: string): Promise<types.DepGraph> {
@@ -288,7 +292,7 @@ async function buildSubtree(
   if (maybeDeduplicationSet) {
     if (maybeDeduplicationSet.has(nodeId)) {
       if (depInstanceIds.length > 0) {
-        depTree.pruned = true;
+        addLabel(depTree, 'pruned', 'true');
       }
       return depTree;
     }
