@@ -22,6 +22,9 @@ interface DepTreeDep {
   labels?: {
     [key: string]: string;
   };
+
+  // Identical subtree already presents within the deduplication scope (a top-level dependency)
+  pruned?: boolean;
 }
 
 interface DepTree extends DepTreeDep {
@@ -199,7 +202,16 @@ async function shortenNodeIds(
   return builder.build();
 }
 
-async function graphToDepTree(depGraphInterface: types.DepGraph, pkgType: string): Promise<DepTree> {
+export interface GraphToTreeOptions {
+  deduplicateWithinTopLevelDeps: boolean;
+}
+
+async function graphToDepTree(
+  depGraphInterface: types.DepGraph,
+  pkgType: string,
+  opts: GraphToTreeOptions = {deduplicateWithinTopLevelDeps: false},
+): Promise<DepTree> {
+
   const depGraph = (depGraphInterface as types.DepGraphInternal);
 
   // TODO: implement cycles support
@@ -208,7 +220,11 @@ async function graphToDepTree(depGraphInterface: types.DepGraph, pkgType: string
   }
 
   const eventLoopSpinner = new EventLoopSpinner();
-  const depTree = await buildSubtree(depGraph, depGraph.rootNodeId, eventLoopSpinner);
+  const depTree = await buildSubtree(
+    depGraph,
+    depGraph.rootNodeId,
+    eventLoopSpinner,
+    opts.deduplicateWithinTopLevelDeps ? null : false);
 
   depTree.type = depGraph.pkgManager.name;
   depTree.packageFormatVersion = constructPackageFormatVersion(pkgType);
@@ -245,7 +261,13 @@ function constructTargetOS(depGraph: types.DepGraph): { name: string; version: s
 }
 
 async function buildSubtree(
-    depGraph: types.DepGraphInternal, nodeId: string, eventLoopSpinner: EventLoopSpinner): Promise<DepTree> {
+  depGraph: types.DepGraphInternal,
+  nodeId: string,
+  eventLoopSpinner: EventLoopSpinner,
+  maybeDeduplicationSet: Set<string> | null | false = null, // false = disabled; null = not in deduplication scope yet
+): Promise<DepTree> {
+
+  const isRoot = nodeId === depGraph.rootNodeId;
   const nodePkg = depGraph.getNodePkg(nodeId);
   const nodeInfo = depGraph.getNode(nodeId);
   const depTree: DepTree = {};
@@ -263,8 +285,23 @@ async function buildSubtree(
     return depTree;
   }
 
+  if (maybeDeduplicationSet) {
+    if (maybeDeduplicationSet.has(nodeId)) {
+      if (depInstanceIds.length > 0) {
+        depTree.pruned = true;
+      }
+      return depTree;
+    }
+    maybeDeduplicationSet.add(nodeId);
+  }
+
   for (const depInstId of depInstanceIds) {
-    const subtree = await buildSubtree(depGraph, depInstId, eventLoopSpinner);
+    // Deduplication of nodes occurs only within a scope of a top-level dependency.
+    // Therefore, every top-level dep gets an independent set to track duplicates.
+    if (isRoot && maybeDeduplicationSet !== false) {
+      maybeDeduplicationSet = new Set();
+    }
+    const subtree = await buildSubtree(depGraph, depInstId, eventLoopSpinner, maybeDeduplicationSet);
     if (!subtree) {
       continue;
     }
