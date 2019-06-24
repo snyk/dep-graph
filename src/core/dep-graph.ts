@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as graphlib from 'graphlib';
 import * as types from './types';
+import {createFromJSON} from './create-from-json';
 
 export {
   DepGraphImpl,
@@ -138,8 +139,18 @@ class DepGraphImpl implements types.DepGraphInternal {
     return count;
   }
 
-  public equals(other: types.DepGraph, compareRoot: boolean = false): boolean {
-    const otherDepGraph = other as types.DepGraphInternal;
+  public equals(other: types.DepGraph, { compareRoot = true }: { compareRoot?: boolean } = {}): boolean {
+    let otherDepGraph;
+
+    if (other instanceof DepGraphImpl) {
+      otherDepGraph = other as types.DepGraphInternal;
+    } else {
+      // At runtime theoretically we can have multiple versions of
+      // @snyk/dep-graph. If "other" is not an instance of the same class it is
+      // safer to rebuild it from JSON.
+      otherDepGraph = createFromJSON(other.toJSON()) as types.DepGraphInternal;
+    }
+
     return this.nodeEquals(this, this.rootNodeId, otherDepGraph, otherDepGraph.rootNodeId, compareRoot);
   }
 
@@ -186,9 +197,9 @@ class DepGraphImpl implements types.DepGraphInternal {
     graphB: types.DepGraphInternal,
     nodeIdB: string,
     compareRoot: boolean,
-    traversedNodes = new Set<string>(),
+    traversedPairs = new Set<string>(),
   ): boolean {
-    // Skip root nodes comparision.
+    // Skip root nodes comparision if needed.
     if (compareRoot || (nodeIdA !== graphA.rootNodeId && nodeIdB !== graphB.rootNodeId)) {
       const pkgA = graphA.getNodePkg(nodeIdA);
       const pkgB = graphB.getNodePkg(nodeIdB);
@@ -219,7 +230,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     const sortFn = (graph: types.DepGraphInternal) => (idA: string, idB: string) => {
       const pkgA = graph.getNodePkg(idA);
       const pkgB = graph.getNodePkg(idB);
-      return `${pkgA.name}@${pkgA.version}`.localeCompare(`${pkgB.name}@${pkgB.version}`);
+      return DepGraphImpl.getPkgId(pkgA).localeCompare(DepGraphImpl.getPkgId(pkgB));
     };
 
     depsA = depsA.sort(sortFn(graphA));
@@ -227,13 +238,17 @@ class DepGraphImpl implements types.DepGraphInternal {
 
     // Compare Each dependency recursively.
     for (let i = 0; i < depsA.length; i++) {
-      // Prevent cycles.
-      if (!traversedNodes.has(depsA[i])) {
-        traversedNodes.add(depsA[i]);
+      const pairKey = `${depsA[i]}_${depsB[i]}`;
 
-        if (!this.nodeEquals(graphA, depsA[i], graphB, depsB[i], compareRoot, traversedNodes)) {
-          return false;
-        }
+      // Prevent cycles.
+      if (traversedPairs.has(pairKey)) {
+        continue;
+      }
+
+      traversedPairs.add(pairKey);
+
+      if (!this.nodeEquals(graphA, depsA[i], graphB, depsB[i], compareRoot, traversedPairs)) {
+        return false;
       }
     }
 

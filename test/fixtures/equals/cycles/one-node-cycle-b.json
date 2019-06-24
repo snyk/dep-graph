@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.2.0",
+  "pkgManager": {
+    "name": "maven"
+  },
+  "pkgs": [
+    {
+      "id": "root@1",
+      "info": {
+        "name": "root",
+        "version": "1"
+      }
+    },
+    {
+      "id": "A@1",
+      "info": {
+        "name": "A",
+        "version": "1"
+      }
+    },
+    {
+      "id": "B@1",
+      "info": {
+        "name": "B",
+        "version": "1"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "root-node",
+        "pkgId": "root@1",
+        "deps": [
+          {
+            "nodeId": "A@1"
+          }
+        ]
+      },
+      {
+        "nodeId": "A@1",
+        "pkgId": "A@1",
+        "deps": [
+          {
+            "nodeId": "B@1"
+          }
+        ]
+      },
+      {
+        "nodeId": "B@1",
+        "pkgId": "B@1",
+        "deps": []
+      }
+    ]
+  }
+}
