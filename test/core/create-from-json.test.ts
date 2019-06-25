@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as depGraphLib from '../../src';
 
 import * as helpers from '../helpers';
