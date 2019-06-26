@@ -114,6 +114,50 @@ export interface DepGraphData {
 
 `DepGraphData` can be used to construct a `DepGraph` instance using `createFromJSON`
 
+### `DepGraphBuilder`
+`DepGraphBuilder` is used to create new `DepGraph` instances by adding packages and their connections.
+
+```typescript
+  /**
+   * Instantiates build for given package manager
+   *
+   * @param pkgManager - package manager for which dependcy graph is created
+   * @param rootPkg - root package information
+   *
+   */
+  public constructor(pkgManager: types.PkgManager, rootPkg?: types.PkgInfo)
+
+  /**
+   * Adds node to the graph. Every node represents logical instance of the package in the dependency graph.
+   *
+   * @param pkgInfo - name and version of the package
+   * @param nodeId - identifier for node in the graph, e.g. `package@version`.
+   *                 Must uniquely identify this "instance" of the package in the graph,
+   *                 so may need to be more than `package@version` for many ecosystems.
+   *                 If in doubt - ask a contributor!
+   * @param nodeInfo - additional node info, e.g. for version provenance
+   *
+   */
+  public addPkgNode(pkgInfo: types.PkgInfo, nodeId: string, nodeInfo?: types.NodeInfo)
+
+  /**
+   * Makes a connection between parent and its dependency.
+   *
+   * @param parentNodeId - id of the parent node
+   * @param depNodeId - id of the dependency node
+   *
+   */
+  public connectDep(parentNodeId: string, depNodeId: string)
+
+  /**
+   * Creates an instance of DepGraph
+   *
+   * @return DepGraph instance built from provided packages and their connections
+   *
+   */
+  public build(): types.DepGraph
+
+```
 ### The `legacy` module
 
 A `DepTree` is a legacy structure used by the Snyk CLI to represent dependency trees. Conversion functions in the `legacy` module ease the gradual migration of code that relies on the legacy format.

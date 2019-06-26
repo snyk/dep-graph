@@ -2,6 +2,7 @@ import 'source-map-support/register';
 
 export { DepGraphData, DepGraph, PkgManager } from './core/types';
 export { createFromJSON } from './core/create-from-json';
+export { DepGraphBuilder } from './core/builder';
 
 import * as Errors from './core/errors';
 export { Errors };
