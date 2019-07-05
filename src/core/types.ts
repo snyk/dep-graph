@@ -44,6 +44,7 @@ export interface NodeInfo {
   labels?: {
     [key: string]: string;
   };
+  depType?: string;
 }
 
 export interface GraphNode {
@@ -63,6 +64,11 @@ export interface PkgManager {
   repositories?: Array<{
     alias: string;
   }>;
+  hasDevDependencies?: boolean;
+  size?: number;
+  meta?: {
+    nodeVersion: string;
+  };
 }
 
 export interface DepGraphData {
