@@ -20,7 +20,7 @@ interface DepTreeDep {
     [depName: string]: DepTreeDep,
   };
   labels?: {
-    [key: string]: string;
+    [key: string]: string | undefined;
   };
 }
 
