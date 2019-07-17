@@ -42,9 +42,9 @@ export interface VersionProvenance {
 export interface NodeInfo {
   versionProvenance?: VersionProvenance;
   labels?: {
-    [key: string]: string;
+    [key: string]: string | undefined;
+    scope?: 'dev' | 'prod';
   };
-  depType?: string;
 }
 
 export interface GraphNode {
@@ -64,11 +64,6 @@ export interface PkgManager {
   repositories?: Array<{
     alias: string;
   }>;
-  hasDevDependencies?: boolean;
-  size?: number;
-  meta?: {
-    nodeVersion: string;
-  };
 }
 
 export interface DepGraphData {

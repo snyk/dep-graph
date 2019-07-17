@@ -20,9 +20,9 @@ interface DepTreeDep {
     [depName: string]: DepTreeDep,
   };
   labels?: {
-    [key: string]: string;
+    [key: string]: string | undefined;
+    scope?: 'dev' | 'prod';
   };
-  depType?: string;
 }
 
 interface DepTree extends DepTreeDep {
@@ -89,9 +89,6 @@ async function buildGraph(
   if (depTree.labels) {
     hash.update(objectHash(depTree.labels));
   }
-  if (depTree.depType) {
-    hash.update(objectHash(depTree.depType));
-  }
 
   const deps = depTree.dependencies || {};
   // filter-out invalid null deps (shouldn't happen - but did...)
@@ -117,9 +114,6 @@ async function buildGraph(
     }
     if (dep.labels) {
       nodeInfo.labels = dep.labels;
-    }
-    if (dep.depType) {
-      nodeInfo.depType = dep.depType;
     }
 
     builder.addPkgNode(depPkg, depNodeId, nodeInfo);
@@ -147,9 +141,6 @@ async function buildGraph(
     }
     if (depTree.labels) {
       nodeInfo.labels = depTree.labels;
-    }
-    if (depTree.depType) {
-      nodeInfo.depType = depTree.depType;
     }
 
     builder.addPkgNode(pkg, pkgNodeId, nodeInfo);
@@ -292,9 +283,6 @@ async function buildSubtree(
   }
   if (nodeInfo.labels) {
     depTree.labels = nodeInfo.labels;
-  }
-  if (nodeInfo.depType) {
-    depTree.depType = nodeInfo.depType;
   }
 
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
