@@ -76,6 +76,18 @@ describe('dep-trees survive serialisation through dep-graphs', () => {
       pkgType: 'pip',
     },
     {
+      description: 'yarn dep-tree',
+      path: 'yarn-dep-tree.json',
+      pkgManagerName: 'yarn',
+      pkgType: 'npm',
+    },
+    {
+      description: 'npm dep-tree',
+      path: 'npm-dep-tree.json',
+      pkgManagerName: 'npm',
+      pkgType: 'npm',
+    },
+    {
       description: 'dep-tree different labels for same package',
       path: 'labelled-dep-tree.json',
       pkgManagerName: 'maven',
