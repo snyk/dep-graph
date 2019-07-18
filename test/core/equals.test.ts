@@ -38,8 +38,8 @@ describe('equals', () => {
   });
 
   test('different nodes order', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple.json'));
-    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple-wrong-nodes-order.json'));
+    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple-wrong-nodes-order-a.json'));
+    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple-wrong-nodes-order-b.json'));
 
     expect(a.equals(b, {compareRoot: false})).toBe(false);
     expect(b.equals(a, {compareRoot: false})).toBe(false);
@@ -78,5 +78,13 @@ describe('equals', () => {
     } as any;
 
     expect(a.equals(b)).toBe(true);
+  });
+
+  test('same graphs with different node IDs', async () => {
+    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/different-node-id-a.json'));
+    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/different-node-id-b.json'));
+
+    expect(a.equals(b, {compareRoot: false})).toBe(true);
+    expect(b.equals(a, {compareRoot: false})).toBe(true);
   });
 });
