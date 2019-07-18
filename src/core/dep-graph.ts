@@ -219,7 +219,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     }
 
     let depsA = graphA.getNodeDepsNodeIds(nodeIdA);
-    let depsB = graphB.getNodeDepsNodeIds(nodeIdA);
+    let depsB = graphB.getNodeDepsNodeIds(nodeIdB);
 
     // Number of dependencies should be the same.
     if (depsA.length !== depsB.length) {
