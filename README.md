@@ -100,7 +100,6 @@ export interface DepGraphData {
         },
         labels?: {
           [key: string]: string | undefined;
-          scope?: 'dev' | 'prod';
         };
       };
       deps: Array<{

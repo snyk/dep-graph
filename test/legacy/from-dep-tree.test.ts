@@ -265,6 +265,14 @@ describe('depTreeToGraph cycle with root', () => {
   });
 });
 
+describe('depTreeToGraph cycle with labels', () => {
+  test('npm', async () => {
+    const depTree = helpers.loadFixture('npm-cyclic-dep-tree.json');
+    const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
+    expect((await depGraphLib.legacy.graphToDepTree(depGraph, 'npm')).dependencies).toEqual(depTree.dependencies);
+  });
+});
+
 describe('depTreeToGraph with (invalid) null dependency', () => {
   const depTree = {
     name: 'pine',
