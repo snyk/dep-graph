@@ -1,4 +1,4 @@
-import { DepGraphBuilder } from '../../src/core/builder';
+import { DepGraphBuilder } from '../../src';
 
 describe('empty graph', () => {
   const builder = new DepGraphBuilder({name: 'pip'});
