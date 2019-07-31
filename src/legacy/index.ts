@@ -22,6 +22,7 @@ interface DepTreeDep {
   labels?: {
     [key: string]: string | undefined;
     scope?: 'dev' | 'prod';
+    pruned?: 'cyclic' | 'true';
   };
 }
 

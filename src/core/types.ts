@@ -44,6 +44,7 @@ export interface NodeInfo {
   labels?: {
     [key: string]: string | undefined;
     scope?: 'dev' | 'prod';
+    pruned?: 'cyclic' | 'true';
   };
 }
 
