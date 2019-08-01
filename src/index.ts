@@ -6,6 +6,7 @@ export {
   Pkg,
   PkgInfo,
   PkgManager,
+  VersionProvenance,
 } from './core/types';
 export { createFromJSON } from './core/create-from-json';
 export { DepGraphBuilder } from './core/builder';
