@@ -6,7 +6,7 @@ describe('fromJSON simple', () => {
   const simpleGraphJson = helpers.loadFixture('simple-graph.json');
   const graph = depGraphLib.createFromJSON(simpleGraphJson);
 
-  test('basic properties', async () => {
+  test('basic properties', () => {
     expect(graph.pkgManager.name).toBe('maven');
 
     expect(graph.rootPkg).toEqual({
@@ -16,7 +16,7 @@ describe('fromJSON simple', () => {
 
   });
 
-  test('getPkgs()', async () => {
+  test('getPkgs()', () => {
     expect(graph.getPkgs().sort(helpers.depSort)).toEqual([
       { name: 'a', version: '1.0.0' },
       { name: 'b', version: '1.0.0' },
@@ -28,7 +28,7 @@ describe('fromJSON simple', () => {
     ].sort(helpers.depSort));
   });
 
-  test('getDepPkgs()', async () => {
+  test('getDepPkgs()', () => {
     expect(graph.getDepPkgs().sort(helpers.depSort)).toEqual([
       { name: 'a', version: '1.0.0' },
       { name: 'b', version: '1.0.0' },
@@ -39,7 +39,7 @@ describe('fromJSON simple', () => {
     ].sort(helpers.depSort));
   });
 
-  test('getPathsToRoot', async () => {
+  test('getPathsToRoot', () => {
     expect(graph.pkgPathsToRoot({ name: 'd', version: '0.0.1' })).toHaveLength(1);
     expect(graph.countPathsToRoot({ name: 'd', version: '0.0.1' })).toBe(1);
 
@@ -71,7 +71,7 @@ describe('fromJSON simple', () => {
   });
 });
 
-test('fromJSON with pkgManager.repositories', async () => {
+test('fromJSON with pkgManager.repositories', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -109,7 +109,7 @@ test('fromJSON with pkgManager.repositories', async () => {
   expect(graph.pkgManager.repositories).toEqual([{ alias: 'ubuntu:18.04' }]);
 });
 
-test('fromJSON a pkg and a node share same id', async () => {
+test('fromJSON a pkg and a node share same id', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -155,7 +155,7 @@ test('fromJSON a pkg and a node share same id', async () => {
   expect(depGraph.countPathsToRoot({ name: 'foo', version: '2' })).toBe(1);
 });
 
-test('fromJSON no deps', async () => {
+test('fromJSON no deps', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -184,7 +184,7 @@ test('fromJSON no deps', async () => {
   expect(depGraph.pkgManager.name).toEqual('pip');
 });
 
-test('fromJSON inside schemaVersion', async () => {
+test('fromJSON inside schemaVersion', () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
   graphJson.schemaVersion = '1.9.9';
@@ -194,7 +194,7 @@ test('fromJSON inside schemaVersion', async () => {
   expect(depGraph.getDepPkgs()).toHaveLength(6);
 });
 
-test('fromJSON too old schemaVersion', async () => {
+test('fromJSON too old schemaVersion', () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
   graphJson.schemaVersion = '0.0.1';
@@ -204,7 +204,7 @@ test('fromJSON too old schemaVersion', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON too new schemaVersion', async () => {
+test('fromJSON too new schemaVersion', () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
   graphJson.schemaVersion = '2.0.0';
@@ -214,7 +214,7 @@ test('fromJSON too new schemaVersion', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON no schemaVersion', async () => {
+test('fromJSON no schemaVersion', () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
   delete graphJson.schemaVersion;
@@ -224,7 +224,7 @@ test('fromJSON no schemaVersion', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON bad schemaVersion', async () => {
+test('fromJSON bad schemaVersion', () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
   graphJson.schemaVersion = 'foo';
@@ -234,7 +234,7 @@ test('fromJSON bad schemaVersion', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON missing root', async () => {
+test('fromJSON missing root', () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
   graphJson.graph.nodes = graphJson.graph.nodes.map((x) => {
@@ -249,7 +249,7 @@ test('fromJSON missing root', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON missing pkgManager.name', async () => {
+test('fromJSON missing pkgManager.name', () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
   delete graphJson.pkgManager.name;
@@ -259,7 +259,7 @@ test('fromJSON missing pkgManager.name', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON missing pkgManager', async () => {
+test('fromJSON missing pkgManager', () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
   delete graphJson.pkgManager;
@@ -269,7 +269,7 @@ test('fromJSON missing pkgManager', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON root pkg id doesnt match name@version', async () => {
+test('fromJSON root pkg id doesnt match name@version', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -303,7 +303,7 @@ test('fromJSON root pkg id doesnt match name@version', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON with a cycle', async () => {
+test('fromJSON with a cycle', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -364,14 +364,14 @@ test('fromJSON with a cycle', async () => {
     { name: 'baz', version: '4' },
   ]);
 
-  // const convertToDepTree = async () => depGraphLib.legacy.graphToDepTree(depGraph);
+  // const convertToDepTree = () => depGraphLib.legacy.graphToDepTree(depGraph);
   // expect(convertToDepTree()).rejects.toThrow(/cycl/);
 
   const getPaths = () => depGraph.pkgPathsToRoot({ name: 'bar', version: '2' });
   expect(getPaths).toThrow(/cycl/);
 });
 
-test('fromJSON root is not really root', async () => {
+test('fromJSON root is not really root', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -413,7 +413,7 @@ test('fromJSON root is not really root', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON a pkg is not reachable from root', async () => {
+test('fromJSON a pkg is not reachable from root', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -453,7 +453,7 @@ test('fromJSON a pkg is not reachable from root', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON root is not really root', async () => {
+test('fromJSON root is not really root', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -495,7 +495,7 @@ test('fromJSON root is not really root', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON a pkg without an instance', async () => {
+test('fromJSON a pkg without an instance', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -530,7 +530,7 @@ test('fromJSON a pkg without an instance', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON an instance without a pkg', async () => {
+test('fromJSON an instance without a pkg', () => {
   const graphJson = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -570,7 +570,7 @@ test('fromJSON an instance without a pkg', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON an instance points to non-existing pkgId', async () => {
+test('fromJSON an instance points to non-existing pkgId', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -611,7 +611,7 @@ test('fromJSON an instance points to non-existing pkgId', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON root has several instances', async () => {
+test('fromJSON root has several instances', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -658,7 +658,7 @@ test('fromJSON root has several instances', async () => {
   expect(depGraph.countPathsToRoot({name: 'toor', version: '1.0.0'})).toBe(2);
 });
 
-test('fromJSON a pkg missing info field', async () => {
+test('fromJSON a pkg missing info field', () => {
   const graphJson = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -693,7 +693,7 @@ test('fromJSON a pkg missing info field', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON a pkg missing name field', async () => {
+test('fromJSON a pkg missing name field', () => {
   const graphJson = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -727,7 +727,7 @@ test('fromJSON a pkg missing name field', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON a pkg missing version field', async () => {
+test('fromJSON a pkg missing version field', () => {
   const graphJson = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -766,7 +766,7 @@ test('fromJSON a pkg missing version field', async () => {
   ]);
 });
 
-test('fromJSON pkg-id is not name@version', async () => {
+test('fromJSON pkg-id is not name@version', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -800,7 +800,7 @@ test('fromJSON pkg-id is not name@version', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON duplicate node-id', async () => {
+test('fromJSON duplicate node-id', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
@@ -839,7 +839,7 @@ test('fromJSON duplicate node-id', async () => {
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
 
-test('fromJSON duplicate pkg-id', async () => {
+test('fromJSON duplicate pkg-id', () => {
   const graphJson: depGraphLib.DepGraphData = {
     schemaVersion: '1.0.0',
     pkgManager: {
