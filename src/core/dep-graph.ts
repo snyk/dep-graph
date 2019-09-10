@@ -23,6 +23,7 @@ class DepGraphImpl implements types.DepGraphInternal {
   private _pkgNodes: { [pkgId: string]: Set<string> };
 
   private _pkgList: types.PkgInfo[];
+  private _depPkgsList: types.PkgInfo[];
 
   private _graph: graphlib.Graph;
   private _pkgManager: types.PkgManager;
@@ -50,6 +51,8 @@ class DepGraphImpl implements types.DepGraphInternal {
     this._rootPkgId = (graph.node(rootNodeId) as Node).pkgId;
 
     this._pkgList = _.values(pkgs);
+    this._depPkgsList = this._pkgList
+      .filter((pkg) => pkg !== this.rootPkg);
   }
 
   get pkgManager() {
@@ -66,6 +69,10 @@ class DepGraphImpl implements types.DepGraphInternal {
 
   public getPkgs(): types.PkgInfo[] {
     return this._pkgList;
+  }
+
+  public getDepPkgs(): types.PkgInfo[] {
+    return this._depPkgsList;
   }
 
   public getNode(nodeId: string): types.NodeInfo {

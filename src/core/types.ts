@@ -84,6 +84,7 @@ export interface DepGraph {
   readonly pkgManager: PkgManager;
   readonly rootPkg: PkgInfo;
   getPkgs(): PkgInfo[];
+  getDepPkgs(): PkgInfo[];
   toJSON(): DepGraphData;
   pkgPathsToRoot(pkg: Pkg): PkgInfo[][];
   countPathsToRoot(pkg: Pkg): number;
