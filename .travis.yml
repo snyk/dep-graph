@@ -1,4 +1,5 @@
-dist: trusty
+dist: bionic
+sudo: false
 notifications:
   email: false
 language: node_js
