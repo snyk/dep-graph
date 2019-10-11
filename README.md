@@ -177,7 +177,7 @@ A `DepTree` is a recursive structure that is quite similar to the output of `npm
 interface DepTree {
   name: string;
   version: string;
-  dependencies: {
+  dependencies?: {
     [depName: string]: DepTree
   };
 }
