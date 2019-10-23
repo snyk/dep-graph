@@ -125,7 +125,10 @@ class DepGraphImpl implements types.DepGraphInternal {
 
     const pathsToRoot: types.PkgInfo[][] = [];
     for (const id of this.getPkgNodeIds(pkg)) {
-      pathsToRoot.push(...this.pathsFromNodeToRoot(id));
+      const paths = this.pathsFromNodeToRoot(id);
+      for (const path of paths) {
+        pathsToRoot.push(path);
+      }
     }
     // note: sorting to get shorter paths first -
     //  it's nicer - and better resembles older behaviour
@@ -281,7 +284,9 @@ class DepGraphImpl implements types.DepGraphInternal {
       const out = this.pathsFromNodeToRoot(id).map((path) => {
         return [this.getNodePkg(nodeId)].concat(path);
       });
-      allPaths.push(...out);
+      for (const path of out) {
+        allPaths.push(path);
+      }
     });
 
     return allPaths;
