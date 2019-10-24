@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "debug": "tsc-watch --project tsconfig.json --onSuccess 'node --inspect --inspect-brk .'",
     "lint": "tslint -p tsconfig.json",
     "test": "jest --verbose --runInBand",
     "test:coverage": "npm run test -- --coverage",
@@ -40,11 +41,14 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
+    "@types/uuid": "^3.4.5",
     "graphlib": "^2.1.5",
     "lodash": "^4.7.14",
     "object-hash": "^1.3.1",
     "semver": "^6.0.0",
     "source-map-support": "^0.5.11",
-    "tslib": "^1.9.3"
+    "tsc-watch": "^4.0.0",
+    "tslib": "^1.9.3",
+    "uuid": "^3.3.3"
   }
 }
