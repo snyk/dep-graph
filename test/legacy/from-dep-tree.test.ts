@@ -325,14 +325,20 @@ describe('depTreeToGraph with (invalid) null dependency', () => {
 
 describe('with versionProvenance', () => {
   let depGraph: types.DepGraph;
+  let depTree: depGraphLib.legacy.DepTree;
 
   beforeAll(async () => {
-    const depTree = helpers.loadFixture('maven-dep-tree.json');
+    depTree = helpers.loadFixture('maven-dep-tree.json');
     depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'maven');
   });
 
   it('matches snapshot', () => {
     expect(depGraph.toJSON()).toMatchSnapshot();
+  });
+
+  it ('equals orig depTree when converted back', async () => {
+    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven');
+    expect(helpers.depTreesEqual(restoredDepTree, depTree)).toBeTruthy();
   });
 
   it ('getPkgNodes() returns versionProvenance', () => {
@@ -364,14 +370,20 @@ describe('without versionProvenance', () => {
 
 describe('with labels', () => {
   let depGraph: types.DepGraph;
+  let depTree: depGraphLib.legacy.DepTree;
 
   beforeAll(async () => {
-    const depTree = helpers.loadFixture('labelled-dep-tree.json');
+    depTree = helpers.loadFixture('labelled-dep-tree.json');
     depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'maven');
   });
 
   it('matches snapshot', () => {
     expect(depGraph.toJSON()).toMatchSnapshot();
+  });
+
+  it ('equals orig depTree when converted back', async () => {
+    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven');
+    expect(helpers.depTreesEqual(restoredDepTree, depTree)).toBeTruthy();
   });
 
   it('getPkgNodes() returns labels', () => {
