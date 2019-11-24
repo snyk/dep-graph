@@ -48,6 +48,12 @@ export interface NodeInfo {
   };
 }
 
+export interface Node {
+  // id: string; - can be added later once it's useful as input to other methods
+  // pkg: PkgInfo; - it can be nice to return this, consider when exposing more node related methods
+  info: NodeInfo;
+}
+
 export interface GraphNode {
   nodeId: string;
   pkgId: string;
@@ -85,6 +91,7 @@ export interface DepGraph {
   readonly rootPkg: PkgInfo;
   getPkgs(): PkgInfo[];
   getDepPkgs(): PkgInfo[];
+  getPkgNodes(pkg: Pkg): Node[];
   toJSON(): DepGraphData;
   pkgPathsToRoot(pkg: Pkg): PkgInfo[][];
   countPathsToRoot(pkg: Pkg): number;

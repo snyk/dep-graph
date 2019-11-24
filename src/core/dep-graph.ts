@@ -7,7 +7,7 @@ export {
   DepGraphImpl,
 };
 
-interface Node {
+interface GraphNode {
   pkgId: string;
   info?: types.NodeInfo;
 }
@@ -48,7 +48,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     this._pkgManager = pkgManager;
 
     this._rootNodeId = rootNodeId;
-    this._rootPkgId = (graph.node(rootNodeId) as Node).pkgId;
+    this._rootPkgId = (graph.node(rootNodeId) as GraphNode).pkgId;
 
     this._pkgList = _.values(pkgs);
     this._depPkgsList = this._pkgList
@@ -73,6 +73,21 @@ class DepGraphImpl implements types.DepGraphInternal {
 
   public getDepPkgs(): types.PkgInfo[] {
     return this._depPkgsList;
+  }
+
+  public getPkgNodes(pkg: types.Pkg): types.Node[] {
+    const pkgId = DepGraphImpl.getPkgId(pkg);
+
+    const nodes: types.Node[] = [];
+    for (const nodeId of Array.from(this._pkgNodes[pkgId])) {
+      const graphNode = this.getGraphNode(nodeId);
+
+      nodes.push({
+        info: graphNode.info || {},
+      });
+    }
+
+    return nodes;
   }
 
   public getNode(nodeId: string): types.NodeInfo {
@@ -171,7 +186,7 @@ class DepGraphImpl implements types.DepGraphInternal {
       const deps = (this._graph.successors(nodeId) || [])
         .map((depNodeId) => ({ nodeId: depNodeId }));
 
-      const node = this._graph.node(nodeId) as Node;
+      const node = this._graph.node(nodeId) as GraphNode;
       const elem: types.GraphNode = {
         nodeId,
         pkgId: node.pkgId,
@@ -265,8 +280,8 @@ class DepGraphImpl implements types.DepGraphInternal {
     return true;
   }
 
-  private getGraphNode(nodeId: string): Node {
-    const node = this._graph.node(nodeId) as Node;
+  private getGraphNode(nodeId: string): GraphNode {
+    const node = this._graph.node(nodeId) as GraphNode;
     if (!node) {
       throw new Error(`no such node: ${nodeId}`);
     }
