@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import * as graphlib from 'graphlib';
 import * as types from './types';
 import {createFromJSON} from './create-from-json';
+import { Index, addToIndex } from './helpers';
 
 export {
   DepGraphImpl,
@@ -13,73 +13,65 @@ interface GraphNode {
 }
 
 class DepGraphImpl implements types.DepGraphInternal {
-  public static SCHEMA_VERSION = '1.2.0';
+
+  get pkgManager() {
+    return this._data.pkgManager;
+  }
+
+  get rootPkg(): types.PkgInfo {
+    const pkgId = this._data.nodes[this._data.rootNodeId].pkgId;
+    return this._data.pkgs[pkgId];
+  }
+
+  get rootNodeId(): string {
+    return this._data.rootNodeId;
+  }
+  public static SCHEMA_VERSION_1 = '1.2.0';
 
   public static getPkgId(pkg: types.Pkg): string {
     return `${pkg.name}@${pkg.version || ''}`;
   }
 
-  private _pkgs: { [pkgId: string]: types.PkgInfo };
-  private _pkgNodes: { [pkgId: string]: Set<string> };
+  // DepGraphData2 contains all of the graph data and allows to perform many
+  // operations effectively.
+  private _data: types.DepGraphData2;
 
-  private _pkgList: types.PkgInfo[];
-  private _depPkgsList: types.PkgInfo[];
-
-  private _graph: graphlib.Graph;
-  private _pkgManager: types.PkgManager;
-
-  private _rootNodeId: string;
-  private _rootPkgId: string;
+  // The additional "reverse lookup" indices are built from _data to enable
+  // some additional operations required from DepGraph.
+  private _nodeIdsByPkgIds: Index = {};
+  private _nodeParents: Index = {};
 
   private _countNodePathsToRootCache: Map<string, number> = new Map();
 
   private _hasCycles: boolean | undefined;
 
   public constructor(
-    graph: graphlib.Graph,
-    rootNodeId: string,
-    pkgs: { [pkgId: string]: types.PkgInfo },
-    pkgNodes: { [pkgId: string]: Set<string> },
-    pkgManager: types.PkgManager,
+    data: types.DepGraphData2,
   ) {
-    this._graph = graph;
-    this._pkgs = pkgs;
-    this._pkgNodes = pkgNodes;
-    this._pkgManager = pkgManager;
-
-    this._rootNodeId = rootNodeId;
-    this._rootPkgId = (graph.node(rootNodeId) as GraphNode).pkgId;
-
-    this._pkgList = _.values(pkgs);
-    this._depPkgsList = this._pkgList
-      .filter((pkg) => pkg !== this.rootPkg);
-  }
-
-  get pkgManager() {
-    return this._pkgManager;
-  }
-
-  get rootPkg(): types.PkgInfo {
-    return this._pkgs[this._rootPkgId];
-  }
-
-  get rootNodeId(): string {
-    return this._rootNodeId;
+    this._data = data;
+    for (const nodeId of Object.keys(data.nodes)) {
+      const node = data.nodes[nodeId];
+      addToIndex(this._nodeIdsByPkgIds, node.pkgId, nodeId);
+      for (const childNodeId of Object.keys(node.deps)) {
+        addToIndex(this._nodeParents, childNodeId, nodeId);
+      }
+    }
   }
 
   public getPkgs(): types.PkgInfo[] {
-    return this._pkgList;
+    return _.values(this._data.pkgs);
   }
 
   public getDepPkgs(): types.PkgInfo[] {
-    return this._depPkgsList;
+    const pkgId = this._data.nodes[this._data.rootNodeId].pkgId;
+    return _.values(_.pickBy(this._data.pkgs, (v: any, k: string) => k !== pkgId));
   }
 
   public getPkgNodes(pkg: types.Pkg): types.Node[] {
     const pkgId = DepGraphImpl.getPkgId(pkg);
 
     const nodes: types.Node[] = [];
-    for (const nodeId of Array.from(this._pkgNodes[pkgId])) {
+    for (const nodeId of Array.from(this._nodeIdsByPkgIds[pkgId])) {
       const graphNode = this.getGraphNode(nodeId);
 
       nodes.push({
@@ -95,39 +87,45 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public getNodePkg(nodeId: string): types.PkgInfo {
-    return this._pkgs[this.getGraphNode(nodeId).pkgId];
+    return this._data.pkgs[this._data.nodes[nodeId].pkgId];
   }
 
   public getPkgNodeIds(pkg: types.Pkg): string[] {
     const pkgId = DepGraphImpl.getPkgId(pkg);
 
-    if (!this._pkgs[pkgId]) {
+    if (!this._data.pkgs[pkgId]) {
       throw new Error(`no such pkg: ${pkgId}`);
     }
 
-    return Array.from(this._pkgNodes[pkgId]);
+    return Array.from(this._nodeIdsByPkgIds[pkgId]);
   }
 
   public getNodeDepsNodeIds(nodeId: string): string[] {
-    const deps = this._graph.successors(nodeId);
-    if (!deps) {
+    const node = this._data.nodes[nodeId];
+    if (!node) {
       throw new Error(`no such node: ${nodeId}`);
     }
-    return deps;
+    return Object.keys(node.deps);
   }
 
   public getNodeParentsNodeIds(nodeId: string): string[] {
-    const parents = this._graph.predecessors(nodeId);
-    if (!parents) {
+    if (nodeId === this.rootNodeId) {
+      return [];
+    }
+    if (!this._data.nodes[nodeId]) {
       throw new Error(`no such node: ${nodeId}`);
     }
-    return parents;
+    const parents = this._nodeParents[nodeId];
+    if (!parents) {
+      throw new Error(`no parents for node: ${nodeId}, all parents: ${JSON.stringify(this._nodeParents)}, all nodes: ${JSON.stringify(this._data.nodes)}`);
+    }
+    return Array.from(parents);
   }
 
   public hasCycles(): boolean {
     // `isAcyclic` is expensive, so memoize
     if (this._hasCycles === undefined) {
-      this._hasCycles = !graphlib.alg.isAcyclic(this._graph);
+      this._hasCycles = this.cycleDetection(this._data.rootNodeId, new Set(), new Set());
     }
     return this._hasCycles;
   }
@@ -184,13 +182,13 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public toJSON(): types.DepGraphData {
-    const nodeIds = this._graph.nodes();
+    const nodeIds = Object.keys(this._data.nodes);
 
     const nodes = nodeIds.reduce((acc: types.GraphNode[], nodeId: string) => {
-      const deps = (this._graph.successors(nodeId) || [])
+      const node = this._data.nodes[nodeId];
+      const deps = Object.keys(node.deps)
         .map((depNodeId) => ({ nodeId: depNodeId }));
 
-      const node = this._graph.node(nodeId) as GraphNode;
       const elem: types.GraphNode = {
         nodeId,
         pkgId: node.pkgId,
@@ -203,21 +201,44 @@ class DepGraphImpl implements types.DepGraphInternal {
       return acc;
     }, []);
 
-    const pkgs: Array<{ id: string; info: types.PkgInfo; }> = _.keys(this._pkgs)
+    const pkgs: Array<{ id: string; info: types.PkgInfo; }> = _.keys(this._data.pkgs)
       .map((pkgId: string) => ({
         id: pkgId,
-        info: this._pkgs[pkgId],
+        info: this._data.pkgs[pkgId],
       }));
 
     return {
-      schemaVersion: DepGraphImpl.SCHEMA_VERSION,
-      pkgManager: this._pkgManager,
+      schemaVersion: DepGraphImpl.SCHEMA_VERSION_1,
+      pkgManager: this._data.pkgManager,
       pkgs,
       graph: {
-        rootNodeId: this._rootNodeId,
+        rootNodeId: this._data.rootNodeId,
         nodes,
       },
     };
+  }
+
+  public toJSONV2(): types.DepGraphData2 {
+    return this._data;
+  }
+
+  private cycleDetection(
+    nodeId: string,
+    ancestors: Set<string>,
+    alreadyChecked: Set<string>,
+  ): boolean {
+    ancestors.add(nodeId);
+    for (const childNodeId of Object.keys(this._data.nodes[nodeId].deps)) {
+      if (ancestors.has(childNodeId)) {
+        return true;
+      }
+      if (this.cycleDetection(childNodeId, ancestors, alreadyChecked)) {
+        return true;
+      }
+      alreadyChecked.add(childNodeId);
+    }
+    ancestors.delete(nodeId);
+    return false;
   }
 
   private nodeEquals(
@@ -284,12 +305,12 @@ class DepGraphImpl implements types.DepGraphInternal {
     return true;
   }
 
-  private getGraphNode(nodeId: string): GraphNode {
-    const node = this._graph.node(nodeId) as GraphNode;
+  private getGraphNode(nodeId: string): types.Node {
+    const node = this._data.nodes[nodeId];
     if (!node) {
       throw new Error(`no such node: ${nodeId}`);
     }
-    return node;
+    return {info: node.info || {}};
   }
 
   private pathsFromNodeToRoot(nodeId: string): types.PkgInfo[][] {

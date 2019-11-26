@@ -280,8 +280,8 @@ describe('depTreeToGraph cycle with root', () => {
     const graphJson = depGraph.toJSON();
     const restoredGraph = await depGraphLib.createFromJSON(graphJson);
 
-    expect(restoredGraph.getPkgs().sort()).toEqual(depGraph.getPkgs().sort());
-    expect(restoredGraph.getDepPkgs().sort()).toEqual(depGraph.getDepPkgs().sort());
+    helpers.expectSamePkgs(restoredGraph.getPkgs(), depGraph.getPkgs());
+    helpers.expectSamePkgs(restoredGraph.getDepPkgs(), depGraph.getDepPkgs());
   });
 });
 

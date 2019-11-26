@@ -154,7 +154,7 @@ test('fromJSON a pkg and a node share same id', () => {
   helpers.expectSamePkgs(depGraph.getPkgs(), [
     { name: 'toor', version: '1.0.0' },
     { name: 'foo', version: '2' },
-  ].sort());
+  ]);
   helpers.expectSamePkgs(depGraph.getDepPkgs(), [
     { name: 'foo', version: '2' },
   ]);
@@ -218,7 +218,7 @@ test('fromJSON too old schemaVersion', () => {
 test('fromJSON too new schemaVersion', () => {
   const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
 
-  graphJson.schemaVersion = '2.0.0';
+  graphJson.schemaVersion = '3.0.0';
 
   const go = () => depGraphLib.createFromJSON(graphJson);
   expect(go).toThrow(/schemaVersion/);
@@ -662,10 +662,10 @@ test('fromJSON root has several instances', () => {
   helpers.expectSamePkgs(depGraph.getPkgs(), [
     {name: 'toor', version: '1.0.0'},
     {name: 'foo', version: '2'},
-  ].sort());
+  ]);
   helpers.expectSamePkgs(depGraph.getDepPkgs(), [
     {name: 'foo', version: '2'},
-  ].sort());
+  ]);
   expect(depGraph.countPathsToRoot({name: 'toor', version: '1.0.0'})).toBe(2);
 });
 

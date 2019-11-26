@@ -1,6 +1,6 @@
-import * as graphlib from 'graphlib';
 import * as types from './types';
 import { DepGraphImpl } from './dep-graph';
+import { conditionalExpression } from '@babel/types';
 
 export {
   DepGraphBuilder,
@@ -9,81 +9,68 @@ export {
 class DepGraphBuilder {
 
   get rootNodeId(): string {
-    return this._rootNodeId;
+    return this._data.rootNodeId;
   }
 
   private static _getPkgId(pkg: types.Pkg): string {
     return `${pkg.name}@${pkg.version || ''}`;
   }
 
-  private _pkgs: { [pkgId: string]: types.PkgInfo } = {};
-  private _pkgNodes: { [pkgId: string]: Set<string> } = {};
-
-  private _graph: graphlib.Graph;
-  private _pkgManager: types.PkgManager;
-
-  private _rootNodeId: string;
-  private _rootPkgId: string;
+  private _data: types.DepGraphData2;
 
   public constructor(pkgManager: types.PkgManager, rootPkg?: types.PkgInfo) {
-    const graph = new graphlib.Graph({
-      directed: true,
-      multigraph: false,
-      compound: false,
-    });
+
     if (!rootPkg) {
       rootPkg = {
         name: '_root',
         version: '0.0.0',
       };
     }
+    const rootPkgId = DepGraphBuilder._getPkgId(rootPkg);
 
-    this._rootNodeId = 'root-node';
-    this._rootPkgId = DepGraphBuilder._getPkgId(rootPkg);
-    this._pkgs[this._rootPkgId] = rootPkg;
-
-    graph.setNode(this._rootNodeId, { pkgId: this._rootPkgId });
-    this._pkgNodes[this._rootPkgId] = new Set([this._rootNodeId]);
-
-    this._graph = graph;
-    this._pkgManager = pkgManager;
+    this._data = {
+      pkgManager,
+      schemaVersion: '2.0.0',
+      rootNodeId: 'root-node',
+      pkgs: {[rootPkgId]: rootPkg},
+      nodes: {'root-node': {pkgId: rootPkgId, deps: {}}},
+    };
   }
 
   // TODO: this can create disconnected nodes
   public addPkgNode(pkgInfo: types.PkgInfo, nodeId: string, nodeInfo?: types.NodeInfo) {
-    if (nodeId === this._rootNodeId) {
+    if (nodeId === this._data.rootNodeId) {
       throw new Error('DepGraphBuilder.addPkgNode() cant override root node');
     }
 
     const pkgId = DepGraphBuilder._getPkgId(pkgInfo);
 
-    this._pkgs[pkgId] = pkgInfo;
-    this._pkgNodes[pkgId] = this._pkgNodes[pkgId] || new Set();
-    this._pkgNodes[pkgId].add(nodeId);
+    this._data.pkgs[pkgId] = pkgInfo;
 
-    this._graph.setNode(nodeId, { pkgId, info: nodeInfo });
+    if (!this._data.nodes[nodeId]) {
+      this._data.nodes[nodeId] = { pkgId, deps: {} };
+    }
+    if (nodeInfo) {
+      this._data.nodes[nodeId].info = nodeInfo;
+    }
   }
 
   // TODO: this can create cycles
   public connectDep(parentNodeId: string, depNodeId: string) {
-    if (!this._graph.hasNode(parentNodeId)) {
+    if (!this._data.nodes[parentNodeId]) {
       throw new Error('parentNodeId does not exist');
     }
 
-    if (!this._graph.hasNode(depNodeId)) {
+    if (!this._data.nodes[depNodeId]) {
       throw new Error('depNodeId does not exist');
     }
 
-    this._graph.setEdge(parentNodeId, depNodeId);
+    this._data.nodes[parentNodeId].deps[depNodeId] = {};
   }
 
   public build(): types.DepGraph {
     return new DepGraphImpl(
-      this._graph,
-      this._rootNodeId,
-      this._pkgs,
-      this._pkgNodes,
-      this._pkgManager,
+      this._data,
     );
   }
 }

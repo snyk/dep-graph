@@ -27,7 +27,6 @@
     "url": "https://github.com/snyk/dep-graph/issues"
   },
   "devDependencies": {
-    "@types/graphlib": "^2.1.4",
     "@types/jest": "^24",
     "@types/lodash": "^4",
     "@types/node": "^8",
@@ -40,7 +39,6 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "graphlib": "^2.1.5",
     "lodash": "^4.7.14",
     "object-hash": "^1.3.1",
     "semver": "^6.0.0",

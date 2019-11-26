@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import * as graphlib from 'graphlib';
 import { ValidationError } from './errors';
+import { DepGraphData2 } from './types';
 
 function assert(condition: boolean, msg: string) {
   if (!condition) {
@@ -8,22 +8,29 @@ function assert(condition: boolean, msg: string) {
   }
 }
 
-export function validateGraph(graph: graphlib.Graph,
-                              rootNodeId: string,
-                              pkgs: {[pkgId: string]: any},
-                              pkgNodes: {[nodeId: string]: Set<string>}) {
+export function validateGraph(data: DepGraphData2) {
 
-  assert((graph.predecessors(rootNodeId) || []).length === 0,
-    `"${rootNodeId}" is not really the root`);
-  const reachableFromRoot = graphlib.alg.postorder(graph, [rootNodeId]);
-  const nodeIds = graph.nodes();
+  const seen = new Set<string>();
+  const toProcess = new Set<string>([data.rootNodeId]);
+  const pkgIdsFromNodes = new Set<string>();
 
-  assert(JSON.stringify(nodeIds.sort()) === JSON.stringify(reachableFromRoot.sort()),
+  while (toProcess.size > 0) {
+    const nodeId = toProcess.keys().next().value;
+    toProcess.delete(nodeId);
+    seen.add(nodeId);
+    const node = data.nodes[nodeId];
+    pkgIdsFromNodes.add(node.pkgId);
+    for (const childNodeId of Object.keys(node.deps)) {
+      if (!seen.has(childNodeId)) {
+        toProcess.add(childNodeId);
+      }
+      assert(childNodeId !== data.rootNodeId, `"${data.rootNodeId}" is not really the root`);
+    }
+  }
+
+  assert(JSON.stringify(Object.keys(data.nodes).sort()) === JSON.stringify(Array.from(seen).sort()),
     'not all graph nodes are reachable from root');
 
-  const pkgIds = _.keys(pkgs) as string[];
-  const pkgsWithoutInstances = pkgIds
-    .filter((pkgId) => !pkgNodes[pkgId] || pkgNodes[pkgId].size === 0);
-  assert(pkgsWithoutInstances.length === 0,
+  assert(JSON.stringify(Object.keys(data.pkgs).sort()) === JSON.stringify(Array.from(pkgIdsFromNodes).sort()),
     'not all pkgs have instance nodes');
 }

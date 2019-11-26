@@ -148,6 +148,7 @@ async function buildGraph(
   }
 
   for (const depNodeId of depNodesIds) {
+
     builder.connectDep(pkgNodeId, depNodeId);
   }
 
@@ -195,7 +196,6 @@ async function shortenNodeIds(
       for (const depNodeId of depGraph.getNodeDepsNodeIds(nodeId)) {
         const parentNode = nodesMap[nodeId] || nodeId;
         const childNode = nodesMap[depNodeId] || depNodeId;
-
         builder.connectDep(parentNode, childNode);
       }
     }

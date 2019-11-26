@@ -109,3 +109,20 @@ export interface DepGraphInternal extends DepGraph {
   getNodeParentsNodeIds(nodeId: string): string[];
   hasCycles(): boolean;
 }
+
+// Alternative representation of dep-graph.
+// Preserves all data, more compact, also deterministic (equal JSONs mean equal graphs).
+// Comparison is much easier e.g. when debugging compatibility.
+export interface DepGraphData2 {
+  schemaVersion: string;
+  pkgManager: PkgManager;
+  pkgs: { [pkgId: string]: PkgInfo };
+  rootNodeId: string;
+  nodes: { [nodeId: string]: GraphNode2 };
+}
+
+export interface GraphNode2 {
+  pkgId: string;
+  info?: NodeInfo;
+  deps: { [otherNodeId: string]: {} }; // metadata
+}

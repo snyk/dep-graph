@@ -1,57 +1,80 @@
 import * as _ from 'lodash';
 import * as semver from 'semver';
-import * as graphlib from 'graphlib';
 import * as types from './types';
 
-import { DepGraph, DepGraphData, GraphNode } from './types';
+import { DepGraph, DepGraphData, DepGraphData2, GraphNode } from './types';
 import { ValidationError } from './errors';
-import { validateGraph } from './validate-graph';
 import { DepGraphImpl } from './dep-graph';
+import { validateGraph } from './validate-graph';
 
 export const SUPPORTED_SCHEMA_RANGE = '^1.0.0';
 
-export function createFromJSON(depGraphData: DepGraphData): DepGraph {
-  validateDepGraphData(depGraphData);
-
-  const graph = new graphlib.Graph({
-    directed: true,
-    multigraph: false,
-    compound: false,
-  });
-  const pkgs: {[pkgId: string]: types.PkgInfo} = {};
-  const pkgNodes: {[pkgId: string]: Set<string>} = {};
-
-  for (const { id, info } of depGraphData.pkgs) {
-    pkgs[id] = info.version
-      ? info
-      : { ...info, version: undefined };
-  }
-
-  for (const node of depGraphData.graph.nodes) {
-    const pkgId = node.pkgId;
-    if (!pkgNodes[pkgId]) {
-      pkgNodes[pkgId] = new Set();
+// To be used in .sort()
+// Compares entries by derived scalar "key"
+function compareByKey<T>(
+  key: (x: T) => string | number | boolean,
+): (a: T, B: T) => number {
+  return (a, b) => {
+    const av = key(a);
+    const bv = key(b);
+    if (av < bv) {
+      return -1;
     }
-    pkgNodes[pkgId].add(node.nodeId);
-
-    graph.setNode(node.nodeId, { pkgId, info: node.info });
-  }
-
-  for (const node of depGraphData.graph.nodes) {
-    for (const depNodeId of node.deps) {
-      graph.setEdge(node.nodeId, depNodeId.nodeId);
+    if (av > bv) {
+      return 1;
     }
+    return 0;
+  };
+}
+
+export function createFromJSON(depGraphDataV1OrV2: DepGraphData|DepGraphData2): DepGraph {
+  if (!depGraphDataV1OrV2.schemaVersion) {
+    throw new ValidationError("Missing schemaVersion");
   }
+  if (depGraphDataV1OrV2.schemaVersion.startsWith('2.')) {
+    const depGraphData2 = depGraphDataV1OrV2 as DepGraphData2;
+    validateGraph(depGraphData2);
+    return new DepGraphImpl(depGraphData2);
+  } else if (depGraphDataV1OrV2.schemaVersion.startsWith('1.')) {
+    const depGraphData = depGraphDataV1OrV2 as DepGraphData;
+    validateDepGraphData(depGraphData);
 
-  validateGraph(graph, depGraphData.graph.rootNodeId, pkgs, pkgNodes);
+    const res: DepGraphData2 = {
+      schemaVersion: '2.0.0',
+      pkgManager: depGraphData.pkgManager,
+      rootNodeId: depGraphData.graph.rootNodeId,
+      // nodes before pkgs, since nodes are usually more interesting when
+      // debugging graph issues and thus should come first in JSON
+      nodes: {},
+      pkgs: {},
+    };
+    // All the keys are sorted when transforming keys to maps.
+    // This is to increase the probability that JSON.stringify will produce
+    // identical representations.
+    for (const pkg of depGraphData.pkgs.sort(compareByKey((x) => x.id))) {
+      res.pkgs[pkg.id] = pkg.info;
+      if (!pkg.info.version) {
+        res.pkgs[pkg.id].version = undefined as any;
+      }
+    }
+    for (const node of depGraphData.graph.nodes.sort(compareByKey((x) => x.nodeId))) {
+      const depsMap: Record<string, {}> = {};
+      node.deps.sort(compareByKey((x) => x.nodeId)).forEach((d) => depsMap[d.nodeId] = {});
+      res.nodes[node.nodeId] = {
+        pkgId: node.pkgId,
+        deps: depsMap,
+        info: node.info,
+      };
+    }
 
-  return new DepGraphImpl(
-    graph,
-    depGraphData.graph.rootNodeId,
-    pkgs,
-    pkgNodes,
-    depGraphData.pkgManager,
-  );
+    validateGraph(res);
+
+    return new DepGraphImpl(
+      res,
+    );
+  } else {
+    throw new ValidationError("Unknown schemaVersion: " + depGraphDataV1OrV2.schemaVersion);
+  }
 }
 
 function assert(condition: boolean, msg: string) {
