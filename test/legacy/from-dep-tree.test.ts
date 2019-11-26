@@ -29,7 +29,7 @@ describe('depTreeToGraph simple dysmorphic', () => {
   });
 
   test('getPkgs', async () => {
-    expect(depGraph.getPkgs().sort(helpers.depSort)).toEqual([
+    helpers.expectSamePkgs(depGraph.getPkgs(), [
       { name: 'a', version: '1.0.0' },
       { name: 'b', version: '1.0.0' },
       { name: 'c', version: '1.0.0' },
@@ -37,15 +37,15 @@ describe('depTreeToGraph simple dysmorphic', () => {
       { name: 'd', version: '0.0.2' },
       { name: 'e', version: '5.0.0' },
       { name: 'root', version: '0.0.0' },
-    ].sort(helpers.depSort));
-    expect(depGraph.getDepPkgs().sort(helpers.depSort)).toEqual([
+    ]);
+    helpers.expectSamePkgs(depGraph.getDepPkgs(), [
       { name: 'a', version: '1.0.0' },
       { name: 'b', version: '1.0.0' },
       { name: 'c', version: '1.0.0' },
       { name: 'd', version: '0.0.1' },
       { name: 'd', version: '0.0.2' },
       { name: 'e', version: '5.0.0' },
-    ].sort(helpers.depSort));
+    ]);
   });
 
   test('getPathsToRoot', async () => {
@@ -228,8 +228,8 @@ describe('depTreeToGraph with funky pipes in the version', () => {
     const graphJson = depGraph.toJSON();
     const restoredGraph = await depGraphLib.createFromJSON(graphJson);
 
-    expect(restoredGraph.getPkgs().sort()).toEqual(depGraph.getPkgs().sort());
-    expect(restoredGraph.getDepPkgs().sort()).toEqual(depGraph.getDepPkgs().sort());
+    helpers.expectSamePkgs(restoredGraph.getPkgs(), depGraph.getPkgs());
+    helpers.expectSamePkgs(restoredGraph.getDepPkgs(), depGraph.getDepPkgs());
   });
 });
 

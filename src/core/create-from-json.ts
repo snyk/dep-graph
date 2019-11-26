@@ -22,7 +22,9 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
   const pkgNodes: {[pkgId: string]: Set<string>} = {};
 
   for (const { id, info } of depGraphData.pkgs) {
-    pkgs[id] = info;
+    pkgs[id] = info.version
+      ? info
+      : { ...info, version: undefined };
   }
 
   for (const node of depGraphData.graph.nodes) {

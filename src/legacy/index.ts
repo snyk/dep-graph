@@ -45,7 +45,7 @@ function addLabel(dep: DepTreeDep, key: string, value: string) {
 async function depTreeToGraph(depTree: DepTree, pkgManagerName: string): Promise<types.DepGraph> {
   const rootPkg = {
     name: depTree.name!,
-    version: depTree.version,
+    version: depTree.version || undefined,
   };
 
   const pkgManagerInfo: types.PkgManager = {
