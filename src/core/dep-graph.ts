@@ -75,20 +75,47 @@ class DepGraphImpl implements types.DepGraphInternal {
   public getPkgNodes(pkg: types.Pkg): types.Node[] {
     const pkgId = DepGraphImpl.getPkgId(pkg);
 
+    const pkgInfo = this._pkgs[pkgId];
+
     const nodes: types.Node[] = [];
     for (const nodeId of Array.from(this._pkgNodes[pkgId])) {
       const graphNode = this.getGraphNode(nodeId);
 
       nodes.push({
+        id: nodeId,
         info: graphNode.info || {},
+        pkg: pkgInfo,
       });
     }
 
     return nodes;
   }
 
-  public getNode(nodeId: string): types.NodeInfo {
-    return this.getGraphNode(nodeId).info || {};
+  public getNodeDeps(nodeId: string): types.Node[] {
+    const depsNodeIds = this.getNodeDepsNodeIds(nodeId);
+
+    const nodes: types.Node[] = [];
+    for (const depNodeId of depsNodeIds) {
+      const graphNode = this.getGraphNode(depNodeId);
+
+      nodes.push({
+        id: depNodeId,
+        info: graphNode.info || {},
+        pkg: this.getNodePkg(depNodeId),
+      });
+    }
+
+    return nodes;
+  }
+
+  public getNode(nodeId: string): types.Node {
+    const graphNode = this.getGraphNode(nodeId);
+
+    return {
+      id: nodeId,
+      info: graphNode.info || {},
+      pkg: this.getNodePkg(nodeId),
+    };
   }
 
   public getNodePkg(nodeId: string): types.PkgInfo {
@@ -246,7 +273,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     compareRoot: boolean,
     traversedPairs = new Set<string>(),
   ): boolean {
-    // Skip root nodes comparision if needed.
+    // Skip root nodes comparison if needed.
     if (
       compareRoot ||
       (nodeIdA !== graphA.rootNodeId && nodeIdB !== graphB.rootNodeId)
@@ -259,11 +286,11 @@ class DepGraphImpl implements types.DepGraphInternal {
         return false;
       }
 
-      const infoA = graphA.getNode(nodeIdA);
-      const infoB = graphB.getNode(nodeIdB);
+      const nodeA = graphA.getNode(nodeIdA);
+      const nodeB = graphB.getNode(nodeIdB);
 
       // Compare NodeInfo (VersionProvenance and labels).
-      if (!_.isEqual(infoA, infoB)) {
+      if (!_.isEqual(nodeA.info, nodeB.info)) {
         return false;
       }
     }
