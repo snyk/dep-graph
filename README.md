@@ -49,21 +49,21 @@ export interface DepGraph {
   };
   readonly rootPkg: {
     name: string;
-    version: string | null;
+    version?: string;
   };
   // all unique packages in the graph (including root package)
   getPkgs(): Array<{
     name: string;
-    version: string | null;
+    version?: string;
   }>;
   // all unique packages in the graph, except the root package
   getDepPkgs(): Array<{
     name: string;
-    version: string | null;
+    version?: string;
   }>;
   pkgPathsToRoot(pkg: Pkg): Array<Array<{
     name: string;
-    version: string | null;
+    version?: string;
   }>>;
   countPathsToRoot(pkg: Pkg): number;
   toJSON(): DepGraphData;
@@ -89,7 +89,7 @@ export interface DepGraphData {
     id: string;
     info: {
       name: string;
-      version: string | null;
+      version?: string;
     };
   }>;
   graph: {

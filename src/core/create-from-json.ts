@@ -22,8 +22,7 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
   const pkgNodes: {[pkgId: string]: Set<string>} = {};
 
   for (const { id, info } of depGraphData.pkgs) {
-    // TODO: avoid this, instead just use `info` as is
-    pkgs[id] = info.version ? info : { ...info, version: null } as any;
+    pkgs[id] = info;
   }
 
   for (const node of depGraphData.graph.nodes) {

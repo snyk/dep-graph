@@ -759,10 +759,10 @@ test('fromJSON a pkg missing version field', () => {
   const depGraph = depGraphLib.createFromJSON(graphJson as any);
   expect(depGraph.getPkgs().sort()).toEqual([
     { name: 'toor', version: '1.0.0' },
-    { name: 'foo', version: null },
+    { name: 'foo' },
   ]);
   expect(depGraph.getDepPkgs().sort()).toEqual([
-    { name: 'foo', version: null },
+    { name: 'foo' },
   ]);
 });
 
