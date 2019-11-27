@@ -67,7 +67,7 @@ async function depTreeToGraph(
 
   const depGraph = await builder.build();
 
-  return shortenNodeIds(depGraph as types.DepGraphInternal, eventLoopSpinner);
+  return shortenNodeIds(depGraph as types.DepGraph, eventLoopSpinner);
 }
 
 async function buildGraph(
@@ -221,12 +221,10 @@ export interface GraphToTreeOptions {
 }
 
 async function graphToDepTree(
-  depGraphInterface: types.DepGraph,
+  depGraph: types.DepGraph,
   pkgType: string,
   opts: GraphToTreeOptions = { deduplicateWithinTopLevelDeps: false },
 ): Promise<DepTree> {
-  const depGraph = depGraphInterface as types.DepGraphInternal;
-
   // TODO: implement cycles support
   if (depGraph.hasCycles()) {
     throw new Error('Conversion to DepTree does not support cyclic graphs yet');

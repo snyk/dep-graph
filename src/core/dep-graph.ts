@@ -10,7 +10,7 @@ interface GraphNode {
   info?: types.NodeInfo;
 }
 
-class DepGraphImpl implements types.DepGraphInternal {
+class DepGraphImpl {
   public static SCHEMA_VERSION = '1.2.0';
 
   public static getPkgId(pkg: types.Pkg): string {
@@ -192,15 +192,13 @@ class DepGraphImpl implements types.DepGraphInternal {
     other: types.DepGraph,
     { compareRoot = true }: { compareRoot?: boolean } = {},
   ): boolean {
-    let otherDepGraph;
+    let otherDepGraph = other;
 
-    if (other instanceof DepGraphImpl) {
-      otherDepGraph = other as types.DepGraphInternal;
-    } else {
+    if (!(other instanceof DepGraphImpl)) {
       // At runtime theoretically we can have multiple versions of
       // @snyk/dep-graph. If "other" is not an instance of the same class it is
       // safer to rebuild it from JSON.
-      otherDepGraph = createFromJSON(other.toJSON()) as types.DepGraphInternal;
+      otherDepGraph = createFromJSON(other.toJSON());
     }
 
     // In theory, for the graphs created by standard means, `_.isEquals(this._data, otherDepGraph._data)`
@@ -266,9 +264,9 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   private nodeEquals(
-    graphA: types.DepGraphInternal,
+    graphA: types.DepGraph,
     nodeIdA: string,
-    graphB: types.DepGraphInternal,
+    graphB: types.DepGraph,
     nodeIdB: string,
     compareRoot: boolean,
     traversedPairs = new Set<string>(),
@@ -278,16 +276,13 @@ class DepGraphImpl implements types.DepGraphInternal {
       compareRoot ||
       (nodeIdA !== graphA.rootNodeId && nodeIdB !== graphB.rootNodeId)
     ) {
-      const pkgA = graphA.getNodePkg(nodeIdA);
-      const pkgB = graphB.getNodePkg(nodeIdB);
-
-      // Compare PkgInfo (name and version).
-      if (!_.isEqual(pkgA, pkgB)) {
-        return false;
-      }
-
       const nodeA = graphA.getNode(nodeIdA);
       const nodeB = graphB.getNode(nodeIdB);
+
+      // Compare PkgInfo (name and version).
+      if (!_.isEqual(nodeA.pkg, nodeB.pkg)) {
+        return false;
+      }
 
       // Compare NodeInfo (VersionProvenance and labels).
       if (!_.isEqual(nodeA.info, nodeB.info)) {
@@ -295,8 +290,8 @@ class DepGraphImpl implements types.DepGraphInternal {
       }
     }
 
-    let depsA = graphA.getNodeDepsNodeIds(nodeIdA);
-    let depsB = graphB.getNodeDepsNodeIds(nodeIdB);
+    let depsA = graphA.getNodeDeps(nodeIdA).map((n) => n.id);
+    let depsB = graphB.getNodeDeps(nodeIdB).map((n) => n.id);
 
     // Number of dependencies should be the same.
     if (depsA.length !== depsB.length) {
@@ -304,12 +299,9 @@ class DepGraphImpl implements types.DepGraphInternal {
     }
 
     // Sort dependencies by name@version string.
-    const sortFn = (graph: types.DepGraphInternal) => (
-      idA: string,
-      idB: string,
-    ) => {
-      const pkgA = graph.getNodePkg(idA);
-      const pkgB = graph.getNodePkg(idB);
+    const sortFn = (graph: types.DepGraph) => (idA: string, idB: string) => {
+      const pkgA = graph.getNode(idA).pkg;
+      const pkgB = graph.getNode(idB).pkg;
       return DepGraphImpl.getPkgId(pkgA).localeCompare(
         DepGraphImpl.getPkgId(pkgB),
       );

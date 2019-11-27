@@ -147,10 +147,8 @@ describe('depTreeToGraph goof', () => {
   });
 
   test('check nodes', async () => {
-    const depGraphInternal = depGraph as types.DepGraphInternal;
-
     const stripAnsiPkg = { name: 'strip-ansi', version: '3.0.1' };
-    const stripAnsiNodes = depGraphInternal.getPkgNodeIds(stripAnsiPkg);
+    const stripAnsiNodes = depGraph.getPkgNodes(stripAnsiPkg);
     expect(stripAnsiNodes).toHaveLength(2);
 
     const stripAnsiPaths = depGraph.pkgPathsToRoot(stripAnsiPkg);
@@ -176,7 +174,7 @@ describe('depTreeToGraph goof', () => {
       depGraph.countPathsToRoot({ name: 'wrappy', version: '1.0.2' }),
     ).toBe(22);
 
-    const expressNodes = depGraphInternal.getPkgNodeIds({
+    const expressNodes = depGraph.getPkgNodes({
       name: 'express',
       version: '4.12.4',
     });
@@ -217,10 +215,9 @@ describe('depTreeToGraph with pkg that that misses a version', () => {
     expect(depGraph.getPkgs()).toHaveLength(3);
     expect(depGraph.getDepPkgs()).toHaveLength(2);
 
-    const depGraphInternal = depGraph as types.DepGraphInternal;
-    expect(depGraphInternal.getPkgNodeIds({ name: 'bar' } as any)).toEqual([
-      'bar@',
-    ]);
+    expect(
+      depGraph.getPkgNodes({ name: 'bar' } as any).map((n) => n.id),
+    ).toEqual(['bar@']);
   });
 });
 

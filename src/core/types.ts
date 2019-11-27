@@ -90,24 +90,18 @@ export interface DepGraph {
   readonly pkgManager: PkgManager;
   readonly rootPkg: PkgInfo;
   readonly rootNodeId: string;
+
   getPkgs(): PkgInfo[];
   getDepPkgs(): PkgInfo[];
   getPkgNodes(pkg: Pkg): Node[];
   getNodeDeps(nodeId: string): Node[];
   getNode(nodeId: string): Node;
-  toJSON(): DepGraphData;
+
+  hasCycles(): boolean;
   pkgPathsToRoot(pkg: Pkg): PkgInfo[][];
   directDepsLeadingTo(pkg: Pkg): PkgInfo[];
   countPathsToRoot(pkg: Pkg): number;
-  equals(other: DepGraph, options?: { compareRoot?: boolean }): boolean;
-}
 
-// NOTE/TODO(shaun): deferring any/all design decisions here
-// Revisit when we actually start using things
-export interface DepGraphInternal extends DepGraph {
-  getNodePkg(nodeId: string): PkgInfo;
-  getPkgNodeIds(pkg: Pkg): string[];
-  getNodeDepsNodeIds(nodeId: string): string[];
-  getNodeParentsNodeIds(nodeId: string): string[];
-  hasCycles(): boolean;
+  equals(other: DepGraph, options?: { compareRoot?: boolean }): boolean;
+  toJSON(): DepGraphData;
 }
