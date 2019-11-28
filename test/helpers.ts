@@ -25,6 +25,10 @@ export function depTreesEqual(a: any, b: any) {
     return false;
   }
 
+  if (!_.isEqual(a.labels, b.labels) || !_.isEqual(a.versionProvenance, b.versionProvenance)) {
+    return false;
+  }
+
   const aDeps = a.dependencies || {};
   const bDeps = b.dependencies || {};
 

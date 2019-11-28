@@ -69,6 +69,17 @@ describe('fromJSON simple', () => {
       ],
     ]);
   });
+
+  test('getPkgNodes', () => {
+    expect(graph.getPkgNodes({ name: 'root', version: '0.0.0' })).toHaveLength(1);
+    expect(graph.getPkgNodes({ name: 'a', version: '1.0.0' })).toHaveLength(1);
+
+    const cNodes = graph.getPkgNodes({ name: 'c', version: '1.0.0' });
+    expect(cNodes).toHaveLength(2);
+    expect(cNodes[0].info).toEqual(cNodes[1].info);
+
+    expect(() => graph.getPkgNodes({ name: 'no-such-pkg', version: '1.3.7'})).toThrow();
+  });
 });
 
 test('fromJSON with pkgManager.repositories', () => {

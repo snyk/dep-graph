@@ -323,22 +323,73 @@ describe('depTreeToGraph with (invalid) null dependency', () => {
   });
 });
 
-describe('snapshots', () => {
-  test('with versionProvenance', async () => {
-    const depTree = helpers.loadFixture('maven-dep-tree.json');
-    const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'maven');
+describe('with versionProvenance', () => {
+  let depGraph: types.DepGraph;
+  let depTree: depGraphLib.legacy.DepTree;
+
+  beforeAll(async () => {
+    depTree = helpers.loadFixture('maven-dep-tree.json');
+    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'maven');
+  });
+
+  it('matches snapshot', () => {
     expect(depGraph.toJSON()).toMatchSnapshot();
   });
 
-  test('without versionProvenance', async () => {
+  it ('equals orig depTree when converted back', async () => {
+    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven');
+    expect(helpers.depTreesEqual(restoredDepTree, depTree)).toBeTruthy();
+  });
+
+  it ('getPkgNodes() returns versionProvenance', () => {
+    const commonsIoNodes = depGraph.getPkgNodes({name: 'commons-io:commons-io', version: '2.2'});
+    expect(commonsIoNodes[0].info.versionProvenance!.type).toEqual('dependencyManagement');
+
+    const ognlNodes = depGraph.getPkgNodes({name: 'ognl:ognl', version: '3.0.6'});
+    expect(ognlNodes[0].info.versionProvenance).toEqual({
+      type: 'property',
+      property: { name: 'ognl.version' },
+      // tslint:disable:max-line-length
+      location: 'https://maven-central.storage-download.googleapis.com/repos/central/data/org/apache/struts/struts2-parent/2.3.20/struts2-parent-2.3.20.pom',
+    });
+  });
+});
+
+describe('without versionProvenance', () => {
+  let depGraph: types.DepGraph;
+
+  beforeAll(async () => {
     const depTree = helpers.loadFixture('goof-dep-tree.json');
-    const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
+    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
+  });
+
+  it('matches snapshot', () => {
+    expect(depGraph.toJSON()).toMatchSnapshot();
+  });
+});
+
+describe('with labels', () => {
+  let depGraph: types.DepGraph;
+  let depTree: depGraphLib.legacy.DepTree;
+
+  beforeAll(async () => {
+    depTree = helpers.loadFixture('labelled-dep-tree.json');
+    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'maven');
+  });
+
+  it('matches snapshot', () => {
     expect(depGraph.toJSON()).toMatchSnapshot();
   });
 
-  test('with labels', async () => {
-    const depTree = helpers.loadFixture('labelled-dep-tree.json');
-    const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'maven');
-    expect(depGraph.toJSON()).toMatchSnapshot();
+  it ('equals orig depTree when converted back', async () => {
+    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven');
+    expect(helpers.depTreesEqual(restoredDepTree, depTree)).toBeTruthy();
+  });
+
+  it('getPkgNodes() returns labels', () => {
+    let dNodes = depGraph.getPkgNodes({name: 'd', version: '2.0.0'});
+    dNodes = _.sortBy(dNodes, 'id');
+    expect(dNodes[0].info.labels).toEqual({key: 'value1'});
+    expect(dNodes[1].info.labels).toEqual({key: 'value2'});
   });
 });
