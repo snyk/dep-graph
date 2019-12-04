@@ -17,7 +17,7 @@ describe('fromJSON simple', () => {
   });
 
   test('getPkgs()', () => {
-    expect(graph.getPkgs().sort(helpers.depSort)).toEqual([
+    helpers.expectSamePkgs(graph.getPkgs(), [
       { name: 'a', version: '1.0.0' },
       { name: 'b', version: '1.0.0' },
       { name: 'c', version: '1.0.0' },
@@ -25,18 +25,18 @@ describe('fromJSON simple', () => {
       { name: 'd', version: '0.0.2' },
       { name: 'e', version: '5.0.0' },
       { name: 'root', version: '0.0.0' },
-    ].sort(helpers.depSort));
+    ]);
   });
 
   test('getDepPkgs()', () => {
-    expect(graph.getDepPkgs().sort(helpers.depSort)).toEqual([
+    helpers.expectSamePkgs(graph.getDepPkgs(), [
       { name: 'a', version: '1.0.0' },
       { name: 'b', version: '1.0.0' },
       { name: 'c', version: '1.0.0' },
       { name: 'd', version: '0.0.1' },
       { name: 'd', version: '0.0.2' },
       { name: 'e', version: '5.0.0' },
-    ].sort(helpers.depSort));
+    ]);
   });
 
   test('getPathsToRoot', () => {
@@ -151,11 +151,11 @@ test('fromJSON a pkg and a node share same id', () => {
 
   const depGraph = depGraphLib.createFromJSON(graphJson);
 
-  expect(depGraph.getPkgs().sort()).toEqual([
+  helpers.expectSamePkgs(depGraph.getPkgs(), [
     { name: 'toor', version: '1.0.0' },
     { name: 'foo', version: '2' },
   ].sort());
-  expect(depGraph.getDepPkgs()).toEqual([
+  helpers.expectSamePkgs(depGraph.getDepPkgs(), [
     { name: 'foo', version: '2' },
   ]);
 
@@ -363,13 +363,13 @@ test('fromJSON with a cycle', () => {
 
   const depGraph = depGraphLib.createFromJSON(graphJson);
 
-  expect(depGraph.getPkgs().sort()).toEqual([
+  helpers.expectSamePkgs(depGraph.getPkgs(), [
     { name: 'toor', version: '1.0.0' },
     { name: 'foo', version: '2' },
     { name: 'bar', version: '3' },
     { name: 'baz', version: '4' },
   ]);
-  expect(depGraph.getDepPkgs().sort()).toEqual([
+  helpers.expectSamePkgs(depGraph.getDepPkgs(), [
     { name: 'foo', version: '2' },
     { name: 'bar', version: '3' },
     { name: 'baz', version: '4' },
@@ -659,11 +659,11 @@ test('fromJSON root has several instances', () => {
   };
 
   const depGraph = depGraphLib.createFromJSON(graphJson);
-  expect(depGraph.getPkgs().sort()).toEqual([
+  helpers.expectSamePkgs(depGraph.getPkgs(), [
     {name: 'toor', version: '1.0.0'},
     {name: 'foo', version: '2'},
   ].sort());
-  expect(depGraph.getDepPkgs().sort()).toEqual([
+  helpers.expectSamePkgs(depGraph.getDepPkgs(), [
     {name: 'foo', version: '2'},
   ].sort());
   expect(depGraph.countPathsToRoot({name: 'toor', version: '1.0.0'})).toBe(2);
@@ -768,12 +768,12 @@ test('fromJSON a pkg missing version field', () => {
   };
 
   const depGraph = depGraphLib.createFromJSON(graphJson as any);
-  expect(depGraph.getPkgs().sort()).toEqual([
+  helpers.expectSamePkgs(depGraph.getPkgs(), [
     { name: 'toor', version: '1.0.0' },
-    { name: 'foo', version: null },
+    { name: 'foo' },
   ]);
-  expect(depGraph.getDepPkgs().sort()).toEqual([
-    { name: 'foo', version: null },
+  helpers.expectSamePkgs(depGraph.getDepPkgs(), [
+    { name: 'foo' },
   ]);
 });
 

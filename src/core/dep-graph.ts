@@ -176,6 +176,10 @@ class DepGraphImpl implements types.DepGraphInternal {
       otherDepGraph = createFromJSON(other.toJSON()) as types.DepGraphInternal;
     }
 
+    // In theory, for the graphs created by standard means, `_.isEquals(this._data, otherDepGraph._data)`
+    // should suffice, since node IDs will be generated in a predictable way.
+    // However, there might be different versions of graph and inconsistencies
+    // in the ordering of the arrays, so we perform a deep comparison.
     return this.nodeEquals(this, this.rootNodeId, otherDepGraph, otherDepGraph.rootNodeId, compareRoot);
   }
 
