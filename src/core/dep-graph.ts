@@ -144,14 +144,9 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public countPathsToRoot(pkg: types.Pkg): number {
-    // TODO: implement cycles support
-    if (this.hasCycles()) {
-      throw new Error('countPathsToRoot does not support cyclic graphs yet');
-    }
-
     let count = 0;
     for (const nodeId of this.getPkgNodeIds(pkg)) {
-      count += this.countNodePathsToRoot(nodeId);
+      count += this.countNodePathsToRoot(nodeId, new Set([]));
     }
 
     return count;
@@ -349,20 +344,32 @@ class DepGraphImpl implements types.DepGraphInternal {
     return allPaths;
   }
 
-  private countNodePathsToRoot(nodeId: string): number {
+  private countNodePathsToRoot(
+    nodeId: string,
+    seenOnPath: Set<string>,
+  ): number {
     if (this._countNodePathsToRootCache.has(nodeId)) {
       return this._countNodePathsToRootCache.get(nodeId) || 0;
     }
 
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
+
     if (parentNodesIds.length === 0) {
       this._countNodePathsToRootCache.set(nodeId, 1);
       return 1;
     }
 
-    const count = parentNodesIds.reduce((acc, parentNodeId) => {
-      return acc + this.countNodePathsToRoot(parentNodeId);
-    }, 0);
+    const count = parentNodesIds
+      .filter((parentId) => !seenOnPath.has(parentId))
+      .reduce((acc, parentNodeId) => {
+        return (
+          acc +
+          this.countNodePathsToRoot(
+            parentNodeId,
+            new Set(seenOnPath).add(nodeId),
+          )
+        );
+      }, 0);
 
     this._countNodePathsToRootCache.set(nodeId, count);
     return count;

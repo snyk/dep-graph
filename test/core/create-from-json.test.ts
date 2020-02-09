@@ -399,6 +399,7 @@ test('fromJSON with a cycle', () => {
       { name: 'toor', version: '1.0.0' },
     ],
   ]);
+  expect(depGraph.countPathsToRoot({ name: 'bar', version: '3' })).toBe(1);
 
   const fooPathsToRoot = depGraph.pkgPathsToRoot({ name: 'foo', version: '2' });
   expect(fooPathsToRoot).toEqual([
@@ -407,6 +408,7 @@ test('fromJSON with a cycle', () => {
       { name: 'toor', version: '1.0.0' },
     ],
   ]);
+  expect(depGraph.countPathsToRoot({ name: 'foo', version: '2' })).toBe(1);
 });
 
 test('fromJSON root is not really root', () => {
