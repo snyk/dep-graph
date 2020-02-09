@@ -210,11 +210,24 @@ describe('graphToDepTree with a linux pkgManager', () => {
   });
 });
 
-test('graphs with cycles are not supported', async () => {
+test('cyclic graph to tree', async () => {
   const cyclicDepGraphData = helpers.loadFixture('cyclic-dep-graph.json');
   const cyclicDepGraph = depGraphLib.createFromJSON(cyclicDepGraphData);
 
-  await expect(
-    depGraphLib.legacy.graphToDepTree(cyclicDepGraph, 'pip'),
-  ).rejects.toThrow('Conversion to DepTree does not support cyclic graphs yet');
+  const depTree = await depGraphLib.legacy.graphToDepTree(
+    cyclicDepGraph,
+    'pip',
+  );
+
+  const cyclicTreeNode = _.get(
+    depTree,
+    'dependencies.foo.dependencies.bar.dependencies.baz.dependencies.foo',
+  );
+  expect(cyclicTreeNode).toEqual({
+    name: 'foo',
+    version: '2',
+    labels: { cyclic: 'true' },
+  });
+
+  expect(depTree).toMatchSnapshot();
 });
