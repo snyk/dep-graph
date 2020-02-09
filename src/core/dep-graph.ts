@@ -130,14 +130,9 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public pkgPathsToRoot(pkg: types.Pkg): types.PkgInfo[][] {
-    // TODO: implement cycles support
-    if (this.hasCycles()) {
-      throw new Error('pkgPathsToRoot does not support cyclic graphs yet');
-    }
-
     const pathsToRoot: types.PkgInfo[][] = [];
     for (const id of this.getPkgNodeIds(pkg)) {
-      const paths = this.pathsFromNodeToRoot(id);
+      const paths = this.pathsFromNodeToRoot(id, new Set([]));
       for (const path of paths) {
         const pkgPath = path.map((nodeId) => this.getNodePkg(nodeId));
         pathsToRoot.push(pkgPath);
@@ -328,21 +323,28 @@ class DepGraphImpl implements types.DepGraphInternal {
     return node;
   }
 
-  private pathsFromNodeToRoot(nodeId: string): string[][] {
+  private pathsFromNodeToRoot(
+    nodeId: string,
+    seenOnPath: Set<string>,
+  ): string[][] {
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
     if (parentNodesIds.length === 0) {
       return [[nodeId]];
     }
 
     const allPaths: string[][] = [];
-    parentNodesIds.map((id) => {
-      const out = this.pathsFromNodeToRoot(id).map((path) => {
-        return [nodeId].concat(path);
+    parentNodesIds
+      .filter((parentId) => !seenOnPath.has(parentId))
+      .map((parentId) => {
+        const pathsFromParent = this.pathsFromNodeToRoot(
+          parentId,
+          new Set(seenOnPath).add(nodeId),
+        );
+
+        for (const path of pathsFromParent) {
+          allPaths.push([nodeId].concat(path));
+        }
       });
-      for (const path of out) {
-        allPaths.push(path);
-      }
-    });
 
     return allPaths;
   }

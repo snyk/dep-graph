@@ -391,11 +391,22 @@ test('fromJSON with a cycle', () => {
     { name: 'baz', version: '4' },
   ]);
 
-  // const convertToDepTree = () => depGraphLib.legacy.graphToDepTree(depGraph);
-  // expect(convertToDepTree()).rejects.toThrow(/cycl/);
+  const barPathsToRoot = depGraph.pkgPathsToRoot({ name: 'bar', version: '3' });
+  expect(barPathsToRoot).toEqual([
+    [
+      { name: 'bar', version: '3' },
+      { name: 'foo', version: '2' },
+      { name: 'toor', version: '1.0.0' },
+    ],
+  ]);
 
-  const getPaths = () => depGraph.pkgPathsToRoot({ name: 'bar', version: '2' });
-  expect(getPaths).toThrow(/cycl/);
+  const fooPathsToRoot = depGraph.pkgPathsToRoot({ name: 'foo', version: '2' });
+  expect(fooPathsToRoot).toEqual([
+    [
+      { name: 'foo', version: '2' },
+      { name: 'toor', version: '1.0.0' },
+    ],
+  ]);
 });
 
 test('fromJSON root is not really root', () => {
