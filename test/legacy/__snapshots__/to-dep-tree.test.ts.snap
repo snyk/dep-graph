@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cyclic graph to tree 1`] = `
+Object {
+  "dependencies": Object {
+    "foo": Object {
+      "dependencies": Object {
+        "bar": Object {
+          "dependencies": Object {
+            "baz": Object {
+              "dependencies": Object {
+                "foo": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "foo",
+                  "version": "2",
+                },
+              },
+              "name": "baz",
+              "version": "4",
+            },
+          },
+          "name": "bar",
+          "version": "3",
+        },
+      },
+      "name": "foo",
+      "version": "2",
+    },
+  },
+  "name": "toor",
+  "packageFormatVersion": "pip:0.0.1",
+  "type": "pip",
+  "version": "1.0.0",
+}
+`;
