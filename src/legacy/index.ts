@@ -227,16 +227,12 @@ async function graphToDepTree(
 ): Promise<DepTree> {
   const depGraph = depGraphInterface as types.DepGraphInternal;
 
-  // TODO: implement cycles support
-  if (depGraph.hasCycles()) {
-    throw new Error('Conversion to DepTree does not support cyclic graphs yet');
-  }
-
   const eventLoopSpinner = new EventLoopSpinner();
   const depTree = await buildSubtree(
     depGraph,
     depGraph.rootNodeId,
     eventLoopSpinner,
+    new Set(),
     opts.deduplicateWithinTopLevelDeps ? null : false,
   );
 
@@ -285,6 +281,7 @@ async function buildSubtree(
   depGraph: types.DepGraphInternal,
   nodeId: string,
   eventLoopSpinner: EventLoopSpinner,
+  ancestorsSet: Set<string>,
   maybeDeduplicationSet: Set<string> | null | false = null, // false = disabled; null = not in deduplication scope yet
 ): Promise<DepTree> {
   const isRoot = nodeId === depGraph.rootNodeId;
@@ -301,7 +298,21 @@ async function buildSubtree(
   }
 
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
-  if (!depInstanceIds || depInstanceIds.length === 0) {
+  if (!depInstanceIds || !depInstanceIds.length) {
+    return depTree;
+  }
+
+  /*
+  TL;DR -- ORDER MATTERS HERE! CYCLES BEFORE DUPES!
+  In the next part we're looking for cycles and duplications;
+  We need to differ between a cycle and a dupe as they close-relatives, but are not same;
+  A dupe can exists w/o having a cycle in the graph, where a cycle in the graph will introduce duplication (if handled wrong)
+  cycle ==100%==> dupe
+  dupe ==not-100%==> cycle
+  thus we must check for cycles prior to dupes;
+   */
+  if (ancestorsSet.has(nodeId)) {
+    addLabel(depTree, 'cyclic', 'true');
     return depTree;
   }
 
@@ -311,8 +322,9 @@ async function buildSubtree(
         addLabel(depTree, 'pruned', 'true');
       }
       return depTree;
+    } else {
+      maybeDeduplicationSet.add(nodeId);
     }
-    maybeDeduplicationSet.add(nodeId);
   }
 
   for (const depInstId of depInstanceIds) {
@@ -321,10 +333,12 @@ async function buildSubtree(
     if (isRoot && maybeDeduplicationSet !== false) {
       maybeDeduplicationSet = new Set();
     }
+    const ancestors = new Set(ancestorsSet).add(nodeId);
     const subtree = await buildSubtree(
       depGraph,
       depInstId,
       eventLoopSpinner,
+      ancestors,
       maybeDeduplicationSet,
     );
     if (!subtree) {

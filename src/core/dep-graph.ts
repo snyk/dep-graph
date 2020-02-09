@@ -31,8 +31,6 @@ class DepGraphImpl implements types.DepGraphInternal {
 
   private _countNodePathsToRootCache: Map<string, number> = new Map();
 
-  private _hasCycles: boolean | undefined;
-
   public constructor(
     graph: graphlib.Graph,
     rootNodeId: string,
@@ -121,25 +119,13 @@ class DepGraphImpl implements types.DepGraphInternal {
     return parents;
   }
 
-  public hasCycles(): boolean {
-    // `isAcyclic` is expensive, so memoize
-    if (this._hasCycles === undefined) {
-      this._hasCycles = !graphlib.alg.isAcyclic(this._graph);
-    }
-    return this._hasCycles;
-  }
-
   public pkgPathsToRoot(pkg: types.Pkg): types.PkgInfo[][] {
-    // TODO: implement cycles support
-    if (this.hasCycles()) {
-      throw new Error('pkgPathsToRoot does not support cyclic graphs yet');
-    }
-
     const pathsToRoot: types.PkgInfo[][] = [];
     for (const id of this.getPkgNodeIds(pkg)) {
-      const paths = this.pathsFromNodeToRoot(id);
+      const paths = this.pathsFromNodeToRoot(id, new Set([]));
       for (const path of paths) {
-        pathsToRoot.push(path);
+        const pkgPath = path.map((nodeId) => this.getNodePkg(nodeId));
+        pathsToRoot.push(pkgPath);
       }
     }
     // note: sorting to get shorter paths first -
@@ -148,14 +134,9 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public countPathsToRoot(pkg: types.Pkg): number {
-    // TODO: implement cycles support
-    if (this.hasCycles()) {
-      throw new Error('countPathsToRoot does not support cyclic graphs yet');
-    }
-
     let count = 0;
     for (const nodeId of this.getPkgNodeIds(pkg)) {
-      count += this.countNodePathsToRoot(nodeId);
+      count += this.countNodePathsToRoot(nodeId, new Set([]));
     }
 
     return count;
@@ -327,39 +308,58 @@ class DepGraphImpl implements types.DepGraphInternal {
     return node;
   }
 
-  private pathsFromNodeToRoot(nodeId: string): types.PkgInfo[][] {
+  private pathsFromNodeToRoot(
+    nodeId: string,
+    seenOnPath: Set<string>,
+  ): string[][] {
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
-    if (parentNodesIds.length === 0) {
-      return [[this.getNodePkg(nodeId)]];
+
+    // No parents --> we're at root!
+    if (!parentNodesIds.length) {
+      return [[nodeId]];
     }
 
-    const allPaths: types.PkgInfo[][] = [];
-    parentNodesIds.map((id) => {
-      const out = this.pathsFromNodeToRoot(id).map((path) => {
-        return [this.getNodePkg(nodeId)].concat(path);
-      });
-      for (const path of out) {
-        allPaths.push(path);
+    const allPaths: string[][] = [];
+
+    for (const parentId of parentNodesIds) {
+      if (!seenOnPath.has(parentId)) {
+        const pathsFromParent = this.pathsFromNodeToRoot(
+          parentId,
+          new Set(seenOnPath).add(nodeId), // Max size is O(log(n)) [tree depth] where n is the amount of nodes in the tree
+        );
+        for (const path of pathsFromParent) {
+          allPaths.push([nodeId].concat(path));
+        }
       }
-    });
+    }
 
     return allPaths;
   }
 
-  private countNodePathsToRoot(nodeId: string): number {
+  private countNodePathsToRoot(
+    nodeId: string,
+    seenOnPath: Set<string>,
+  ): number {
     if (this._countNodePathsToRootCache.has(nodeId)) {
       return this._countNodePathsToRootCache.get(nodeId) || 0;
     }
 
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
+
     if (parentNodesIds.length === 0) {
       this._countNodePathsToRootCache.set(nodeId, 1);
       return 1;
     }
 
-    const count = parentNodesIds.reduce((acc, parentNodeId) => {
-      return acc + this.countNodePathsToRoot(parentNodeId);
-    }, 0);
+    let count = 0;
+    for (const parentNodeId of parentNodesIds) {
+      if (!seenOnPath.has(parentNodeId)) {
+        count += this.countNodePathsToRoot(
+          parentNodeId,
+          new Set(seenOnPath).add(nodeId),
+        );
+      }
+    }
 
     this._countNodePathsToRootCache.set(nodeId, count);
     return count;

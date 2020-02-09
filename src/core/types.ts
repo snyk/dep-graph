@@ -108,5 +108,4 @@ export interface DepGraphInternal extends DepGraph {
   getPkgNodeIds(pkg: Pkg): string[];
   getNodeDepsNodeIds(nodeId: string): string[];
   getNodeParentsNodeIds(nodeId: string): string[];
-  hasCycles(): boolean;
 }
