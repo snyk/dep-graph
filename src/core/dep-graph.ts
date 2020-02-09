@@ -121,14 +121,6 @@ class DepGraphImpl implements types.DepGraphInternal {
     return parents;
   }
 
-  public hasCycles(): boolean {
-    // `isAcyclic` is expensive, so memoize
-    if (this._hasCycles === undefined) {
-      this._hasCycles = !graphlib.alg.isAcyclic(this._graph);
-    }
-    return this._hasCycles;
-  }
-
   public pkgPathsToRoot(pkg: types.Pkg): types.PkgInfo[][] {
     const pathsToRoot: types.PkgInfo[][] = [];
     for (const id of this.getPkgNodeIds(pkg)) {
