@@ -183,6 +183,16 @@ class DepGraphImpl implements types.DepGraphInternal {
     return this.nodeEquals(this, this.rootNodeId, otherDepGraph, otherDepGraph.rootNodeId, compareRoot);
   }
 
+  public directDepsLeadingTo(pkg: types.Pkg): types.PkgInfo[] {
+    const pkgNodes = this.getPkgNodeIds(pkg);
+    const directDeps = this.getNodeDepsNodeIds(this.rootNodeId);
+    const nodes = directDeps.filter((directDep) => {
+      const reachableNodes = graphlib.alg.postorder(this._graph, [directDep]);
+      return reachableNodes.filter((node) => pkgNodes.includes(node)).length;
+    });
+    return nodes.map((node) => this.getNodePkg(node));
+  }
+
   public toJSON(): types.DepGraphData {
     const nodeIds = this._graph.nodes();
 
