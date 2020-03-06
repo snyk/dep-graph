@@ -22,6 +22,9 @@
                     "vuln": "yes"
                   }
                 }
+              },
+              "labels": {
+                "foo": "bar"
               }
             }
           }
@@ -34,6 +37,7 @@
               "name": "c",
               "version": "1.0.0",
               "labels": {
+                "foo": "bar",
                 "pruned": "true"
               }
             }
@@ -60,6 +64,9 @@
                     "vuln": "yes"
                   }
                 }
+              },
+              "labels": {
+                "foo": "bar"
               }
             }
           }

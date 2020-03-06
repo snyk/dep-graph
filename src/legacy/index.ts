@@ -283,7 +283,7 @@ async function buildSubtree(
     depTree.versionProvenance = nodeInfo.versionProvenance;
   }
   if (nodeInfo.labels) {
-    depTree.labels = nodeInfo.labels;
+    depTree.labels = { ...nodeInfo.labels };
   }
 
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
