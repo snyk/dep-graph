@@ -251,7 +251,7 @@ function constructPackageFormatVersion(pkgType: string): string {
 }
 
 function constructTargetOS(depGraph: types.DepGraph): { name: string; version: string; } | void {
-  if (['apk', 'apt', 'deb', 'rpm'].indexOf(depGraph.pkgManager.name) === -1) {
+  if (['apk', 'apt', 'deb', 'rpm', 'linux'].indexOf(depGraph.pkgManager.name) === -1) {
     // .targetOS is undefined unless its a linux pkgManager
     return;
   }

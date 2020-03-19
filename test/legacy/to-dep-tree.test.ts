@@ -46,6 +46,12 @@ describe('dep-trees survive serialisation through dep-graphs', () => {
       pkgType: 'rpm',
     },
     {
+      description: 'os dep-tree (linux - scratch image)',
+      path: 'os-linux-scratch-dep-tree.json',
+      pkgManagerName: 'linux',
+      pkgType: 'linux',
+    },
+    {
       description: 'maven dep-tree',
       path: 'maven-dep-tree.json',
       pkgManagerName: 'maven',

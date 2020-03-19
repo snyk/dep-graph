@@ -1,0 +1,30 @@
+{
+    "schemaVersion": "1.2.0",
+    "pkgManager": {
+      "name": "linux",
+      "repositories": [
+        {
+          "alias": "unknown:0.0"
+        }
+      ]
+    },
+    "pkgs": [
+      {
+        "id": "docker-image|scratch@0",
+        "info": {
+          "name": "docker-image|scratch",
+          "version": "0"
+        }
+      }
+    ],
+    "graph": {
+      "rootNodeId": "root-node",
+      "nodes": [
+        {
+          "nodeId": "root-node",
+          "pkgId": "docker-image|scratch@0",
+          "deps": []
+        }
+      ]
+    }
+  }
