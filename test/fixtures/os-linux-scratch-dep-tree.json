@@ -1,0 +1,10 @@
+{
+    "name": "docker-image|scratch",
+    "version": "0",
+    "type": "linux",
+    "packageFormatVersion": "linux:0.0.1",
+    "targetOS": {
+      "name": "unknown",
+      "version": "0.0"
+    }
+  }
