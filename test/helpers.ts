@@ -4,7 +4,9 @@ import * as path from 'path';
 import { PkgInfo } from '../src';
 
 export function loadFixture(name: string) {
-  return JSON.parse(fs.readFileSync(path.join(__dirname, `fixtures/${name}`), 'utf8'));
+  return JSON.parse(
+    fs.readFileSync(path.join(__dirname, `fixtures/${name}`), 'utf8'),
+  );
 }
 
 function depSort(a: any, b: any) {
@@ -30,14 +32,24 @@ export function depTreesEqual(a: any, b: any) {
     return false;
   }
 
-  if (!_.isEqual(a.labels, b.labels) || !_.isEqual(a.versionProvenance, b.versionProvenance)) {
+  if (
+    !_.isEqual(a.labels, b.labels) ||
+    !_.isEqual(a.versionProvenance, b.versionProvenance)
+  ) {
     return false;
   }
 
   const aDeps = a.dependencies || {};
   const bDeps = b.dependencies || {};
 
-  if (_.keys(aDeps).sort().join(',') !== _.keys(bDeps).sort().join(',')) {
+  if (
+    _.keys(aDeps)
+      .sort()
+      .join(',') !==
+    _.keys(bDeps)
+      .sort()
+      .join(',')
+  ) {
     return false;
   }
 

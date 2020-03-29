@@ -7,7 +7,9 @@ test('depTree pruning works as expected with 1 top-level dep', async () => {
   const depGraph = await depGraphLib.legacy.depTreeToGraph(origTree, 'maven');
 
   const expectedDepTree = helpers.loadFixture('pruneable-tree-pruned.json');
-  const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven', {deduplicateWithinTopLevelDeps: true});
+  const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven', {
+    deduplicateWithinTopLevelDeps: true,
+  });
 
   expect(depTree.type).toEqual('maven');
   delete depTree.type;
@@ -15,11 +17,17 @@ test('depTree pruning works as expected with 1 top-level dep', async () => {
 });
 
 test('depTree pruning works as expected with multi top-level deps', async () => {
-  const origTree = helpers.loadFixture('pruneable-tree-multi-top-level-deps.json');
+  const origTree = helpers.loadFixture(
+    'pruneable-tree-multi-top-level-deps.json',
+  );
   const depGraph = await depGraphLib.legacy.depTreeToGraph(origTree, 'maven');
 
-  const expectedDepTree = helpers.loadFixture('pruneable-tree-multi-top-level-deps-pruned.json');
-  const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven', {deduplicateWithinTopLevelDeps: true});
+  const expectedDepTree = helpers.loadFixture(
+    'pruneable-tree-multi-top-level-deps-pruned.json',
+  );
+  const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven', {
+    deduplicateWithinTopLevelDeps: true,
+  });
 
   expect(depTree.type).toEqual('maven');
   delete depTree.type;
@@ -33,7 +41,9 @@ test('depTree is a no-op for dysmorphic trees', async () => {
   // dependencies
   const origTree = helpers.loadFixture('simple-dep-tree.json');
   const depGraph = await depGraphLib.legacy.depTreeToGraph(origTree, 'maven');
-  const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven', {deduplicateWithinTopLevelDeps: true});
+  const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven', {
+    deduplicateWithinTopLevelDeps: true,
+  });
 
   expect(depTree.type).toEqual('maven');
   delete depTree.type;
@@ -43,7 +53,9 @@ test('depTree is a no-op for dysmorphic trees', async () => {
 test('subdeps from different direct deps are not deduped', async () => {
   const origTree = helpers.loadFixture('unpruneable-tree.json');
   const depGraph = await depGraphLib.legacy.depTreeToGraph(origTree, 'maven');
-  const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven', {deduplicateWithinTopLevelDeps: true});
+  const depTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven', {
+    deduplicateWithinTopLevelDeps: true,
+  });
 
   expect(depTree.type).toEqual('maven');
   delete depTree.type;
