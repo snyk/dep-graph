@@ -2,7 +2,7 @@
 // tslint:disable:no-console
 
 import * as fs from 'fs';
-import {legacy, createFromJSON} from '../src';
+import { legacy, createFromJSON } from '../src';
 
 const [STDIN, STDOUT] = [0, 1];
 

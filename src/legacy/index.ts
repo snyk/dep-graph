@@ -6,18 +6,14 @@ import { EventLoopSpinner } from './event-loop-spinner';
 
 import objectHash = require('object-hash');
 
-export {
-  depTreeToGraph,
-  graphToDepTree,
-  DepTree,
-};
+export { depTreeToGraph, graphToDepTree, DepTree };
 
 interface DepTreeDep {
   name?: string; // shouldn't, but might happen
   version?: string; // shouldn't, but might happen
   versionProvenance?: types.VersionProvenance;
   dependencies?: {
-    [depName: string]: DepTreeDep,
+    [depName: string]: DepTreeDep;
   };
   labels?: {
     [key: string]: string | undefined;
@@ -42,7 +38,10 @@ function addLabel(dep: DepTreeDep, key: string, value: string) {
   dep.labels[key] = value;
 }
 
-async function depTreeToGraph(depTree: DepTree, pkgManagerName: string): Promise<types.DepGraph> {
+async function depTreeToGraph(
+  depTree: DepTree,
+  pkgManagerName: string,
+): Promise<types.DepGraph> {
   const rootPkg = {
     name: depTree.name!,
     version: depTree.version || undefined,
@@ -72,14 +71,17 @@ async function depTreeToGraph(depTree: DepTree, pkgManagerName: string): Promise
 }
 
 async function buildGraph(
-    builder: DepGraphBuilder,
-    depTree: DepTreeDep,
-    pkgName: string,
-    eventLoopSpinner: EventLoopSpinner,
-    isRoot = false): Promise<string> {
-
-  const getNodeId = (name: string, version: string | undefined, hashId: string) =>
-    `${name}@${version || ''}|${hashId}`;
+  builder: DepGraphBuilder,
+  depTree: DepTreeDep,
+  pkgName: string,
+  eventLoopSpinner: EventLoopSpinner,
+  isRoot = false,
+): Promise<string> {
+  const getNodeId = (
+    name: string,
+    version: string | undefined,
+    hashId: string,
+  ) => `${name}@${version || ''}|${hashId}`;
 
   const depNodesIds = [];
 
@@ -97,7 +99,12 @@ async function buildGraph(
   for (const depName of depNames.sort()) {
     const dep = deps[depName];
 
-    const subtreeHash = await buildGraph(builder, dep, depName, eventLoopSpinner);
+    const subtreeHash = await buildGraph(
+      builder,
+      dep,
+      depName,
+      eventLoopSpinner,
+    );
 
     const depPkg: types.PkgInfo = {
       name: depName,
@@ -158,10 +165,12 @@ async function buildGraph(
 }
 
 async function shortenNodeIds(
-    depGraph: types.DepGraphInternal, eventLoopSpinner: EventLoopSpinner): Promise<types.DepGraph> {
+  depGraph: types.DepGraphInternal,
+  eventLoopSpinner: EventLoopSpinner,
+): Promise<types.DepGraph> {
   const builder = new DepGraphBuilder(depGraph.pkgManager, depGraph.rootPkg);
 
-  const nodesMap: {[key: string]: string} = {};
+  const nodesMap: { [key: string]: string } = {};
 
   // create nodes with shorter ids
   for (const pkg of depGraph.getPkgs()) {
@@ -215,10 +224,9 @@ export interface GraphToTreeOptions {
 async function graphToDepTree(
   depGraphInterface: types.DepGraph,
   pkgType: string,
-  opts: GraphToTreeOptions = {deduplicateWithinTopLevelDeps: false},
+  opts: GraphToTreeOptions = { deduplicateWithinTopLevelDeps: false },
 ): Promise<DepTree> {
-
-  const depGraph = (depGraphInterface as types.DepGraphInternal);
+  const depGraph = depGraphInterface as types.DepGraphInternal;
 
   // TODO: implement cycles support
   if (depGraph.hasCycles()) {
@@ -230,7 +238,8 @@ async function graphToDepTree(
     depGraph,
     depGraph.rootNodeId,
     eventLoopSpinner,
-    opts.deduplicateWithinTopLevelDeps ? null : false);
+    opts.deduplicateWithinTopLevelDeps ? null : false,
+  );
 
   depTree.type = depGraph.pkgManager.name;
   depTree.packageFormatVersion = constructPackageFormatVersion(pkgType);
@@ -250,16 +259,23 @@ function constructPackageFormatVersion(pkgType: string): string {
   return `${pkgType}:0.0.1`;
 }
 
-function constructTargetOS(depGraph: types.DepGraph): { name: string; version: string; } | void {
-  if (['apk', 'apt', 'deb', 'rpm', 'linux'].indexOf(depGraph.pkgManager.name) === -1) {
+function constructTargetOS(
+  depGraph: types.DepGraph,
+): { name: string; version: string } | void {
+  if (
+    ['apk', 'apt', 'deb', 'rpm', 'linux'].indexOf(depGraph.pkgManager.name) ===
+    -1
+  ) {
     // .targetOS is undefined unless its a linux pkgManager
     return;
   }
 
-  if (!depGraph.pkgManager.repositories
-    || !depGraph.pkgManager.repositories.length
-    || !depGraph.pkgManager.repositories[0].alias) {
-      throw new Error('Incomplete .pkgManager, could not create .targetOS');
+  if (
+    !depGraph.pkgManager.repositories ||
+    !depGraph.pkgManager.repositories.length ||
+    !depGraph.pkgManager.repositories[0].alias
+  ) {
+    throw new Error('Incomplete .pkgManager, could not create .targetOS');
   }
 
   const [name, version] = depGraph.pkgManager.repositories[0].alias.split(':');
@@ -272,7 +288,6 @@ async function buildSubtree(
   eventLoopSpinner: EventLoopSpinner,
   maybeDeduplicationSet: Set<string> | null | false = null, // false = disabled; null = not in deduplication scope yet
 ): Promise<DepTree> {
-
   const isRoot = nodeId === depGraph.rootNodeId;
   const nodePkg = depGraph.getNodePkg(nodeId);
   const nodeInfo = depGraph.getNode(nodeId);
@@ -307,7 +322,12 @@ async function buildSubtree(
     if (isRoot && maybeDeduplicationSet !== false) {
       maybeDeduplicationSet = new Set();
     }
-    const subtree = await buildSubtree(depGraph, depInstId, eventLoopSpinner, maybeDeduplicationSet);
+    const subtree = await buildSubtree(
+      depGraph,
+      depInstId,
+      eventLoopSpinner,
+      maybeDeduplicationSet,
+    );
     if (!subtree) {
       continue;
     }

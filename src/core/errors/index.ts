@@ -1,5 +1,3 @@
 import { ValidationError } from './validation-error';
 
-export {
-  ValidationError,
-};
+export { ValidationError };

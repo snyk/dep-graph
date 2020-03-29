@@ -13,7 +13,6 @@ describe('fromJSON simple', () => {
       name: 'root',
       version: '0.0.0',
     });
-
   });
 
   test('getPkgs()', () => {
@@ -40,16 +39,24 @@ describe('fromJSON simple', () => {
   });
 
   test('getPathsToRoot', () => {
-    expect(graph.pkgPathsToRoot({ name: 'd', version: '0.0.1' })).toHaveLength(1);
+    expect(graph.pkgPathsToRoot({ name: 'd', version: '0.0.1' })).toHaveLength(
+      1,
+    );
     expect(graph.countPathsToRoot({ name: 'd', version: '0.0.1' })).toBe(1);
 
-    expect(graph.pkgPathsToRoot({ name: 'd', version: '0.0.2' })).toHaveLength(1);
+    expect(graph.pkgPathsToRoot({ name: 'd', version: '0.0.2' })).toHaveLength(
+      1,
+    );
     expect(graph.countPathsToRoot({ name: 'd', version: '0.0.2' })).toBe(1);
 
-    expect(graph.pkgPathsToRoot({ name: 'c', version: '1.0.0' })).toHaveLength(2);
+    expect(graph.pkgPathsToRoot({ name: 'c', version: '1.0.0' })).toHaveLength(
+      2,
+    );
     expect(graph.countPathsToRoot({ name: 'c', version: '1.0.0' })).toBe(2);
 
-    expect(graph.pkgPathsToRoot({ name: 'e', version: '5.0.0' })).toHaveLength(2);
+    expect(graph.pkgPathsToRoot({ name: 'e', version: '5.0.0' })).toHaveLength(
+      2,
+    );
     expect(graph.countPathsToRoot({ name: 'e', version: '5.0.0' })).toBe(2);
 
     expect(graph.pkgPathsToRoot({ name: 'e', version: '5.0.0' })).toEqual([
@@ -71,14 +78,18 @@ describe('fromJSON simple', () => {
   });
 
   test('getPkgNodes', () => {
-    expect(graph.getPkgNodes({ name: 'root', version: '0.0.0' })).toHaveLength(1);
+    expect(graph.getPkgNodes({ name: 'root', version: '0.0.0' })).toHaveLength(
+      1,
+    );
     expect(graph.getPkgNodes({ name: 'a', version: '1.0.0' })).toHaveLength(1);
 
     const cNodes = graph.getPkgNodes({ name: 'c', version: '1.0.0' });
     expect(cNodes).toHaveLength(2);
     expect(cNodes[0].info).toEqual(cNodes[1].info);
 
-    expect(() => graph.getPkgNodes({ name: 'no-such-pkg', version: '1.3.7'})).toThrow();
+    expect(() =>
+      graph.getPkgNodes({ name: 'no-such-pkg', version: '1.3.7' }),
+    ).toThrow();
   });
 });
 
@@ -103,9 +114,7 @@ test('fromJSON with pkgManager.repositories', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
@@ -136,9 +145,7 @@ test('fromJSON a pkg and a node share same id', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2' },
-          ],
+          deps: [{ nodeId: 'foo@2' }],
         },
         {
           nodeId: 'foo@2',
@@ -151,18 +158,23 @@ test('fromJSON a pkg and a node share same id', () => {
 
   const depGraph = depGraphLib.createFromJSON(graphJson);
 
-  helpers.expectSamePkgs(depGraph.getPkgs(), [
-    { name: 'toor', version: '1.0.0' },
-    { name: 'foo', version: '2' },
-  ].sort());
+  helpers.expectSamePkgs(
+    depGraph.getPkgs(),
+    [
+      { name: 'toor', version: '1.0.0' },
+      { name: 'foo', version: '2' },
+    ].sort(),
+  );
   helpers.expectSamePkgs(depGraph.getDepPkgs(), [
     { name: 'foo', version: '2' },
   ]);
 
-  expect(depGraph.pkgPathsToRoot({ name: 'foo', version: '2' })).toEqual([[
-    { name: 'foo', version: '2' },
-    { name: 'toor', version: '1.0.0' },
-  ]]);
+  expect(depGraph.pkgPathsToRoot({ name: 'foo', version: '2' })).toEqual([
+    [
+      { name: 'foo', version: '2' },
+      { name: 'toor', version: '1.0.0' },
+    ],
+  ]);
   expect(depGraph.countPathsToRoot({ name: 'foo', version: '2' })).toBe(1);
 });
 
@@ -172,9 +184,7 @@ test('fromJSON no deps', () => {
     pkgManager: {
       name: 'pip',
     },
-    pkgs: [
-      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
-    ],
+    pkgs: [{ id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } }],
     graph: {
       rootNodeId: 'toor',
       nodes: [
@@ -196,7 +206,9 @@ test('fromJSON no deps', () => {
 });
 
 test('fromJSON inside schemaVersion', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
+  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
+    'simple-graph.json',
+  );
 
   graphJson.schemaVersion = '1.9.9';
 
@@ -206,7 +218,9 @@ test('fromJSON inside schemaVersion', () => {
 });
 
 test('fromJSON too old schemaVersion', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
+  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
+    'simple-graph.json',
+  );
 
   graphJson.schemaVersion = '0.0.1';
 
@@ -216,7 +230,9 @@ test('fromJSON too old schemaVersion', () => {
 });
 
 test('fromJSON too new schemaVersion', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
+  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
+    'simple-graph.json',
+  );
 
   graphJson.schemaVersion = '2.0.0';
 
@@ -226,7 +242,9 @@ test('fromJSON too new schemaVersion', () => {
 });
 
 test('fromJSON no schemaVersion', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
+  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
+    'simple-graph.json',
+  );
 
   delete graphJson.schemaVersion;
 
@@ -236,7 +254,9 @@ test('fromJSON no schemaVersion', () => {
 });
 
 test('fromJSON bad schemaVersion', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
+  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
+    'simple-graph.json',
+  );
 
   graphJson.schemaVersion = 'foo';
 
@@ -246,7 +266,9 @@ test('fromJSON bad schemaVersion', () => {
 });
 
 test('fromJSON missing root', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
+  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
+    'simple-graph.json',
+  );
 
   graphJson.graph.nodes = graphJson.graph.nodes.map((x) => {
     if (x.nodeId === 'root-node') {
@@ -261,7 +283,9 @@ test('fromJSON missing root', () => {
 });
 
 test('fromJSON missing pkgManager.name', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
+  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
+    'simple-graph.json',
+  );
 
   delete graphJson.pkgManager.name;
 
@@ -271,7 +295,9 @@ test('fromJSON missing pkgManager.name', () => {
 });
 
 test('fromJSON missing pkgManager', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture('simple-graph.json');
+  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
+    'simple-graph.json',
+  );
 
   delete graphJson.pkgManager;
 
@@ -296,9 +322,7 @@ test('fromJSON root pkg id doesnt match name@version', () => {
         {
           nodeId: 'toor',
           pkgId: 'rooty',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
@@ -332,30 +356,22 @@ test('fromJSON with a cycle', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
           pkgId: 'foo@2',
-          deps: [
-            { nodeId: 'bar@3|x' },
-          ],
+          deps: [{ nodeId: 'bar@3|x' }],
         },
         {
           nodeId: 'bar@3|x',
           pkgId: 'bar@3',
-          deps: [
-            { nodeId: 'baz@4|x' },
-          ],
+          deps: [{ nodeId: 'baz@4|x' }],
         },
         {
           nodeId: 'baz@4|x',
           pkgId: 'baz@4',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
       ],
     },
@@ -399,9 +415,7 @@ test('fromJSON root is not really root', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
@@ -411,9 +425,7 @@ test('fromJSON root is not really root', () => {
         {
           nodeId: 'bar@3|x',
           pkgId: 'bar@3',
-          deps: [
-            { nodeId: 'toor' },
-          ],
+          deps: [{ nodeId: 'toor' }],
         },
       ],
     },
@@ -441,9 +453,7 @@ test('fromJSON a pkg is not reachable from root', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
@@ -481,9 +491,7 @@ test('fromJSON root is not really root', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
@@ -493,9 +501,7 @@ test('fromJSON root is not really root', () => {
         {
           nodeId: 'bar@3|x',
           pkgId: 'bar@3',
-          deps: [
-            { nodeId: 'root' },
-          ],
+          deps: [{ nodeId: 'root' }],
         },
       ],
     },
@@ -523,9 +529,7 @@ test('fromJSON a pkg without an instance', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
@@ -557,16 +561,12 @@ test('fromJSON an instance without a pkg', () => {
         {
           nodeId: 'root-node',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
           pkgId: 'foo@2',
-          deps: [
-            { nodeId: 'bar@3|x' },
-          ],
+          deps: [{ nodeId: 'bar@3|x' }],
         },
         {
           nodeId: 'bar@3|x',
@@ -576,7 +576,8 @@ test('fromJSON an instance without a pkg', () => {
     },
   };
 
-  const go = () => depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
+  const go = () =>
+    depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
   expect(go).toThrow(/instance/);
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
@@ -597,16 +598,12 @@ test('fromJSON an instance points to non-existing pkgId', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
           pkgId: 'foo@2',
-          deps: [
-            { nodeId: 'bar@3|x' },
-          ],
+          deps: [{ nodeId: 'bar@3|x' }],
         },
         {
           nodeId: 'bar@3|x',
@@ -638,16 +635,12 @@ test('fromJSON root has several instances', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
           pkgId: 'foo@2',
-          deps: [
-            { nodeId: 'bar@3|x' },
-          ],
+          deps: [{ nodeId: 'bar@3|x' }],
         },
         {
           nodeId: 'bar@3|x',
@@ -659,14 +652,18 @@ test('fromJSON root has several instances', () => {
   };
 
   const depGraph = depGraphLib.createFromJSON(graphJson);
-  helpers.expectSamePkgs(depGraph.getPkgs(), [
-    {name: 'toor', version: '1.0.0'},
-    {name: 'foo', version: '2'},
-  ].sort());
-  helpers.expectSamePkgs(depGraph.getDepPkgs(), [
-    {name: 'foo', version: '2'},
-  ].sort());
-  expect(depGraph.countPathsToRoot({name: 'toor', version: '1.0.0'})).toBe(2);
+  helpers.expectSamePkgs(
+    depGraph.getPkgs(),
+    [
+      { name: 'toor', version: '1.0.0' },
+      { name: 'foo', version: '2' },
+    ].sort(),
+  );
+  helpers.expectSamePkgs(
+    depGraph.getDepPkgs(),
+    [{ name: 'foo', version: '2' }].sort(),
+  );
+  expect(depGraph.countPathsToRoot({ name: 'toor', version: '1.0.0' })).toBe(2);
 });
 
 test('fromJSON a pkg missing info field', () => {
@@ -677,7 +674,7 @@ test('fromJSON a pkg missing info field', () => {
     },
     pkgs: [
       { id: 'toor', info: { name: 'toor', version: '1.0.0' } },
-      { id: 'foo@2'},
+      { id: 'foo@2' },
     ],
     graph: {
       rootNodeId: 'toor',
@@ -685,9 +682,7 @@ test('fromJSON a pkg missing info field', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
@@ -698,7 +693,8 @@ test('fromJSON a pkg missing info field', () => {
     },
   };
 
-  const go = () => depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
+  const go = () =>
+    depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
   expect(go).toThrow(/\.info/);
   expect(go).toThrow(/^((?!(of undefined)).)*$/);
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
@@ -720,9 +716,7 @@ test('fromJSON a pkg missing name field', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
@@ -733,7 +727,8 @@ test('fromJSON a pkg missing name field', () => {
     },
   };
 
-  const go = () => depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
+  const go = () =>
+    depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
   expect(go).toThrow(/name/);
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
@@ -754,9 +749,7 @@ test('fromJSON a pkg missing version field', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@|x' },
-          ],
+          deps: [{ nodeId: 'foo@|x' }],
         },
         {
           nodeId: 'foo@|x',
@@ -772,9 +765,7 @@ test('fromJSON a pkg missing version field', () => {
     { name: 'toor', version: '1.0.0' },
     { name: 'foo' },
   ]);
-  helpers.expectSamePkgs(depGraph.getDepPkgs(), [
-    { name: 'foo' },
-  ]);
+  helpers.expectSamePkgs(depGraph.getDepPkgs(), [{ name: 'foo' }]);
 });
 
 test('fromJSON pkg-id is not name@version', () => {
@@ -793,9 +784,7 @@ test('fromJSON pkg-id is not name@version', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@3|x' },
-          ],
+          deps: [{ nodeId: 'foo@3|x' }],
         },
         {
           nodeId: 'foo@3|x',
@@ -827,9 +816,7 @@ test('fromJSON duplicate node-id', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
@@ -867,9 +854,7 @@ test('fromJSON duplicate pkg-id', () => {
         {
           nodeId: 'toor',
           pkgId: 'toor@1.0.0',
-          deps: [
-            { nodeId: 'foo@2|x' },
-          ],
+          deps: [{ nodeId: 'foo@2|x' }],
         },
         {
           nodeId: 'foo@2|x',
@@ -887,7 +872,9 @@ test('fromJSON duplicate pkg-id', () => {
 
 describe('schema backwards compatibility', () => {
   test('1.0.0', () => {
-    const graphJson = helpers.loadFixture('old-schema-compat/simple-graph-1.0.0.json');
+    const graphJson = helpers.loadFixture(
+      'old-schema-compat/simple-graph-1.0.0.json',
+    );
     const go = () => depGraphLib.createFromJSON(graphJson);
     expect(go).not.toThrow();
   });

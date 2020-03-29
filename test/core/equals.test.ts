@@ -3,74 +3,108 @@ import * as helpers from '../helpers';
 
 describe('equals', () => {
   test('same graphs', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple.json'));
-    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple-different-root.json'));
+    const a = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple.json'),
+    );
+    const b = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple-different-root.json'),
+    );
 
-    expect(a.equals(b, {compareRoot: false})).toBe(true);
-    expect(b.equals(a, {compareRoot: false})).toBe(true);
+    expect(a.equals(b, { compareRoot: false })).toBe(true);
+    expect(b.equals(a, { compareRoot: false })).toBe(true);
 
     expect(a.equals(b)).toBe(false);
-    expect(b.equals(a, {compareRoot: true})).toBe(false);
+    expect(b.equals(a, { compareRoot: true })).toBe(false);
   });
 
   test('different minor version', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple.json'));
-    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple-different-minor-verion.json'));
+    const a = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple.json'),
+    );
+    const b = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple-different-minor-verion.json'),
+    );
 
-    expect(a.equals(b, {compareRoot: false})).toBe(false);
-    expect(b.equals(a, {compareRoot: false})).toBe(false);
+    expect(a.equals(b, { compareRoot: false })).toBe(false);
+    expect(b.equals(a, { compareRoot: false })).toBe(false);
   });
 
   test('additional dependency', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple.json'));
-    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple-one-more-child.json'));
+    const a = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple.json'),
+    );
+    const b = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple-one-more-child.json'),
+    );
 
-    expect(a.equals(b, {compareRoot: false})).toBe(false);
-    expect(b.equals(a, {compareRoot: false})).toBe(false);
+    expect(a.equals(b, { compareRoot: false })).toBe(false);
+    expect(b.equals(a, { compareRoot: false })).toBe(false);
   });
 
   test('additional label', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple.json'));
-    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple-with-label.json'));
+    const a = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple.json'),
+    );
+    const b = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple-with-label.json'),
+    );
 
-    expect(a.equals(b, {compareRoot: false})).toBe(false);
-    expect(b.equals(a, {compareRoot: false})).toBe(false);
+    expect(a.equals(b, { compareRoot: false })).toBe(false);
+    expect(b.equals(a, { compareRoot: false })).toBe(false);
   });
 
   test('different nodes order', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple-wrong-nodes-order-a.json'));
-    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple-wrong-nodes-order-b.json'));
+    const a = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple-wrong-nodes-order-a.json'),
+    );
+    const b = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple-wrong-nodes-order-b.json'),
+    );
 
-    expect(a.equals(b, {compareRoot: false})).toBe(false);
-    expect(b.equals(a, {compareRoot: false})).toBe(false);
+    expect(a.equals(b, { compareRoot: false })).toBe(false);
+    expect(b.equals(a, { compareRoot: false })).toBe(false);
   });
 
   test('same graphs with cycles', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/cycles/simple-a.json'));
-    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/cycles/simple-a.json'));
+    const a = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/cycles/simple-a.json'),
+    );
+    const b = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/cycles/simple-a.json'),
+    );
 
-    expect(a.equals(b, {compareRoot: false})).toBe(true);
-    expect(b.equals(a, {compareRoot: false})).toBe(true);
+    expect(a.equals(b, { compareRoot: false })).toBe(true);
+    expect(b.equals(a, { compareRoot: false })).toBe(true);
   });
 
   test('different graphs with cycles', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/cycles/simple-a.json'));
-    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/cycles/simple-b.json'));
+    const a = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/cycles/simple-a.json'),
+    );
+    const b = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/cycles/simple-b.json'),
+    );
 
-    expect(a.equals(b, {compareRoot: false})).toBe(false);
-    expect(b.equals(a, {compareRoot: false})).toBe(false);
+    expect(a.equals(b, { compareRoot: false })).toBe(false);
+    expect(b.equals(a, { compareRoot: false })).toBe(false);
   });
 
   test('different graphs one node cycle', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/cycles/one-node-cycle-a.json'));
-    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/cycles/one-node-cycle-b.json'));
+    const a = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/cycles/one-node-cycle-a.json'),
+    );
+    const b = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/cycles/one-node-cycle-b.json'),
+    );
 
     expect(a.equals(b)).toBe(false);
     expect(b.equals(a)).toBe(false);
   });
 
   test('other is a different internal implementation', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/simple.json'));
+    const a = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/simple.json'),
+    );
     const b = {
       toJSON() {
         return helpers.loadFixture('equals/simple.json');
@@ -81,10 +115,14 @@ describe('equals', () => {
   });
 
   test('same graphs with different node IDs', async () => {
-    const a = depGraphLib.createFromJSON(helpers.loadFixture('equals/different-node-id-a.json'));
-    const b = depGraphLib.createFromJSON(helpers.loadFixture('equals/different-node-id-b.json'));
+    const a = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/different-node-id-a.json'),
+    );
+    const b = depGraphLib.createFromJSON(
+      helpers.loadFixture('equals/different-node-id-b.json'),
+    );
 
-    expect(a.equals(b, {compareRoot: false})).toBe(true);
-    expect(b.equals(a, {compareRoot: false})).toBe(true);
+    expect(a.equals(b, { compareRoot: false })).toBe(true);
+    expect(b.equals(a, { compareRoot: false })).toBe(true);
   });
 });

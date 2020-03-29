@@ -4,10 +4,10 @@ import * as helpers from '../helpers';
 
 describe('dep-trees survive serialisation through dep-graphs', () => {
   const depTreeFixtures: Array<{
-    description: string,
-    path: string,
-    pkgManagerName: string,  // the caller will provide for tree -> graph
-    pkgType: string, // the caller will provide for graph -> tree
+    description: string;
+    path: string;
+    pkgManagerName: string; // the caller will provide for tree -> graph
+    pkgType: string; // the caller will provide for graph -> tree
   }> = [
     {
       description: 'goof',
@@ -58,7 +58,8 @@ describe('dep-trees survive serialisation through dep-graphs', () => {
       pkgType: 'maven',
     },
     {
-      description: 'maven dep-tree different version provenance for same package',
+      description:
+        'maven dep-tree different version provenance for same package',
       path: 'maven-dep-tree-wonky.json',
       pkgManagerName: 'maven',
       pkgType: 'maven',
@@ -120,11 +121,17 @@ describe('dep-trees survive serialisation through dep-graphs', () => {
   for (const fixture of depTreeFixtures) {
     test(fixture.description, async () => {
       const inputTree = helpers.loadFixture(fixture.path);
-      const inputGraph = await depGraphLib.legacy.depTreeToGraph(inputTree, fixture.pkgManagerName);
+      const inputGraph = await depGraphLib.legacy.depTreeToGraph(
+        inputTree,
+        fixture.pkgManagerName,
+      );
       const inputJSON = JSON.stringify(inputGraph);
       const outputJSON = JSON.parse(inputJSON);
       const outputGraph = depGraphLib.createFromJSON(outputJSON);
-      const outputTree = await depGraphLib.legacy.graphToDepTree(outputGraph, fixture.pkgType);
+      const outputTree = await depGraphLib.legacy.graphToDepTree(
+        outputGraph,
+        fixture.pkgType,
+      );
 
       expect(outputTree.type).toEqual(fixture.pkgManagerName);
       if (!inputTree.type) {
@@ -186,9 +193,9 @@ describe('graphToDepTree with a linux pkgManager', () => {
       const depGraph = depGraphLib.createFromJSON(depGraphData);
       delete depGraph.pkgManager.repositories;
 
-      await expect(depGraphLib.legacy.graphToDepTree(depGraph, 'deb'))
-        .rejects
-        .toThrow('Incomplete .pkgManager, could not create .targetOS');
+      await expect(
+        depGraphLib.legacy.graphToDepTree(depGraph, 'deb'),
+      ).rejects.toThrow('Incomplete .pkgManager, could not create .targetOS');
     });
 
     test('missing repository alias', async () => {
@@ -196,9 +203,9 @@ describe('graphToDepTree with a linux pkgManager', () => {
       const depGraph = depGraphLib.createFromJSON(depGraphData);
       delete depGraph.pkgManager.repositories![0].alias;
 
-      await expect(depGraphLib.legacy.graphToDepTree(depGraph, 'deb'))
-        .rejects
-        .toThrow('Incomplete .pkgManager, could not create .targetOS');
+      await expect(
+        depGraphLib.legacy.graphToDepTree(depGraph, 'deb'),
+      ).rejects.toThrow('Incomplete .pkgManager, could not create .targetOS');
     });
   });
 });
@@ -207,7 +214,7 @@ test('graphs with cycles are not supported', async () => {
   const cyclicDepGraphData = helpers.loadFixture('cyclic-dep-graph.json');
   const cyclicDepGraph = depGraphLib.createFromJSON(cyclicDepGraphData);
 
-  await expect(depGraphLib.legacy.graphToDepTree(cyclicDepGraph, 'pip'))
-    .rejects
-    .toThrow('Conversion to DepTree does not support cyclic graphs yet');
+  await expect(
+    depGraphLib.legacy.graphToDepTree(cyclicDepGraph, 'pip'),
+  ).rejects.toThrow('Conversion to DepTree does not support cyclic graphs yet');
 });

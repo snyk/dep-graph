@@ -6,7 +6,7 @@ export class EventLoopSpinner {
   }
 
   public isStarving(): boolean {
-    return (Date.now() - this.afterLastSpin) > this.thresholdMs;
+    return Date.now() - this.afterLastSpin > this.thresholdMs;
   }
 
   public reset() {
@@ -14,9 +14,11 @@ export class EventLoopSpinner {
   }
 
   public async spin() {
-    return new Promise((resolve) => setImmediate(() => {
-      this.reset();
-      resolve();
-    }));
+    return new Promise((resolve) =>
+      setImmediate(() => {
+        this.reset();
+        resolve();
+      }),
+    );
   }
 }

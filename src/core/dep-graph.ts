@@ -1,11 +1,9 @@
 import * as _ from 'lodash';
 import * as graphlib from 'graphlib';
 import * as types from './types';
-import {createFromJSON} from './create-from-json';
+import { createFromJSON } from './create-from-json';
 
-export {
-  DepGraphImpl,
-};
+export { DepGraphImpl };
 
 interface GraphNode {
   pkgId: string;
@@ -51,8 +49,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     this._rootPkgId = (graph.node(rootNodeId) as GraphNode).pkgId;
 
     this._pkgList = _.values(pkgs);
-    this._depPkgsList = this._pkgList
-      .filter((pkg) => pkg !== this.rootPkg);
+    this._depPkgsList = this._pkgList.filter((pkg) => pkg !== this.rootPkg);
   }
 
   get pkgManager() {
@@ -164,7 +161,10 @@ class DepGraphImpl implements types.DepGraphInternal {
     return count;
   }
 
-  public equals(other: types.DepGraph, { compareRoot = true }: { compareRoot?: boolean } = {}): boolean {
+  public equals(
+    other: types.DepGraph,
+    { compareRoot = true }: { compareRoot?: boolean } = {},
+  ): boolean {
     let otherDepGraph;
 
     if (other instanceof DepGraphImpl) {
@@ -180,7 +180,13 @@ class DepGraphImpl implements types.DepGraphInternal {
     // should suffice, since node IDs will be generated in a predictable way.
     // However, there might be different versions of graph and inconsistencies
     // in the ordering of the arrays, so we perform a deep comparison.
-    return this.nodeEquals(this, this.rootNodeId, otherDepGraph, otherDepGraph.rootNodeId, compareRoot);
+    return this.nodeEquals(
+      this,
+      this.rootNodeId,
+      otherDepGraph,
+      otherDepGraph.rootNodeId,
+      compareRoot,
+    );
   }
 
   public directDepsLeadingTo(pkg: types.Pkg): types.PkgInfo[] {
@@ -197,8 +203,9 @@ class DepGraphImpl implements types.DepGraphInternal {
     const nodeIds = this._graph.nodes();
 
     const nodes = nodeIds.reduce((acc: types.GraphNode[], nodeId: string) => {
-      const deps = (this._graph.successors(nodeId) || [])
-        .map((depNodeId) => ({ nodeId: depNodeId }));
+      const deps = (this._graph.successors(nodeId) || []).map((depNodeId) => ({
+        nodeId: depNodeId,
+      }));
 
       const node = this._graph.node(nodeId) as GraphNode;
       const elem: types.GraphNode = {
@@ -213,11 +220,12 @@ class DepGraphImpl implements types.DepGraphInternal {
       return acc;
     }, []);
 
-    const pkgs: Array<{ id: string; info: types.PkgInfo; }> = _.keys(this._pkgs)
-      .map((pkgId: string) => ({
-        id: pkgId,
-        info: this._pkgs[pkgId],
-      }));
+    const pkgs: Array<{ id: string; info: types.PkgInfo }> = _.keys(
+      this._pkgs,
+    ).map((pkgId: string) => ({
+      id: pkgId,
+      info: this._pkgs[pkgId],
+    }));
 
     return {
       schemaVersion: DepGraphImpl.SCHEMA_VERSION,
@@ -239,7 +247,10 @@ class DepGraphImpl implements types.DepGraphInternal {
     traversedPairs = new Set<string>(),
   ): boolean {
     // Skip root nodes comparision if needed.
-    if (compareRoot || (nodeIdA !== graphA.rootNodeId && nodeIdB !== graphB.rootNodeId)) {
+    if (
+      compareRoot ||
+      (nodeIdA !== graphA.rootNodeId && nodeIdB !== graphB.rootNodeId)
+    ) {
       const pkgA = graphA.getNodePkg(nodeIdA);
       const pkgB = graphB.getNodePkg(nodeIdB);
 
@@ -266,10 +277,15 @@ class DepGraphImpl implements types.DepGraphInternal {
     }
 
     // Sort dependencies by name@version string.
-    const sortFn = (graph: types.DepGraphInternal) => (idA: string, idB: string) => {
+    const sortFn = (graph: types.DepGraphInternal) => (
+      idA: string,
+      idB: string,
+    ) => {
       const pkgA = graph.getNodePkg(idA);
       const pkgB = graph.getNodePkg(idB);
-      return DepGraphImpl.getPkgId(pkgA).localeCompare(DepGraphImpl.getPkgId(pkgB));
+      return DepGraphImpl.getPkgId(pkgA).localeCompare(
+        DepGraphImpl.getPkgId(pkgB),
+      );
     };
 
     depsA = depsA.sort(sortFn(graphA));
@@ -286,7 +302,16 @@ class DepGraphImpl implements types.DepGraphInternal {
 
       traversedPairs.add(pairKey);
 
-      if (!this.nodeEquals(graphA, depsA[i], graphB, depsB[i], compareRoot, traversedPairs)) {
+      if (
+        !this.nodeEquals(
+          graphA,
+          depsA[i],
+          graphB,
+          depsB[i],
+          compareRoot,
+          traversedPairs,
+        )
+      ) {
         return false;
       }
     }

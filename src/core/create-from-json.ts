@@ -18,13 +18,11 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
     multigraph: false,
     compound: false,
   });
-  const pkgs: {[pkgId: string]: types.PkgInfo} = {};
-  const pkgNodes: {[pkgId: string]: Set<string>} = {};
+  const pkgs: { [pkgId: string]: types.PkgInfo } = {};
+  const pkgNodes: { [pkgId: string]: Set<string> } = {};
 
   for (const { id, info } of depGraphData.pkgs) {
-    pkgs[id] = info.version
-      ? info
-      : { ...info, version: undefined };
+    pkgs[id] = info.version ? info : { ...info, version: undefined };
   }
 
   for (const node of depGraphData.graph.nodes) {
@@ -62,10 +60,14 @@ function assert(condition: boolean, msg: string) {
 
 function validateDepGraphData(depGraphData: DepGraphData) {
   assert(
-    !!semver.valid(depGraphData.schemaVersion)
-      && semver.satisfies(depGraphData.schemaVersion, SUPPORTED_SCHEMA_RANGE),
-    `dep-graph schemaVersion not in "${SUPPORTED_SCHEMA_RANGE}"`);
-  assert(depGraphData.pkgManager && !!depGraphData.pkgManager.name, '.pkgManager.name is missing');
+    !!semver.valid(depGraphData.schemaVersion) &&
+      semver.satisfies(depGraphData.schemaVersion, SUPPORTED_SCHEMA_RANGE),
+    `dep-graph schemaVersion not in "${SUPPORTED_SCHEMA_RANGE}"`,
+  );
+  assert(
+    depGraphData.pkgManager && !!depGraphData.pkgManager.name,
+    '.pkgManager.name is missing',
+  );
 
   const pkgsMap = depGraphData.pkgs.reduce((acc, cur) => {
     assert(!(cur.id in acc), 'more than one pkg with same id');
@@ -73,7 +75,7 @@ function validateDepGraphData(depGraphData: DepGraphData) {
 
     acc[cur.id] = cur.info;
     return acc;
-  }, {} as {[pkdId: string]: types.PkgInfo});
+  }, {} as { [pkdId: string]: types.PkgInfo });
 
   const nodesMap = depGraphData.graph.nodes.reduce((acc, cur) => {
     assert(!(cur.nodeId in acc), 'more than on node with same id');
@@ -87,22 +89,24 @@ function validateDepGraphData(depGraphData: DepGraphData) {
   assert(rootNodeId in nodesMap, `.${rootNodeId} root graph node is missing`);
   const rootPkgId = rootNode.pkgId;
   assert(rootPkgId in pkgsMap, `.${rootPkgId} root pkg missing`);
-  assert(nodesMap[rootNodeId].pkgId === rootPkgId,
-    `the root node .pkgId should be "${rootPkgId}"`);
+  assert(
+    nodesMap[rootNodeId].pkgId === rootPkgId,
+    `the root node .pkgId should be "${rootPkgId}"`,
+  );
   const pkgIds = _.keys(pkgsMap);
   // NOTE: this name@version check is very strict,
   // we can relax it later, it just makes things easier now
   assert(
-    pkgIds
-      .filter((pkgId) => (pkgId !== DepGraphImpl.getPkgId(pkgsMap[pkgId])))
+    pkgIds.filter((pkgId) => pkgId !== DepGraphImpl.getPkgId(pkgsMap[pkgId]))
       .length === 0,
-    'pkgs ids should be name@version');
-  assert(_.values(nodesMap)
-      .filter((node) => !(node.pkgId in pkgsMap))
-      .length === 0,
-    'some instance nodes belong to non-existing pkgIds');
-  assert(_.values(pkgsMap)
-      .filter((pkg: { name: string }) => !pkg.name)
-      .length === 0,
-    'some .pkgs elements have no .name field');
+    'pkgs ids should be name@version',
+  );
+  assert(
+    _.values(nodesMap).filter((node) => !(node.pkgId in pkgsMap)).length === 0,
+    'some instance nodes belong to non-existing pkgIds',
+  );
+  assert(
+    _.values(pkgsMap).filter((pkg: { name: string }) => !pkg.name).length === 0,
+    'some .pkgs elements have no .name field',
+  );
 }

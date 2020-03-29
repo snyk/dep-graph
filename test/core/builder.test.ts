@@ -1,7 +1,7 @@
 import { DepGraphBuilder } from '../../src';
 
 describe('empty graph', () => {
-  const builder = new DepGraphBuilder({name: 'pip'});
+  const builder = new DepGraphBuilder({ name: 'pip' });
 
   const depGraph = builder.build();
 

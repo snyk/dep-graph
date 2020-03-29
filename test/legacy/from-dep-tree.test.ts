@@ -49,16 +49,24 @@ describe('depTreeToGraph simple dysmorphic', () => {
   });
 
   test('getPathsToRoot', async () => {
-    expect(depGraph.pkgPathsToRoot({ name: 'd', version: '0.0.1' })).toHaveLength(1);
+    expect(
+      depGraph.pkgPathsToRoot({ name: 'd', version: '0.0.1' }),
+    ).toHaveLength(1);
     expect(depGraph.countPathsToRoot({ name: 'd', version: '0.0.1' })).toBe(1);
 
-    expect(depGraph.pkgPathsToRoot({ name: 'd', version: '0.0.2' })).toHaveLength(1);
+    expect(
+      depGraph.pkgPathsToRoot({ name: 'd', version: '0.0.2' }),
+    ).toHaveLength(1);
     expect(depGraph.countPathsToRoot({ name: 'd', version: '0.0.2' })).toBe(1);
 
-    expect(depGraph.pkgPathsToRoot({ name: 'c', version: '1.0.0' })).toHaveLength(2);
+    expect(
+      depGraph.pkgPathsToRoot({ name: 'c', version: '1.0.0' }),
+    ).toHaveLength(2);
     expect(depGraph.countPathsToRoot({ name: 'c', version: '1.0.0' })).toBe(2);
 
-    expect(depGraph.pkgPathsToRoot({ name: 'e', version: '5.0.0' })).toHaveLength(2);
+    expect(
+      depGraph.pkgPathsToRoot({ name: 'e', version: '5.0.0' }),
+    ).toHaveLength(2);
     expect(depGraph.countPathsToRoot({ name: 'e', version: '5.0.0' })).toBe(2);
 
     expect(depGraph.pkgPathsToRoot({ name: 'e', version: '5.0.0' })).toEqual([
@@ -80,7 +88,10 @@ describe('depTreeToGraph simple dysmorphic', () => {
   });
 
   test('convert back to depTree & compare', async () => {
-    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'mvn');
+    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(
+      depGraph,
+      'mvn',
+    );
     expect(helpers.depTreesEqual(restoredDepTree, simpleDepTree)).toBe(true);
   });
 
@@ -104,9 +115,7 @@ describe('depTreeToGraph with .targetOS', () => {
   test('pkgManager', async () => {
     expect(depGraph.pkgManager).toEqual({
       name: 'deb',
-      repositories: [
-        { alias: 'ubuntu:18.04' },
-      ],
+      repositories: [{ alias: 'ubuntu:18.04' }],
     });
   });
 });
@@ -140,7 +149,7 @@ describe('depTreeToGraph goof', () => {
   test('check nodes', async () => {
     const depGraphInternal = depGraph as types.DepGraphInternal;
 
-    const stripAnsiPkg = {name: 'strip-ansi', version: '3.0.1'};
+    const stripAnsiPkg = { name: 'strip-ansi', version: '3.0.1' };
     const stripAnsiNodes = depGraphInternal.getPkgNodeIds(stripAnsiPkg);
     expect(stripAnsiNodes).toHaveLength(2);
 
@@ -148,14 +157,29 @@ describe('depTreeToGraph goof', () => {
     expect(stripAnsiPaths).toHaveLength(6);
     expect(depGraph.countPathsToRoot(stripAnsiPkg)).toBe(6);
 
-    expect(depGraph.pkgPathsToRoot({name: 'ansi-regex', version: '2.0.0'})).toHaveLength(4);
-    expect(depGraph.countPathsToRoot({name: 'ansi-regex', version: '2.0.0'})).toBe(4);
-    expect(depGraph.pkgPathsToRoot({name: 'ansi-regex', version: '2.1.1'})).toHaveLength(3);
-    expect(depGraph.countPathsToRoot({name: 'ansi-regex', version: '2.1.1'})).toBe(3);
-    expect(depGraph.pkgPathsToRoot({name: 'wrappy', version: '1.0.2'})).toHaveLength(22);
-    expect(depGraph.countPathsToRoot({name: 'wrappy', version: '1.0.2'})).toBe(22);
+    expect(
+      depGraph.pkgPathsToRoot({ name: 'ansi-regex', version: '2.0.0' }),
+    ).toHaveLength(4);
+    expect(
+      depGraph.countPathsToRoot({ name: 'ansi-regex', version: '2.0.0' }),
+    ).toBe(4);
+    expect(
+      depGraph.pkgPathsToRoot({ name: 'ansi-regex', version: '2.1.1' }),
+    ).toHaveLength(3);
+    expect(
+      depGraph.countPathsToRoot({ name: 'ansi-regex', version: '2.1.1' }),
+    ).toBe(3);
+    expect(
+      depGraph.pkgPathsToRoot({ name: 'wrappy', version: '1.0.2' }),
+    ).toHaveLength(22);
+    expect(
+      depGraph.countPathsToRoot({ name: 'wrappy', version: '1.0.2' }),
+    ).toBe(22);
 
-    const expressNodes = depGraphInternal.getPkgNodeIds({name: 'express', version: '4.12.4'});
+    const expressNodes = depGraphInternal.getPkgNodeIds({
+      name: 'express',
+      version: '4.12.4',
+    });
     expect(expressNodes).toHaveLength(1);
   });
 
@@ -194,7 +218,9 @@ describe('depTreeToGraph with pkg that that misses a version', () => {
     expect(depGraph.getDepPkgs()).toHaveLength(2);
 
     const depGraphInternal = depGraph as types.DepGraphInternal;
-    expect(depGraphInternal.getPkgNodeIds({name: 'bar'} as any)).toEqual(['bar@']);
+    expect(depGraphInternal.getPkgNodeIds({ name: 'bar' } as any)).toEqual([
+      'bar@',
+    ]);
   });
 });
 
@@ -259,19 +285,17 @@ describe('depTreeToGraph cycle with root', () => {
     // note that despite maple@3 being a dependency of bar@1,
     //   it's still not returned, as it's the root package.
     expect(depGraph.getDepPkgs()).toEqual([
-        {name: 'bar', version: '1'},
-        {name: 'foo', version: '2'},
+      { name: 'bar', version: '1' },
+      { name: 'foo', version: '2' },
     ]);
 
     expect(depGraph.countPathsToRoot(depGraph.rootPkg)).toBe(2);
     expect(depGraph.pkgPathsToRoot(depGraph.rootPkg)).toEqual([
+      [{ name: 'maple', version: '3' }],
       [
-        {name: 'maple', version: '3'},
-      ],
-      [
-        {name: 'maple', version: '3'},
-        {name: 'bar', version: '1'},
-        {name: 'maple', version: '3'},
+        { name: 'maple', version: '3' },
+        { name: 'bar', version: '1' },
+        { name: 'maple', version: '3' },
       ],
     ]);
   });
@@ -281,7 +305,9 @@ describe('depTreeToGraph cycle with root', () => {
     const restoredGraph = await depGraphLib.createFromJSON(graphJson);
 
     expect(restoredGraph.getPkgs().sort()).toEqual(depGraph.getPkgs().sort());
-    expect(restoredGraph.getDepPkgs().sort()).toEqual(depGraph.getDepPkgs().sort());
+    expect(restoredGraph.getDepPkgs().sort()).toEqual(
+      depGraph.getDepPkgs().sort(),
+    );
   });
 });
 
@@ -289,7 +315,9 @@ describe('depTreeToGraph cycle with labels', () => {
   test('npm', async () => {
     const depTree = helpers.loadFixture('npm-cyclic-dep-tree.json');
     const depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'npm');
-    expect((await depGraphLib.legacy.graphToDepTree(depGraph, 'npm')).dependencies).toEqual(depTree.dependencies);
+    expect(
+      (await depGraphLib.legacy.graphToDepTree(depGraph, 'npm')).dependencies,
+    ).toEqual(depTree.dependencies);
   });
 });
 
@@ -310,16 +338,29 @@ describe('depTreeToGraph with (invalid) null dependency', () => {
 
   let depGraph: types.DepGraph;
   test('create', async () => {
-    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree as any, 'composer');
-    expect(_.sortBy(depGraph.getPkgs(), 'name')).toEqual(_.sortBy([
-      {name: 'pine', version: '4'},
-      {name: 'foo', version: '1'},
-      {name: 'baz', version: '3'},
-    ], 'name'));
-    expect(_.sortBy(depGraph.getDepPkgs(), 'name')).toEqual(_.sortBy([
-      {name: 'foo', version: '1'},
-      {name: 'baz', version: '3'},
-    ], 'name'));
+    depGraph = await depGraphLib.legacy.depTreeToGraph(
+      depTree as any,
+      'composer',
+    );
+    expect(_.sortBy(depGraph.getPkgs(), 'name')).toEqual(
+      _.sortBy(
+        [
+          { name: 'pine', version: '4' },
+          { name: 'foo', version: '1' },
+          { name: 'baz', version: '3' },
+        ],
+        'name',
+      ),
+    );
+    expect(_.sortBy(depGraph.getDepPkgs(), 'name')).toEqual(
+      _.sortBy(
+        [
+          { name: 'foo', version: '1' },
+          { name: 'baz', version: '3' },
+        ],
+        'name',
+      ),
+    );
   });
 });
 
@@ -336,21 +377,33 @@ describe('with versionProvenance', () => {
     expect(depGraph.toJSON()).toMatchSnapshot();
   });
 
-  it ('equals orig depTree when converted back', async () => {
-    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven');
+  it('equals orig depTree when converted back', async () => {
+    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(
+      depGraph,
+      'maven',
+    );
     expect(helpers.depTreesEqual(restoredDepTree, depTree)).toBeTruthy();
   });
 
-  it ('getPkgNodes() returns versionProvenance', () => {
-    const commonsIoNodes = depGraph.getPkgNodes({name: 'commons-io:commons-io', version: '2.2'});
-    expect(commonsIoNodes[0].info.versionProvenance!.type).toEqual('dependencyManagement');
+  it('getPkgNodes() returns versionProvenance', () => {
+    const commonsIoNodes = depGraph.getPkgNodes({
+      name: 'commons-io:commons-io',
+      version: '2.2',
+    });
+    expect(commonsIoNodes[0].info.versionProvenance!.type).toEqual(
+      'dependencyManagement',
+    );
 
-    const ognlNodes = depGraph.getPkgNodes({name: 'ognl:ognl', version: '3.0.6'});
+    const ognlNodes = depGraph.getPkgNodes({
+      name: 'ognl:ognl',
+      version: '3.0.6',
+    });
     expect(ognlNodes[0].info.versionProvenance).toEqual({
       type: 'property',
       property: { name: 'ognl.version' },
       // tslint:disable:max-line-length
-      location: 'https://maven-central.storage-download.googleapis.com/repos/central/data/org/apache/struts/struts2-parent/2.3.20/struts2-parent-2.3.20.pom',
+      location:
+        'https://maven-central.storage-download.googleapis.com/repos/central/data/org/apache/struts/struts2-parent/2.3.20/struts2-parent-2.3.20.pom',
     });
   });
 });
@@ -381,15 +434,18 @@ describe('with labels', () => {
     expect(depGraph.toJSON()).toMatchSnapshot();
   });
 
-  it ('equals orig depTree when converted back', async () => {
-    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(depGraph, 'maven');
+  it('equals orig depTree when converted back', async () => {
+    const restoredDepTree = await depGraphLib.legacy.graphToDepTree(
+      depGraph,
+      'maven',
+    );
     expect(helpers.depTreesEqual(restoredDepTree, depTree)).toBeTruthy();
   });
 
   it('getPkgNodes() returns labels', () => {
-    let dNodes = depGraph.getPkgNodes({name: 'd', version: '2.0.0'});
+    let dNodes = depGraph.getPkgNodes({ name: 'd', version: '2.0.0' });
     dNodes = _.sortBy(dNodes, 'id');
-    expect(dNodes[0].info.labels).toEqual({key: 'value1'});
-    expect(dNodes[1].info.labels).toEqual({key: 'value2'});
+    expect(dNodes[0].info.labels).toEqual({ key: 'value1' });
+    expect(dNodes[1].info.labels).toEqual({ key: 'value2' });
   });
 });
