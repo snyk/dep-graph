@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
-import * as graphlib from 'graphlib';
+import * as _ from '@snyk/lodash';
+import * as graphlib from '@snyk/graphlib';
 import { ValidationError } from './errors';
 
 function assert(condition: boolean, msg: string) {

@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import * as _ from '@snyk/lodash';
 import * as depGraphLib from '../../src';
 import * as types from '../../src/core/types';
 import * as helpers from '../helpers';
