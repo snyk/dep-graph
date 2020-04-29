@@ -1,4 +1,4 @@
-import * as graphlib from 'graphlib';
+import * as graphlib from '@snyk/graphlib';
 import * as types from './types';
 import { DepGraphImpl } from './dep-graph';
 

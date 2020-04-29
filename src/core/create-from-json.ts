@@ -1,6 +1,6 @@
-import * as _ from 'lodash';
+import * as _ from '@snyk/lodash';
 import * as semver from 'semver';
-import * as graphlib from 'graphlib';
+import * as graphlib from '@snyk/graphlib';
 import * as types from './types';
 
 import { DepGraph, DepGraphData, GraphNode } from './types';

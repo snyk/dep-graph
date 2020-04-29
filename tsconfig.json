@@ -9,6 +9,7 @@
     "module": "commonjs",
     "sourceMap": true,
     "strict": true,
+    "noImplicitAny": false,
     "declaration": true,
     "importHelpers": true
   },

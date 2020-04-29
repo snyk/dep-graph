@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
-import * as graphlib from 'graphlib';
+import * as _ from '@snyk/lodash';
+import * as graphlib from '@snyk/graphlib';
 import * as types from './types';
 import { createFromJSON } from './create-from-json';
 

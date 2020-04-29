@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import * as _ from '@snyk/lodash';
 import * as crypto from 'crypto';
 import * as types from '../core/types';
 import { DepGraphBuilder } from '../core/builder';
@@ -83,7 +83,7 @@ async function buildGraph(
     hashId: string,
   ) => `${name}@${version || ''}|${hashId}`;
 
-  const depNodesIds = [];
+  const depNodesIds: string[] = [];
 
   const hash = crypto.createHash('sha1');
   if (depTree.versionProvenance) {
