@@ -1,9 +1,8 @@
 {
   "defaultSeverity": "error",
-  "extends": [
-    "tslint:recommended"
-  ],
+  "extends": ["tslint:recommended"],
   "rules": {
+    "array-type": false,
     "indent": [true, "spaces", 2],
     "interface-name": false,
     "no-var-requires": false,
