@@ -31,8 +31,6 @@ class DepGraphImpl implements types.DepGraphInternal {
 
   private _countNodePathsToRootCache: Map<string, number> = new Map();
 
-  private _hasCycles: boolean | undefined;
-
   public constructor(
     graph: graphlib.Graph,
     rootNodeId: string,
@@ -315,7 +313,9 @@ class DepGraphImpl implements types.DepGraphInternal {
     seenOnPath: Set<string>,
   ): string[][] {
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
-    if (parentNodesIds.length === 0) {
+
+    // No parents --> we're at root!
+    if (!parentNodesIds.length) {
       return [[nodeId]];
     }
 
@@ -325,7 +325,7 @@ class DepGraphImpl implements types.DepGraphInternal {
       .map((parentId) => {
         const pathsFromParent = this.pathsFromNodeToRoot(
           parentId,
-          new Set(seenOnPath).add(nodeId),
+          new Set(seenOnPath).add(nodeId), // Max size is O(log(n)) [tree depth] where n is the amount of nodes in the tree
         );
 
         for (const path of pathsFromParent) {

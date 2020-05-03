@@ -41,13 +41,29 @@ describe('directDepsLeadingTo', () => {
     expect(depGraph.directDepsLeadingTo(pkg)).toEqual(expected);
   });
 
-  test('it works with a cyclic dep-graph', () => {
-    const cyclic = depGraphLib.createFromJSON(
-      helpers.loadFixture('cyclic-dep-graph.json'),
-    );
-    const pkg = { name: 'baz', version: '4' };
-    const expected = [{ name: 'foo', version: '2' }];
+  describe('get direct deps for cyclic graphs', () => {
+    test('it works with a simple cyclic dep-graph', () => {
+      const cyclic = depGraphLib.createFromJSON(
+        helpers.loadFixture('cyclic-dep-graph.json'),
+      );
+      const pkg = { name: 'baz', version: '4' };
+      const expected = [{ name: 'foo', version: '2' }];
 
-    expect(cyclic.directDepsLeadingTo(pkg)).toEqual(expected);
+      expect(cyclic.directDepsLeadingTo(pkg)).toEqual(expected);
+    });
+
+    test('it works with a surreal cyclic dep-graph', () => {
+      const cyclic = depGraphLib.createFromJSON(
+        helpers.loadFixture('heavily-cyclic-dep-graph.json'),
+      );
+      const pkg = { name: 'B', version: '4' };
+      const expected = [
+        { name: 'B', version: '4' },
+        { name: 'D', version: '4' },
+        { name: 'C', version: '4' },
+      ];
+
+      expect(cyclic.directDepsLeadingTo(pkg)).toEqual(expected);
+    });
   });
 });
