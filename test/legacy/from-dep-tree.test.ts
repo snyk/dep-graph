@@ -1,4 +1,3 @@
-import * as _ from '@snyk/lodash';
 import * as depGraphLib from '../../src';
 import * as types from '../../src/core/types';
 import * as helpers from '../helpers';
@@ -342,25 +341,15 @@ describe('depTreeToGraph with (invalid) null dependency', () => {
       depTree as any,
       'composer',
     );
-    expect(_.sortBy(depGraph.getPkgs(), 'name')).toEqual(
-      _.sortBy(
-        [
-          { name: 'pine', version: '4' },
-          { name: 'foo', version: '1' },
-          { name: 'baz', version: '3' },
-        ],
-        'name',
-      ),
-    );
-    expect(_.sortBy(depGraph.getDepPkgs(), 'name')).toEqual(
-      _.sortBy(
-        [
-          { name: 'foo', version: '1' },
-          { name: 'baz', version: '3' },
-        ],
-        'name',
-      ),
-    );
+    helpers.expectSamePkgs(depGraph.getPkgs(), [
+      { name: 'pine', version: '4' },
+      { name: 'foo', version: '1' },
+      { name: 'baz', version: '3' },
+    ]);
+    helpers.expectSamePkgs(depGraph.getDepPkgs(), [
+      { name: 'foo', version: '1' },
+      { name: 'baz', version: '3' },
+    ]);
   });
 });
 
@@ -444,7 +433,7 @@ describe('with labels', () => {
 
   it('getPkgNodes() returns labels', () => {
     let dNodes = depGraph.getPkgNodes({ name: 'd', version: '2.0.0' });
-    dNodes = _.sortBy(dNodes, 'id');
+    dNodes = helpers.sortBy(dNodes, 'id');
     expect(dNodes[0].info.labels).toEqual({ key: 'value1' });
     expect(dNodes[1].info.labels).toEqual({ key: 'value2' });
   });

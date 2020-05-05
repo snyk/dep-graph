@@ -1,4 +1,3 @@
-import * as _ from '@snyk/lodash';
 import * as crypto from 'crypto';
 import * as types from '../core/types';
 import { DepGraphBuilder } from '../core/builder';
@@ -95,7 +94,7 @@ async function buildGraph(
 
   const deps = depTree.dependencies || {};
   // filter-out invalid null deps (shouldn't happen - but did...)
-  const depNames = _.keys(deps).filter((d) => !!deps[d]);
+  const depNames = Object.keys(deps).filter((d) => !!deps[d]);
   for (const depName of depNames.sort()) {
     const dep = deps[depName];
 

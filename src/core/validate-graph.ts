@@ -1,4 +1,3 @@
-import * as _ from '@snyk/lodash';
 import * as graphlib from '@snyk/graphlib';
 import { ValidationError } from './errors';
 
@@ -26,7 +25,7 @@ export function validateGraph(
     'not all graph nodes are reachable from root',
   );
 
-  const pkgIds = _.keys(pkgs) as string[];
+  const pkgIds = Object.keys(pkgs);
   const pkgsWithoutInstances = pkgIds.filter(
     (pkgId) => !pkgNodes[pkgId] || pkgNodes[pkgId].size === 0,
   );

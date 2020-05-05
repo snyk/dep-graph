@@ -9,7 +9,7 @@ export function loadFixture(name: string) {
   );
 }
 
-function depSort(a: any, b: any) {
+function depCompare(a: any, b: any) {
   if (a.name < b.name) {
     return -1;
   } else if (a.name > b.name) {
@@ -24,7 +24,9 @@ function depSort(a: any, b: any) {
 }
 
 export function expectSamePkgs(actual: PkgInfo[], expected: PkgInfo[]) {
-  return expect(actual.sort(depSort)).toEqual(expected.sort(depSort));
+  actual = actual.slice().sort(depCompare);
+  expected = expected.slice().sort(depCompare);
+  return expect(actual).toEqual(expected);
 }
 
 export function depTreesEqual(a: any, b: any) {
@@ -43,17 +45,17 @@ export function depTreesEqual(a: any, b: any) {
   const bDeps = b.dependencies || {};
 
   if (
-    _.keys(aDeps)
+    Object.keys(aDeps)
       .sort()
       .join(',') !==
-    _.keys(bDeps)
+    Object.keys(bDeps)
       .sort()
       .join(',')
   ) {
     return false;
   }
 
-  for (const depName of _.keys(aDeps)) {
+  for (const depName of Object.keys(aDeps)) {
     const aSubtree = aDeps[depName];
     const bSubtree = bDeps[depName];
 
@@ -65,3 +67,16 @@ export function depTreesEqual(a: any, b: any) {
 
   return true;
 }
+
+export const sortBy = (arr: any[], p: string) =>
+  arr.slice().sort((x: any, y: any) => {
+    const a = x[p];
+    const b = y[p];
+    if (a < b) {
+      return -1;
+    } else if (a > b) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });

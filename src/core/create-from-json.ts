@@ -1,4 +1,3 @@
-import * as _ from '@snyk/lodash';
 import * as semver from 'semver';
 import * as graphlib from '@snyk/graphlib';
 import * as types from './types';
@@ -93,7 +92,7 @@ function validateDepGraphData(depGraphData: DepGraphData) {
     nodesMap[rootNodeId].pkgId === rootPkgId,
     `the root node .pkgId should be "${rootPkgId}"`,
   );
-  const pkgIds = _.keys(pkgsMap);
+  const pkgIds = Object.keys(pkgsMap);
   // NOTE: this name@version check is very strict,
   // we can relax it later, it just makes things easier now
   assert(
@@ -102,11 +101,13 @@ function validateDepGraphData(depGraphData: DepGraphData) {
     'pkgs ids should be name@version',
   );
   assert(
-    _.values(nodesMap).filter((node) => !(node.pkgId in pkgsMap)).length === 0,
+    Object.values(nodesMap).filter((node) => !(node.pkgId in pkgsMap))
+      .length === 0,
     'some instance nodes belong to non-existing pkgIds',
   );
   assert(
-    _.values(pkgsMap).filter((pkg: { name: string }) => !pkg.name).length === 0,
+    Object.values(pkgsMap).filter((pkg: { name: string }) => !pkg.name)
+      .length === 0,
     'some .pkgs elements have no .name field',
   );
 }
