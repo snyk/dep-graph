@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`cyclic graph to tree 1`] = `
+exports[`Cyclic graphs cyclic graph to tree 1`] = `
 Object {
   "dependencies": Object {
     "foo": Object {
@@ -33,5 +33,232 @@ Object {
   "packageFormatVersion": "pip:0.0.1",
   "type": "pip",
   "version": "1.0.0",
+}
+`;
+
+exports[`Cyclic graphs heavily cyclic graph to tree and back (X2) 1`] = `
+Object {
+  "dependencies": Object {
+    "B": Object {
+      "dependencies": Object {
+        "C": Object {
+          "dependencies": Object {
+            "B": Object {
+              "labels": Object {
+                "cyclic": "true",
+              },
+              "name": "B",
+              "version": "4",
+            },
+            "D": Object {
+              "dependencies": Object {
+                "B": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "B",
+                  "version": "4",
+                },
+                "C": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "C",
+                  "version": "4",
+                },
+              },
+              "name": "D",
+              "version": "4",
+            },
+          },
+          "name": "C",
+          "version": "4",
+        },
+        "D": Object {
+          "dependencies": Object {
+            "B": Object {
+              "labels": Object {
+                "cyclic": "true",
+              },
+              "name": "B",
+              "version": "4",
+            },
+            "C": Object {
+              "dependencies": Object {
+                "B": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "B",
+                  "version": "4",
+                },
+                "D": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "D",
+                  "version": "4",
+                },
+              },
+              "name": "C",
+              "version": "4",
+            },
+          },
+          "name": "D",
+          "version": "4",
+        },
+      },
+      "name": "B",
+      "version": "4",
+    },
+    "C": Object {
+      "dependencies": Object {
+        "B": Object {
+          "dependencies": Object {
+            "C": Object {
+              "labels": Object {
+                "cyclic": "true",
+              },
+              "name": "C",
+              "version": "4",
+            },
+            "D": Object {
+              "dependencies": Object {
+                "B": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "B",
+                  "version": "4",
+                },
+                "C": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "C",
+                  "version": "4",
+                },
+              },
+              "name": "D",
+              "version": "4",
+            },
+          },
+          "name": "B",
+          "version": "4",
+        },
+        "D": Object {
+          "dependencies": Object {
+            "B": Object {
+              "dependencies": Object {
+                "C": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "C",
+                  "version": "4",
+                },
+                "D": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "D",
+                  "version": "4",
+                },
+              },
+              "name": "B",
+              "version": "4",
+            },
+            "C": Object {
+              "labels": Object {
+                "cyclic": "true",
+              },
+              "name": "C",
+              "version": "4",
+            },
+          },
+          "name": "D",
+          "version": "4",
+        },
+      },
+      "name": "C",
+      "version": "4",
+    },
+    "D": Object {
+      "dependencies": Object {
+        "B": Object {
+          "dependencies": Object {
+            "C": Object {
+              "dependencies": Object {
+                "B": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "B",
+                  "version": "4",
+                },
+                "D": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "D",
+                  "version": "4",
+                },
+              },
+              "name": "C",
+              "version": "4",
+            },
+            "D": Object {
+              "labels": Object {
+                "cyclic": "true",
+              },
+              "name": "D",
+              "version": "4",
+            },
+          },
+          "name": "B",
+          "version": "4",
+        },
+        "C": Object {
+          "dependencies": Object {
+            "B": Object {
+              "dependencies": Object {
+                "C": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "C",
+                  "version": "4",
+                },
+                "D": Object {
+                  "labels": Object {
+                    "cyclic": "true",
+                  },
+                  "name": "D",
+                  "version": "4",
+                },
+              },
+              "name": "B",
+              "version": "4",
+            },
+            "D": Object {
+              "labels": Object {
+                "cyclic": "true",
+              },
+              "name": "D",
+              "version": "4",
+            },
+          },
+          "name": "C",
+          "version": "4",
+        },
+      },
+      "name": "D",
+      "version": "4",
+    },
+  },
+  "name": "A",
+  "packageFormatVersion": "npm:0.0.1",
+  "type": "npm",
+  "version": "4",
 }
 `;
