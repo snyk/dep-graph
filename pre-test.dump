@@ -1,0 +1,25 @@
+  console.log
+    ===========
+    rss 110.63 MB
+    heapTotal 72.09 MB
+    heapUsed 50.26 MB
+    external 4.53 MB
+    ===========
+
+      at dumpMemory (test/legacy/performance.test.ts:31:11)
+
+  console.log
+    ===========
+    rss 163.96 MB
+    heapTotal 115.85 MB
+    heapUsed 96.63 MB
+    external 3.42 MB
+    ===========
+
+      at dumpMemory (test/legacy/performance.test.ts:31:11)
+
+  console.info
+    Execution time (hr): 0s 236.379585ms
+
+      at Object.<anonymous> (test/legacy/performance.test.ts:44:13)
+

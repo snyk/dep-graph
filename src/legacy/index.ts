@@ -5,6 +5,7 @@ import { DepGraphBuilder } from '../core/builder';
 import { EventLoopSpinner } from './event-loop-spinner';
 
 import objectHash = require('object-hash');
+import { InternalSet } from '../core/InternalSet';
 
 export { depTreeToGraph, graphToDepTree, DepTree };
 
@@ -233,7 +234,7 @@ async function graphToDepTree(
     depGraph,
     depGraph.rootNodeId,
     eventLoopSpinner,
-    new Set(),
+    new InternalSet(),
     opts.deduplicateWithinTopLevelDeps ? null : false,
   );
 
@@ -282,8 +283,8 @@ async function buildSubtree(
   depGraph: types.DepGraphInternal,
   nodeId: string,
   eventLoopSpinner: EventLoopSpinner,
-  ancestorsSet: Set<string>,
-  maybeDeduplicationSet: Set<string> | null | false = null, // false = disabled; null = not in deduplication scope yet
+  ancestorsSet: InternalSet,
+  maybeDeduplicationSet: InternalSet | null | false = null, // false = disabled; null = not in deduplication scope yet
 ): Promise<DepTree> {
   const isRoot = nodeId === depGraph.rootNodeId;
   const nodePkg = depGraph.getNodePkg(nodeId);
@@ -332,9 +333,9 @@ async function buildSubtree(
     // Deduplication of nodes occurs only within a scope of a top-level dependency.
     // Therefore, every top-level dep gets an independent set to track duplicates.
     if (isRoot && maybeDeduplicationSet !== false) {
-      maybeDeduplicationSet = new Set();
+      maybeDeduplicationSet = new InternalSet();
     }
-    const ancestors = new Set(ancestorsSet).add(nodeId);
+    const ancestors = new InternalSet(ancestorsSet).add(nodeId);
     const subtree = await buildSubtree(
       depGraph,
       depInstId,
