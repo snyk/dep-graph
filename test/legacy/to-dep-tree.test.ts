@@ -1,4 +1,3 @@
-import * as _ from '@snyk/lodash';
 import * as depGraphLib from '../../src';
 import * as helpers from '../helpers';
 
@@ -220,10 +219,9 @@ describe('Cyclic graphs', () => {
       'pip',
     );
 
-    const cyclicTreeNode = _.get(
-      depTree,
-      'dependencies.foo.dependencies.bar.dependencies.baz.dependencies.foo',
-    );
+    const cyclicTreeNode =
+      depTree?.dependencies?.foo?.dependencies?.bar?.dependencies?.baz
+        ?.dependencies?.foo;
     expect(cyclicTreeNode).toEqual({
       name: 'foo',
       version: '2',

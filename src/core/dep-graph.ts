@@ -46,7 +46,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     this._rootNodeId = rootNodeId;
     this._rootPkgId = (graph.node(rootNodeId) as GraphNode).pkgId;
 
-    this._pkgList = _.values(pkgs);
+    this._pkgList = Object.values(pkgs);
     this._depPkgsList = this._pkgList.filter((pkg) => pkg !== this.rootPkg);
   }
 
@@ -201,7 +201,7 @@ class DepGraphImpl implements types.DepGraphInternal {
       return acc;
     }, []);
 
-    const pkgs: Array<{ id: string; info: types.PkgInfo }> = _.keys(
+    const pkgs: Array<{ id: string; info: types.PkgInfo }> = Object.keys(
       this._pkgs,
     ).map((pkgId: string) => ({
       id: pkgId,
