@@ -320,18 +320,18 @@ class DepGraphImpl implements types.DepGraphInternal {
     }
 
     const allPaths: string[][] = [];
-    parentNodesIds
-      .filter((parentId) => !seenOnPath.has(parentId))
-      .map((parentId) => {
+
+    for (const parentId of parentNodesIds) {
+      if (!seenOnPath.has(parentId)) {
         const pathsFromParent = this.pathsFromNodeToRoot(
           parentId,
           new Set(seenOnPath).add(nodeId), // Max size is O(log(n)) [tree depth] where n is the amount of nodes in the tree
         );
-
         for (const path of pathsFromParent) {
           allPaths.push([nodeId].concat(path));
         }
-      });
+      }
+    }
 
     return allPaths;
   }
@@ -351,17 +351,15 @@ class DepGraphImpl implements types.DepGraphInternal {
       return 1;
     }
 
-    const count = parentNodesIds
-      .filter((parentId) => !seenOnPath.has(parentId))
-      .reduce((acc, parentNodeId) => {
-        return (
-          acc +
-          this.countNodePathsToRoot(
-            parentNodeId,
-            new Set(seenOnPath).add(nodeId),
-          )
+    let count = 0;
+    for (const parentNodeId of parentNodesIds) {
+      if (!seenOnPath.has(parentNodeId)) {
+        count += this.countNodePathsToRoot(
+          parentNodeId,
+          new Set(seenOnPath).add(nodeId),
         );
-      }, 0);
+      }
+    }
 
     this._countNodePathsToRootCache.set(nodeId, count);
     return count;
