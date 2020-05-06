@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.2.0",
+  "pkgManager": {
+    "name": "npm"
+  },
+  "pkgs": [
+    {
+      "id": "A@4",
+      "info": {
+        "name": "A",
+        "version": "4"
+      }
+    },
+    {
+      "id": "B@4",
+      "info": {
+        "name": "B",
+        "version": "4"
+      }
+    },
+    {
+      "id": "C@4",
+      "info": {
+        "name": "C",
+        "version": "4"
+      }
+    },
+    {
+      "id": "D@4",
+      "info": {
+        "name": "D",
+        "version": "4"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "A@4|x",
+    "nodes": [
+      {
+        "nodeId": "A@4|x",
+        "pkgId": "A@4",
+        "deps": [
+          {
+            "nodeId": "B@4|x"
+          },
+          {
+            "nodeId": "D@4|x"
+          },
+          {
+            "nodeId": "C@4|x"
+          }
+        ]
+      },
+      {
+        "nodeId": "B@4|x",
+        "pkgId": "B@4",
+        "deps": [
+          {
+            "nodeId": "C@4|x"
+          },
+          {
+            "nodeId": "D@4|x"
+          }
+        ]
+      },
+      {
+        "nodeId": "C@4|x",
+        "pkgId": "C@4",
+        "deps": [
+          {
+            "nodeId": "D@4|x"
+          },
+          {
+            "nodeId": "B@4|x"
+          }
+        ]
+      },
+      {
+        "nodeId": "D@4|x",
+        "pkgId": "D@4",
+        "deps": [
+          {
+            "nodeId": "C@4|x"
+          },
+          {
+            "nodeId": "B@4|x"
+          }
+        ]
+      }
+    ]
+  }
+}

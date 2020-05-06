@@ -209,11 +209,44 @@ describe('graphToDepTree with a linux pkgManager', () => {
   });
 });
 
-test('graphs with cycles are not supported', async () => {
-  const cyclicDepGraphData = helpers.loadFixture('cyclic-dep-graph.json');
-  const cyclicDepGraph = depGraphLib.createFromJSON(cyclicDepGraphData);
+describe('Cyclic graphs', () => {
+  test('cyclic graph to tree', async () => {
+    const cyclicDepGraphData = helpers.loadFixture('cyclic-dep-graph.json');
+    const cyclicDepGraph = depGraphLib.createFromJSON(cyclicDepGraphData);
 
-  await expect(
-    depGraphLib.legacy.graphToDepTree(cyclicDepGraph, 'pip'),
-  ).rejects.toThrow('Conversion to DepTree does not support cyclic graphs yet');
+    const depTree = await depGraphLib.legacy.graphToDepTree(
+      cyclicDepGraph,
+      'pip',
+    );
+
+    const cyclicTreeNode =
+      depTree?.dependencies?.foo?.dependencies?.bar?.dependencies?.baz
+        ?.dependencies?.foo;
+    expect(cyclicTreeNode).toEqual({
+      name: 'foo',
+      version: '2',
+      labels: { cyclic: 'true' },
+    });
+
+    expect(depTree).toMatchSnapshot();
+  });
+  test('heavily cyclic graph to tree and back (X2)', async () => {
+    const cyclicDepGraphData = helpers.loadFixture(
+      'heavily-cyclic-dep-graph.json',
+    );
+    const cyclicDepGraph = depGraphLib.createFromJSON(cyclicDepGraphData);
+
+    const tree0 = await depGraphLib.legacy.graphToDepTree(
+      cyclicDepGraph,
+      'npm',
+    );
+    const graph0 = await depGraphLib.legacy.depTreeToGraph(tree0, 'npm');
+    const tree1 = await depGraphLib.legacy.graphToDepTree(graph0, 'npm');
+    const graph1 = await depGraphLib.legacy.depTreeToGraph(tree1, 'npm');
+
+    // Make sure that data persists between shape changes regardless of cycles
+    expect(graph0.toJSON()).toEqual(graph1.toJSON());
+    expect(tree0).toEqual(tree1);
+    expect(tree0).toMatchSnapshot();
+  });
 });
