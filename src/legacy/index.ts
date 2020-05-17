@@ -66,7 +66,7 @@ async function depTreeToGraph(
 
   const depGraph = await builder.build();
 
-  return shortenNodeIds(depGraph as types.DepGraphInternal, eventLoopSpinner);
+  return shortenNodeIds(depGraph as types.DepGraph, eventLoopSpinner);
 }
 
 async function buildGraph(
@@ -164,7 +164,7 @@ async function buildGraph(
 }
 
 async function shortenNodeIds(
-  depGraph: types.DepGraphInternal,
+  depGraph: types.DepGraph,
   eventLoopSpinner: EventLoopSpinner,
 ): Promise<types.DepGraph> {
   const builder = new DepGraphBuilder(depGraph.pkgManager, depGraph.rootPkg);
@@ -173,23 +173,22 @@ async function shortenNodeIds(
 
   // create nodes with shorter ids
   for (const pkg of depGraph.getPkgs()) {
-    const nodeIds = depGraph.getPkgNodeIds(pkg);
-    for (let i = 0; i < nodeIds.length; i++) {
-      const nodeId = nodeIds[i];
-      if (nodeId === depGraph.rootNodeId) {
+    const nodes = depGraph.getPkgNodes(pkg);
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+      if (node.id === depGraph.rootNodeId) {
         continue;
       }
-      const nodeInfo = depGraph.getNode(nodeId);
 
       let newNodeId: string;
-      if (nodeIds.length === 1) {
-        newNodeId = `${trimAfterLastSep(nodeId, '|')}`;
+      if (nodes.length === 1) {
+        newNodeId = `${trimAfterLastSep(node.id, '|')}`;
       } else {
-        newNodeId = `${trimAfterLastSep(nodeId, '|')}|${i + 1}`;
+        newNodeId = `${trimAfterLastSep(node.id, '|')}|${i + 1}`;
       }
 
-      nodesMap[nodeId] = newNodeId;
-      builder.addPkgNode(pkg, newNodeId, nodeInfo);
+      nodesMap[node.id] = newNodeId;
+      builder.addPkgNode(pkg, newNodeId, node.info);
     }
 
     if (eventLoopSpinner.isStarving()) {
@@ -199,10 +198,10 @@ async function shortenNodeIds(
 
   // connect nodes
   for (const pkg of depGraph.getPkgs()) {
-    for (const nodeId of depGraph.getPkgNodeIds(pkg)) {
-      for (const depNodeId of depGraph.getNodeDepsNodeIds(nodeId)) {
-        const parentNode = nodesMap[nodeId] || nodeId;
-        const childNode = nodesMap[depNodeId] || depNodeId;
+    for (const node of depGraph.getPkgNodes(pkg)) {
+      for (const depNode of depGraph.getNodeDeps(node.id)) {
+        const parentNode = nodesMap[node.id] || node.id;
+        const childNode = nodesMap[depNode.id] || depNode.id;
 
         builder.connectDep(parentNode, childNode);
       }
@@ -221,12 +220,10 @@ export interface GraphToTreeOptions {
 }
 
 async function graphToDepTree(
-  depGraphInterface: types.DepGraph,
+  depGraph: types.DepGraph,
   pkgType: string,
   opts: GraphToTreeOptions = { deduplicateWithinTopLevelDeps: false },
 ): Promise<DepTree> {
-  const depGraph = depGraphInterface as types.DepGraphInternal;
-
   // TODO: implement cycles support
   if (depGraph.hasCycles()) {
     throw new Error('Conversion to DepTree does not support cyclic graphs yet');
@@ -282,32 +279,31 @@ function constructTargetOS(
 }
 
 async function buildSubtree(
-  depGraph: types.DepGraphInternal,
+  depGraph: types.DepGraph,
   nodeId: string,
   eventLoopSpinner: EventLoopSpinner,
   maybeDeduplicationSet: Set<string> | null | false = null, // false = disabled; null = not in deduplication scope yet
 ): Promise<DepTree> {
   const isRoot = nodeId === depGraph.rootNodeId;
-  const nodePkg = depGraph.getNodePkg(nodeId);
-  const nodeInfo = depGraph.getNode(nodeId);
+  const node = depGraph.getNode(nodeId);
   const depTree: DepTree = {};
-  depTree.name = nodePkg.name;
-  depTree.version = nodePkg.version;
-  if (nodeInfo.versionProvenance) {
-    depTree.versionProvenance = nodeInfo.versionProvenance;
+  depTree.name = node.pkg.name;
+  depTree.version = node.pkg.version;
+  if (node.info.versionProvenance) {
+    depTree.versionProvenance = node.info.versionProvenance;
   }
-  if (nodeInfo.labels) {
-    depTree.labels = { ...nodeInfo.labels };
+  if (node.info.labels) {
+    depTree.labels = { ...node.info.labels };
   }
 
-  const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
-  if (!depInstanceIds || depInstanceIds.length === 0) {
+  const depNodes = depGraph.getNodeDeps(nodeId);
+  if (!depNodes || depNodes.length === 0) {
     return depTree;
   }
 
   if (maybeDeduplicationSet) {
     if (maybeDeduplicationSet.has(nodeId)) {
-      if (depInstanceIds.length > 0) {
+      if (depNodes.length > 0) {
         addLabel(depTree, 'pruned', 'true');
       }
       return depTree;
@@ -315,7 +311,7 @@ async function buildSubtree(
     maybeDeduplicationSet.add(nodeId);
   }
 
-  for (const depInstId of depInstanceIds) {
+  for (const depNode of depNodes) {
     // Deduplication of nodes occurs only within a scope of a top-level dependency.
     // Therefore, every top-level dep gets an independent set to track duplicates.
     if (isRoot && maybeDeduplicationSet !== false) {
@@ -323,7 +319,7 @@ async function buildSubtree(
     }
     const subtree = await buildSubtree(
       depGraph,
-      depInstId,
+      depNode.id,
       eventLoopSpinner,
       maybeDeduplicationSet,
     );

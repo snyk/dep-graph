@@ -49,8 +49,8 @@ export interface NodeInfo {
 }
 
 export interface Node {
-  // id: string; - can be added later once it's useful as input to other methods
-  // pkg: PkgInfo; - it can be nice to return this, consider when exposing more node related methods
+  id: string;
+  pkg: PkgInfo;
   info: NodeInfo;
 }
 
@@ -89,24 +89,19 @@ export interface DepGraphData {
 export interface DepGraph {
   readonly pkgManager: PkgManager;
   readonly rootPkg: PkgInfo;
+  readonly rootNodeId: string;
+
   getPkgs(): PkgInfo[];
   getDepPkgs(): PkgInfo[];
   getPkgNodes(pkg: Pkg): Node[];
-  toJSON(): DepGraphData;
+  getNodeDeps(nodeId: string): Node[];
+  getNode(nodeId: string): Node;
+
+  hasCycles(): boolean;
   pkgPathsToRoot(pkg: Pkg): PkgInfo[][];
   directDepsLeadingTo(pkg: Pkg): PkgInfo[];
   countPathsToRoot(pkg: Pkg): number;
-  equals(other: DepGraph, options?: { compareRoot?: boolean }): boolean;
-}
 
-// NOTE/TODO(shaun): deferring any/all design decisions here
-// Revisit when we actually start using things
-export interface DepGraphInternal extends DepGraph {
-  readonly rootNodeId: string;
-  getNode(nodeId: string): NodeInfo;
-  getNodePkg(nodeId: string): PkgInfo;
-  getPkgNodeIds(pkg: Pkg): string[];
-  getNodeDepsNodeIds(nodeId: string): string[];
-  getNodeParentsNodeIds(nodeId: string): string[];
-  hasCycles(): boolean;
+  equals(other: DepGraph, options?: { compareRoot?: boolean }): boolean;
+  toJSON(): DepGraphData;
 }
