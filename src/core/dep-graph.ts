@@ -1,4 +1,4 @@
-import * as _ from '@snyk/lodash';
+import * as _isEqual from 'lodash.isequal';
 import * as graphlib from '@snyk/graphlib';
 import * as types from './types';
 import { createFromJSON } from './create-from-json';
@@ -255,7 +255,7 @@ class DepGraphImpl implements types.DepGraphInternal {
       const pkgB = graphB.getNodePkg(nodeIdB);
 
       // Compare PkgInfo (name and version).
-      if (!_.isEqual(pkgA, pkgB)) {
+      if (!_isEqual(pkgA, pkgB)) {
         return false;
       }
 
@@ -263,7 +263,7 @@ class DepGraphImpl implements types.DepGraphInternal {
       const infoB = graphB.getNode(nodeIdB);
 
       // Compare NodeInfo (VersionProvenance and labels).
-      if (!_.isEqual(infoA, infoB)) {
+      if (!_isEqual(infoA, infoB)) {
         return false;
       }
     }
