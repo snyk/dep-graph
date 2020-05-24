@@ -1,4 +1,4 @@
-import * as _ from '@snyk/lodash';
+import * as _isEqual from 'lodash.isequal';
 import * as fs from 'fs';
 import * as path from 'path';
 import { PkgInfo } from '../src';
@@ -35,8 +35,8 @@ export function depTreesEqual(a: any, b: any) {
   }
 
   if (
-    !_.isEqual(a.labels, b.labels) ||
-    !_.isEqual(a.versionProvenance, b.versionProvenance)
+    !_isEqual(a.labels, b.labels) ||
+    !_isEqual(a.versionProvenance, b.versionProvenance)
   ) {
     return false;
   }
