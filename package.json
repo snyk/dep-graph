@@ -35,9 +35,9 @@
     "@types/node": "^8",
     "@types/object-hash": "^1.3.1",
     "@types/semver": "^7",
-    "jest": "^25",
+    "jest": "^26",
     "prettier": "^2.0.5",
-    "ts-jest": "^25",
+    "ts-jest": "^26",
     "ts-node": "^8",
     "tslint": "^6",
     "typescript": "~3.8.3"
