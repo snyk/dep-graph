@@ -1,6 +1,6 @@
 import Graph = require('./graph');
-import isAcyclic = require('./alg/is-acyclic');
-import postorder = require('./alg/postorder');
+import { isAcyclic } from './alg/is-acyclic';
+import { postorder } from './alg/postorder';
 
 export { Graph };
 export const alg = {

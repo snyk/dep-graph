@@ -1,6 +1,4 @@
-var _ = require('../lodash');
-
-module.exports = dfs;
+import { isArray, each, has } from '../lodash';
 
 /*
  * A helper that preforms a pre- or post-order traversal on the input graph
@@ -10,16 +8,16 @@ module.exports = dfs;
  *
  * Order must be one of "pre" or "post".
  */
-function dfs(g, vs, order) {
-  if (!_.isArray(vs)) {
+export function dfs(g, vs, order) {
+  if (!isArray(vs)) {
     vs = [vs];
   }
 
-  var navigation = (g.isDirected() ? g.successors : g.neighbors).bind(g);
+  const navigation = (g.isDirected() ? g.successors : g.neighbors).bind(g);
 
-  var acc = [];
-  var visited = {};
-  _.each(vs, function (v) {
+  const acc = [];
+  const visited = {};
+  each(vs, function (v) {
     if (!g.hasNode(v)) {
       throw new Error('Graph does not have node: ' + v);
     }
@@ -30,13 +28,13 @@ function dfs(g, vs, order) {
 }
 
 function doDfs(g, v, postorder, visited, navigation, acc) {
-  if (!_.has(visited, v)) {
+  if (!has(visited, v)) {
     visited[v] = true;
 
     if (!postorder) {
       acc.push(v);
     }
-    _.each(navigation(v), function (w) {
+    each(navigation(v), function (w) {
       doDfs(g, w, postorder, visited, navigation, acc);
     });
     if (postorder) {
