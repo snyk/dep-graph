@@ -1,5 +1,5 @@
 import * as _isEqual from 'lodash.isequal';
-import * as graphlib from 'graphlib';
+import * as graphlib from '../graphlib';
 import * as types from './types';
 import { createFromJSON } from './create-from-json';
 
