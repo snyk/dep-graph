@@ -4,5 +4,6 @@ import postorder = require('./alg/postorder');
 
 export { Graph };
 export const alg = {
-  isAcyclic, postorder
-}
+  isAcyclic,
+  postorder,
+};

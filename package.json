@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "format": "prettier --write '{src,test,scripts}/**/*.ts'",
+    "format": "prettier --write '{src,test,scripts}/**/*.?s'",
     "lint:eslint": "eslint 'src/**/*.ts' && (cd test && eslint '**/*.ts')",
     "lint:prettier": "prettier --check '{src,test,scripts}/**/*.ts'",
     "lint": "npm run lint:eslint && npm run lint:prettier",
