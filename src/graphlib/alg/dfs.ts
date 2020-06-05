@@ -1,5 +1,6 @@
 import * as each from 'lodash.foreach';
 import * as has from 'lodash.has';
+import {Graph} from '../graph';
 
 /*
  * A helper that preforms a pre- or post-order traversal on the input graph
@@ -9,16 +10,16 @@ import * as has from 'lodash.has';
  *
  * Order must be one of "pre" or "post".
  */
-export function dfs(g, vs, order) {
+export function dfs(g: Graph, vs: string[], order: 'pre' | 'post'): string[] {
   if (!Array.isArray(vs)) {
     vs = [vs];
   }
 
   const navigation = (g.isDirected() ? g.successors : g.neighbors).bind(g);
 
-  const acc = [];
-  const visited = {};
-  each(vs, function (v) {
+  const acc: string[] = [];
+  const visited: { [v: string]: boolean } = {};
+  each(vs, v => {
     if (!g.hasNode(v)) {
       throw new Error('Graph does not have node: ' + v);
     }

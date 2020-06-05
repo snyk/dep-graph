@@ -14,6 +14,19 @@ const DEFAULT_EDGE_NAME = '\x00';
 const GRAPH_NODE = '\x00';
 const EDGE_KEY_DELIM = '\x01';
 
+export interface GraphOptions {
+  directed?: boolean; // default: true.
+  multigraph?: boolean; // default: false.
+  compound?: boolean; // default: false.
+}
+
+export interface Edge {
+  v: string;
+  w: string;
+  /** The name that uniquely identifies a multi-edge. */
+  name?: string;
+}
+
 // Implementation notes:
 //
 //  * Node id query functions should return string ids for the nodes
@@ -45,7 +58,7 @@ export class Graph {
   _edgeObjs;
   _edgeLabels;
 
-  constructor(opts) {
+  constructor(opts: GraphOptions) {
     this._isDirected = has(opts, 'directed') ? opts.directed : true;
     this._isMultigraph = has(opts, 'multigraph') ? opts.multigraph : false;
     this._isCompound = has(opts, 'compound') ? opts.compound : false;
@@ -190,7 +203,7 @@ export class Graph {
     return this._nodes[v];
   }
 
-  hasNode(v) {
+  hasNode(v: string): boolean {
     return has(this._nodes, v);
   }
 
@@ -398,6 +411,8 @@ export class Graph {
    * setEdge(v, w, [value, [name]])
    * setEdge({ v, w, [name] }, [value])
    */
+  setEdge(v: string, w: string, label?: any, name?: string): Graph;
+  setEdge(edge: Edge, label?: any): Graph;
   setEdge(...args: any[]) {
     let v, w, name, value;
     let valueSpecified = false;
@@ -564,7 +579,7 @@ function edgeArgsToId(isDirected, v_, w_, name) {
   );
 }
 
-function edgeArgsToObj(isDirected, v_, w_, name) {
+function edgeArgsToObj(isDirected, v_, w_, name): Edge {
   let v = '' + v_;
   let w = '' + w_;
   if (!isDirected && v > w) {
@@ -572,7 +587,7 @@ function edgeArgsToObj(isDirected, v_, w_, name) {
     v = w;
     w = tmp;
   }
-  const edgeObj = { v: v, w: w, name: undefined };
+  const edgeObj: Edge = { v: v, w: w };
   if (name) {
     edgeObj.name = name;
   }

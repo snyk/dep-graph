@@ -1,6 +1,7 @@
 import { topsort, CycleException } from './topsort';
+import { Graph } from '../graph';
 
-export function isAcyclic(g) {
+export function isAcyclic(g: Graph) {
   try {
     topsort(g);
   } catch (e) {

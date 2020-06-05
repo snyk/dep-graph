@@ -2,7 +2,9 @@ import * as each from 'lodash.foreach';
 import * as has from 'lodash.has';
 import * as size from 'lodash.size';
 
-export function topsort(g) {
+import { Graph } from '../graph';
+
+export function topsort(g: Graph): string[] {
   const visited = {};
   const stack = {};
   const results: any[] = [];
