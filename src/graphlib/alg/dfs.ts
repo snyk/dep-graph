@@ -1,4 +1,5 @@
-import { isArray, each, has } from '../lodash';
+import * as each from 'lodash.foreach';
+import * as has from 'lodash.has';
 
 /*
  * A helper that preforms a pre- or post-order traversal on the input graph
@@ -9,7 +10,7 @@ import { isArray, each, has } from '../lodash';
  * Order must be one of "pre" or "post".
  */
 export function dfs(g, vs, order) {
-  if (!isArray(vs)) {
+  if (!Array.isArray(vs)) {
     vs = [vs];
   }
 

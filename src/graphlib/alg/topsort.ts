@@ -1,4 +1,6 @@
-import { has, each, size } from '../lodash';
+import * as each from 'lodash.foreach';
+import * as has from 'lodash.has';
+import * as size from 'lodash.size';
 
 export function topsort(g) {
   const visited = {};

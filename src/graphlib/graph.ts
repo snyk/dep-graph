@@ -1,18 +1,14 @@
-'use strict';
-
-import {
-  has,
-  constant,
-  isFunction,
-  keys,
-  filter as _filter,
-  isEmpty,
-  each,
-  isUndefined,
-  union,
-  values,
-  reduce,
-} from './lodash';
+import * as constant from 'lodash.constant';
+import * as each from 'lodash.foreach';
+import * as _filter from 'lodash.foreach';
+import * as has from 'lodash.has';
+import * as isEmpty from 'lodash.isempty';
+import * as isFunction from 'lodash.isfunction';
+import * as isUndefined from 'lodash.isundefined';
+import * as keys from 'lodash.keys';
+import * as reduce from 'lodash.reduce';
+import * as union from 'lodash.union';
+import * as values from 'lodash.values';
 
 const DEFAULT_EDGE_NAME = '\x00';
 const GRAPH_NODE = '\x00';
@@ -201,7 +197,7 @@ export class Graph {
   removeNode(v) {
     const self = this;
     if (has(this._nodes, v)) {
-      const removeEdge = function(e) {
+      const removeEdge = function (e) {
         self.removeEdge(self._edgeObjs[e]);
       };
       delete this._nodes[v];
@@ -576,7 +572,7 @@ function edgeArgsToObj(isDirected, v_, w_, name) {
     v = w;
     w = tmp;
   }
-  const edgeObj = {v: v, w: w, name: undefined};
+  const edgeObj = { v: v, w: w, name: undefined };
   if (name) {
     edgeObj.name = name;
   }
