@@ -42,7 +42,7 @@
     "typescript": "~3.8.3"
   },
   "dependencies": {
-    "@snyk/graphlib": "2.1.9-patch",
+    "@snyk/graphlib": "2.1.9-patch.2",
     "lodash.isequal": "^4.5.0",
     "object-hash": "^2.0.3",
     "semver": "^6.0.0",
