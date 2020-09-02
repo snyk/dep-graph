@@ -6,11 +6,13 @@
 export interface Pkg {
   name: string;
   version?: string;
+  url?: string;
 }
 
 export interface PkgInfo {
   name: string;
   version?: string;
+  url?: string;
   // NOTE: consider adding in the future
   // requires?: {
   //   name: string;
