@@ -1,5 +1,5 @@
 import * as semver from 'semver';
-import * as graphlib from '@snyk/graphlib';
+import * as graphlib from 'graphlib';
 import * as types from './types';
 
 import { DepGraph, DepGraphData, GraphNode } from './types';
