@@ -63,6 +63,7 @@ class DepGraphBuilder {
     this._pkgNodes[pkgId].add(nodeId);
 
     this._graph.setNode(nodeId, { pkgId, info: nodeInfo });
+    return this;
   }
 
   // TODO: this can create cycles
@@ -76,6 +77,7 @@ class DepGraphBuilder {
     }
 
     this._graph.setEdge(parentNodeId, depNodeId);
+    return this;
   }
 
   public build(): types.DepGraph {
