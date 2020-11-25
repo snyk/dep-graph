@@ -285,8 +285,12 @@ async function buildSubtree(
   depGraph: types.DepGraphInternal,
   nodeId: string,
   eventLoopSpinner: EventLoopSpinner,
-  maybeDeduplicationSet: Set<string> | null | false = null, // false = disabled; null = not in deduplication scope yet
+  maybeDeduplicationSet: Set<string> | null | false = false, // false = disabled; null = not in deduplication scope yet
+  memoizationMap: Map<string, DepTree> = new Map(),
 ): Promise<DepTree> {
+  if (!maybeDeduplicationSet && memoizationMap.has(nodeId)) {
+    return memoizationMap.get(nodeId)!;
+  }
   const isRoot = nodeId === depGraph.rootNodeId;
   const nodePkg = depGraph.getNodePkg(nodeId);
   const nodeInfo = depGraph.getNode(nodeId);
@@ -302,6 +306,7 @@ async function buildSubtree(
 
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
   if (!depInstanceIds || depInstanceIds.length === 0) {
+    memoizationMap.set(nodeId, depTree);
     return depTree;
   }
 
@@ -326,6 +331,7 @@ async function buildSubtree(
       depInstId,
       eventLoopSpinner,
       maybeDeduplicationSet,
+      memoizationMap,
     );
     if (!subtree) {
       continue;
@@ -341,6 +347,7 @@ async function buildSubtree(
   if (eventLoopSpinner.isStarving()) {
     await eventLoopSpinner.spin();
   }
+  memoizationMap.set(nodeId, depTree);
   return depTree;
 }
 
