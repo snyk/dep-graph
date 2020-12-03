@@ -75,7 +75,11 @@ async function buildGraph(
   pkgName: string,
   eventLoopSpinner: EventLoopSpinner,
   isRoot = false,
+  memoizationMap: Map<DepTree, string> = new Map(),
 ): Promise<string> {
+  if (memoizationMap.has(depTree)) {
+    return memoizationMap.get(depTree)!;
+  }
   const getNodeId = (
     name: string,
     version: string | undefined,
@@ -103,6 +107,8 @@ async function buildGraph(
       dep,
       depName,
       eventLoopSpinner,
+      false,
+      memoizationMap,
     );
 
     const depPkg: types.PkgInfo = {
@@ -160,6 +166,7 @@ async function buildGraph(
   if (depNodesIds.length > 0 && eventLoopSpinner.isStarving()) {
     await eventLoopSpinner.spin();
   }
+  memoizationMap.set(depTree, treeHash);
   return treeHash;
 }
 
