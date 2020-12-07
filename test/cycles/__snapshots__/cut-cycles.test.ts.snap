@@ -1,0 +1,2183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cut and reconnect cycles cyclic graph 1`] = `
+Object {
+  "graph": Object {
+    "nodes": Array [
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "id-0",
+          },
+        ],
+        "nodeId": "root-node",
+        "pkgId": "root@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "id-1",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "removed-cyclic-deps": "0@@root-node",
+          },
+        },
+        "nodeId": "id-0",
+        "pkgId": "id-0@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "id-2",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "removed-cyclic-deps": "0@@root-node",
+          },
+        },
+        "nodeId": "id-1",
+        "pkgId": "id-1@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "id-3",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "removed-cyclic-deps": "0@@root-node",
+          },
+        },
+        "nodeId": "id-2",
+        "pkgId": "id-2@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "id-4",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "removed-cyclic-deps": "0@@root-node",
+          },
+        },
+        "nodeId": "id-3",
+        "pkgId": "id-3@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "id-5",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "removed-cyclic-deps": "0@@root-node",
+          },
+        },
+        "nodeId": "id-4",
+        "pkgId": "id-4@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "id-6",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "removed-cyclic-deps": "0@@root-node",
+          },
+        },
+        "nodeId": "id-5",
+        "pkgId": "id-5@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "id-7",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "removed-cyclic-deps": "0@@root-node",
+          },
+        },
+        "nodeId": "id-6",
+        "pkgId": "id-6@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "id-8",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "removed-cyclic-deps": "0@@root-node",
+          },
+        },
+        "nodeId": "id-7",
+        "pkgId": "id-7@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "id-9",
+          },
+        ],
+        "info": Object {
+          "labels": Object {
+            "removed-cyclic-deps": "0@@root-node",
+          },
+        },
+        "nodeId": "id-8",
+        "pkgId": "id-8@1.2.3",
+      },
+      Object {
+        "deps": Array [],
+        "info": Object {
+          "labels": Object {
+            "removed-cyclic-deps": "0@@root-node",
+          },
+        },
+        "nodeId": "id-9",
+        "pkgId": "id-9@1.2.3",
+      },
+    ],
+    "rootNodeId": "root-node",
+  },
+  "pkgManager": Object {
+    "name": "npm",
+  },
+  "pkgs": Array [
+    Object {
+      "id": "root@1.2.3",
+      "info": Object {
+        "name": "root",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-0@1.2.3",
+      "info": Object {
+        "name": "id-0",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-1@1.2.3",
+      "info": Object {
+        "name": "id-1",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-2@1.2.3",
+      "info": Object {
+        "name": "id-2",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-3@1.2.3",
+      "info": Object {
+        "name": "id-3",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-4@1.2.3",
+      "info": Object {
+        "name": "id-4",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-5@1.2.3",
+      "info": Object {
+        "name": "id-5",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-6@1.2.3",
+      "info": Object {
+        "name": "id-6",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-7@1.2.3",
+      "info": Object {
+        "name": "id-7",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-8@1.2.3",
+      "info": Object {
+        "name": "id-8",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-9@1.2.3",
+      "info": Object {
+        "name": "id-9",
+        "version": "1.2.3",
+      },
+    },
+  ],
+  "schemaVersion": "1.2.0",
+}
+`;
+
+exports[`cut and reconnect cycles non cyclic graph 1`] = `
+Object {
+  "graph": Object {
+    "nodes": Array [
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+          Object {
+            "nodeId": "id-0",
+          },
+          Object {
+            "nodeId": "id-1",
+          },
+          Object {
+            "nodeId": "id-2",
+          },
+          Object {
+            "nodeId": "id-3",
+          },
+          Object {
+            "nodeId": "id-4",
+          },
+          Object {
+            "nodeId": "id-5",
+          },
+          Object {
+            "nodeId": "id-6",
+          },
+          Object {
+            "nodeId": "id-7",
+          },
+          Object {
+            "nodeId": "id-8",
+          },
+          Object {
+            "nodeId": "id-9",
+          },
+          Object {
+            "nodeId": "id-10",
+          },
+          Object {
+            "nodeId": "id-11",
+          },
+          Object {
+            "nodeId": "id-12",
+          },
+          Object {
+            "nodeId": "id-13",
+          },
+          Object {
+            "nodeId": "id-14",
+          },
+          Object {
+            "nodeId": "id-15",
+          },
+          Object {
+            "nodeId": "id-16",
+          },
+          Object {
+            "nodeId": "id-17",
+          },
+          Object {
+            "nodeId": "id-18",
+          },
+          Object {
+            "nodeId": "id-19",
+          },
+          Object {
+            "nodeId": "id-20",
+          },
+          Object {
+            "nodeId": "id-21",
+          },
+          Object {
+            "nodeId": "id-22",
+          },
+          Object {
+            "nodeId": "id-23",
+          },
+          Object {
+            "nodeId": "id-24",
+          },
+          Object {
+            "nodeId": "id-25",
+          },
+          Object {
+            "nodeId": "id-26",
+          },
+          Object {
+            "nodeId": "id-27",
+          },
+          Object {
+            "nodeId": "id-28",
+          },
+          Object {
+            "nodeId": "id-29",
+          },
+          Object {
+            "nodeId": "id-30",
+          },
+          Object {
+            "nodeId": "id-31",
+          },
+          Object {
+            "nodeId": "id-32",
+          },
+          Object {
+            "nodeId": "id-33",
+          },
+          Object {
+            "nodeId": "id-34",
+          },
+          Object {
+            "nodeId": "id-35",
+          },
+          Object {
+            "nodeId": "id-36",
+          },
+          Object {
+            "nodeId": "id-37",
+          },
+          Object {
+            "nodeId": "id-38",
+          },
+          Object {
+            "nodeId": "id-39",
+          },
+          Object {
+            "nodeId": "id-40",
+          },
+          Object {
+            "nodeId": "id-41",
+          },
+          Object {
+            "nodeId": "id-42",
+          },
+          Object {
+            "nodeId": "id-43",
+          },
+          Object {
+            "nodeId": "id-44",
+          },
+          Object {
+            "nodeId": "id-45",
+          },
+          Object {
+            "nodeId": "id-46",
+          },
+          Object {
+            "nodeId": "id-47",
+          },
+          Object {
+            "nodeId": "id-48",
+          },
+          Object {
+            "nodeId": "id-49",
+          },
+          Object {
+            "nodeId": "id-50",
+          },
+          Object {
+            "nodeId": "id-51",
+          },
+          Object {
+            "nodeId": "id-52",
+          },
+          Object {
+            "nodeId": "id-53",
+          },
+          Object {
+            "nodeId": "id-54",
+          },
+          Object {
+            "nodeId": "id-55",
+          },
+          Object {
+            "nodeId": "id-56",
+          },
+          Object {
+            "nodeId": "id-57",
+          },
+          Object {
+            "nodeId": "id-58",
+          },
+          Object {
+            "nodeId": "id-59",
+          },
+          Object {
+            "nodeId": "id-60",
+          },
+          Object {
+            "nodeId": "id-61",
+          },
+          Object {
+            "nodeId": "id-62",
+          },
+          Object {
+            "nodeId": "id-63",
+          },
+          Object {
+            "nodeId": "id-64",
+          },
+          Object {
+            "nodeId": "id-65",
+          },
+          Object {
+            "nodeId": "id-66",
+          },
+          Object {
+            "nodeId": "id-67",
+          },
+          Object {
+            "nodeId": "id-68",
+          },
+          Object {
+            "nodeId": "id-69",
+          },
+          Object {
+            "nodeId": "id-70",
+          },
+          Object {
+            "nodeId": "id-71",
+          },
+          Object {
+            "nodeId": "id-72",
+          },
+          Object {
+            "nodeId": "id-73",
+          },
+          Object {
+            "nodeId": "id-74",
+          },
+          Object {
+            "nodeId": "id-75",
+          },
+          Object {
+            "nodeId": "id-76",
+          },
+          Object {
+            "nodeId": "id-77",
+          },
+          Object {
+            "nodeId": "id-78",
+          },
+          Object {
+            "nodeId": "id-79",
+          },
+          Object {
+            "nodeId": "id-80",
+          },
+          Object {
+            "nodeId": "id-81",
+          },
+          Object {
+            "nodeId": "id-82",
+          },
+          Object {
+            "nodeId": "id-83",
+          },
+          Object {
+            "nodeId": "id-84",
+          },
+          Object {
+            "nodeId": "id-85",
+          },
+          Object {
+            "nodeId": "id-86",
+          },
+          Object {
+            "nodeId": "id-87",
+          },
+          Object {
+            "nodeId": "id-88",
+          },
+          Object {
+            "nodeId": "id-89",
+          },
+          Object {
+            "nodeId": "id-90",
+          },
+          Object {
+            "nodeId": "id-91",
+          },
+          Object {
+            "nodeId": "id-92",
+          },
+          Object {
+            "nodeId": "id-93",
+          },
+          Object {
+            "nodeId": "id-94",
+          },
+          Object {
+            "nodeId": "id-95",
+          },
+          Object {
+            "nodeId": "id-96",
+          },
+          Object {
+            "nodeId": "id-97",
+          },
+          Object {
+            "nodeId": "id-98",
+          },
+          Object {
+            "nodeId": "id-99",
+          },
+        ],
+        "nodeId": "root-node",
+        "pkgId": "root@1.2.3",
+      },
+      Object {
+        "deps": Array [],
+        "nodeId": "needle",
+        "pkgId": "needle@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-0",
+        "pkgId": "id-0@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-1",
+        "pkgId": "id-1@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-2",
+        "pkgId": "id-2@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-3",
+        "pkgId": "id-3@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-4",
+        "pkgId": "id-4@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-5",
+        "pkgId": "id-5@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-6",
+        "pkgId": "id-6@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-7",
+        "pkgId": "id-7@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-8",
+        "pkgId": "id-8@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-9",
+        "pkgId": "id-9@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-10",
+        "pkgId": "id-10@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-11",
+        "pkgId": "id-11@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-12",
+        "pkgId": "id-12@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-13",
+        "pkgId": "id-13@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-14",
+        "pkgId": "id-14@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-15",
+        "pkgId": "id-15@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-16",
+        "pkgId": "id-16@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-17",
+        "pkgId": "id-17@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-18",
+        "pkgId": "id-18@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-19",
+        "pkgId": "id-19@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-20",
+        "pkgId": "id-20@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-21",
+        "pkgId": "id-21@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-22",
+        "pkgId": "id-22@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-23",
+        "pkgId": "id-23@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-24",
+        "pkgId": "id-24@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-25",
+        "pkgId": "id-25@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-26",
+        "pkgId": "id-26@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-27",
+        "pkgId": "id-27@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-28",
+        "pkgId": "id-28@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-29",
+        "pkgId": "id-29@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-30",
+        "pkgId": "id-30@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-31",
+        "pkgId": "id-31@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-32",
+        "pkgId": "id-32@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-33",
+        "pkgId": "id-33@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-34",
+        "pkgId": "id-34@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-35",
+        "pkgId": "id-35@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-36",
+        "pkgId": "id-36@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-37",
+        "pkgId": "id-37@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-38",
+        "pkgId": "id-38@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-39",
+        "pkgId": "id-39@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-40",
+        "pkgId": "id-40@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-41",
+        "pkgId": "id-41@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-42",
+        "pkgId": "id-42@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-43",
+        "pkgId": "id-43@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-44",
+        "pkgId": "id-44@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-45",
+        "pkgId": "id-45@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-46",
+        "pkgId": "id-46@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-47",
+        "pkgId": "id-47@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-48",
+        "pkgId": "id-48@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-49",
+        "pkgId": "id-49@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-50",
+        "pkgId": "id-50@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-51",
+        "pkgId": "id-51@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-52",
+        "pkgId": "id-52@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-53",
+        "pkgId": "id-53@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-54",
+        "pkgId": "id-54@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-55",
+        "pkgId": "id-55@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-56",
+        "pkgId": "id-56@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-57",
+        "pkgId": "id-57@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-58",
+        "pkgId": "id-58@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-59",
+        "pkgId": "id-59@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-60",
+        "pkgId": "id-60@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-61",
+        "pkgId": "id-61@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-62",
+        "pkgId": "id-62@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-63",
+        "pkgId": "id-63@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-64",
+        "pkgId": "id-64@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-65",
+        "pkgId": "id-65@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-66",
+        "pkgId": "id-66@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-67",
+        "pkgId": "id-67@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-68",
+        "pkgId": "id-68@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-69",
+        "pkgId": "id-69@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-70",
+        "pkgId": "id-70@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-71",
+        "pkgId": "id-71@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-72",
+        "pkgId": "id-72@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-73",
+        "pkgId": "id-73@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-74",
+        "pkgId": "id-74@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-75",
+        "pkgId": "id-75@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-76",
+        "pkgId": "id-76@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-77",
+        "pkgId": "id-77@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-78",
+        "pkgId": "id-78@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-79",
+        "pkgId": "id-79@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-80",
+        "pkgId": "id-80@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-81",
+        "pkgId": "id-81@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-82",
+        "pkgId": "id-82@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-83",
+        "pkgId": "id-83@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-84",
+        "pkgId": "id-84@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-85",
+        "pkgId": "id-85@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-86",
+        "pkgId": "id-86@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-87",
+        "pkgId": "id-87@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-88",
+        "pkgId": "id-88@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-89",
+        "pkgId": "id-89@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-90",
+        "pkgId": "id-90@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-91",
+        "pkgId": "id-91@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-92",
+        "pkgId": "id-92@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-93",
+        "pkgId": "id-93@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-94",
+        "pkgId": "id-94@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-95",
+        "pkgId": "id-95@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-96",
+        "pkgId": "id-96@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-97",
+        "pkgId": "id-97@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-98",
+        "pkgId": "id-98@1.2.3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "needle",
+          },
+        ],
+        "nodeId": "id-99",
+        "pkgId": "id-99@1.2.3",
+      },
+    ],
+    "rootNodeId": "root-node",
+  },
+  "pkgManager": Object {
+    "name": "npm",
+  },
+  "pkgs": Array [
+    Object {
+      "id": "root@1.2.3",
+      "info": Object {
+        "name": "root",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "needle@1.2.3",
+      "info": Object {
+        "name": "needle",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-0@1.2.3",
+      "info": Object {
+        "name": "id-0",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-1@1.2.3",
+      "info": Object {
+        "name": "id-1",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-2@1.2.3",
+      "info": Object {
+        "name": "id-2",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-3@1.2.3",
+      "info": Object {
+        "name": "id-3",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-4@1.2.3",
+      "info": Object {
+        "name": "id-4",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-5@1.2.3",
+      "info": Object {
+        "name": "id-5",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-6@1.2.3",
+      "info": Object {
+        "name": "id-6",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-7@1.2.3",
+      "info": Object {
+        "name": "id-7",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-8@1.2.3",
+      "info": Object {
+        "name": "id-8",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-9@1.2.3",
+      "info": Object {
+        "name": "id-9",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-10@1.2.3",
+      "info": Object {
+        "name": "id-10",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-11@1.2.3",
+      "info": Object {
+        "name": "id-11",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-12@1.2.3",
+      "info": Object {
+        "name": "id-12",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-13@1.2.3",
+      "info": Object {
+        "name": "id-13",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-14@1.2.3",
+      "info": Object {
+        "name": "id-14",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-15@1.2.3",
+      "info": Object {
+        "name": "id-15",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-16@1.2.3",
+      "info": Object {
+        "name": "id-16",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-17@1.2.3",
+      "info": Object {
+        "name": "id-17",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-18@1.2.3",
+      "info": Object {
+        "name": "id-18",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-19@1.2.3",
+      "info": Object {
+        "name": "id-19",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-20@1.2.3",
+      "info": Object {
+        "name": "id-20",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-21@1.2.3",
+      "info": Object {
+        "name": "id-21",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-22@1.2.3",
+      "info": Object {
+        "name": "id-22",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-23@1.2.3",
+      "info": Object {
+        "name": "id-23",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-24@1.2.3",
+      "info": Object {
+        "name": "id-24",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-25@1.2.3",
+      "info": Object {
+        "name": "id-25",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-26@1.2.3",
+      "info": Object {
+        "name": "id-26",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-27@1.2.3",
+      "info": Object {
+        "name": "id-27",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-28@1.2.3",
+      "info": Object {
+        "name": "id-28",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-29@1.2.3",
+      "info": Object {
+        "name": "id-29",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-30@1.2.3",
+      "info": Object {
+        "name": "id-30",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-31@1.2.3",
+      "info": Object {
+        "name": "id-31",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-32@1.2.3",
+      "info": Object {
+        "name": "id-32",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-33@1.2.3",
+      "info": Object {
+        "name": "id-33",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-34@1.2.3",
+      "info": Object {
+        "name": "id-34",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-35@1.2.3",
+      "info": Object {
+        "name": "id-35",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-36@1.2.3",
+      "info": Object {
+        "name": "id-36",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-37@1.2.3",
+      "info": Object {
+        "name": "id-37",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-38@1.2.3",
+      "info": Object {
+        "name": "id-38",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-39@1.2.3",
+      "info": Object {
+        "name": "id-39",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-40@1.2.3",
+      "info": Object {
+        "name": "id-40",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-41@1.2.3",
+      "info": Object {
+        "name": "id-41",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-42@1.2.3",
+      "info": Object {
+        "name": "id-42",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-43@1.2.3",
+      "info": Object {
+        "name": "id-43",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-44@1.2.3",
+      "info": Object {
+        "name": "id-44",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-45@1.2.3",
+      "info": Object {
+        "name": "id-45",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-46@1.2.3",
+      "info": Object {
+        "name": "id-46",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-47@1.2.3",
+      "info": Object {
+        "name": "id-47",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-48@1.2.3",
+      "info": Object {
+        "name": "id-48",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-49@1.2.3",
+      "info": Object {
+        "name": "id-49",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-50@1.2.3",
+      "info": Object {
+        "name": "id-50",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-51@1.2.3",
+      "info": Object {
+        "name": "id-51",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-52@1.2.3",
+      "info": Object {
+        "name": "id-52",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-53@1.2.3",
+      "info": Object {
+        "name": "id-53",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-54@1.2.3",
+      "info": Object {
+        "name": "id-54",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-55@1.2.3",
+      "info": Object {
+        "name": "id-55",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-56@1.2.3",
+      "info": Object {
+        "name": "id-56",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-57@1.2.3",
+      "info": Object {
+        "name": "id-57",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-58@1.2.3",
+      "info": Object {
+        "name": "id-58",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-59@1.2.3",
+      "info": Object {
+        "name": "id-59",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-60@1.2.3",
+      "info": Object {
+        "name": "id-60",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-61@1.2.3",
+      "info": Object {
+        "name": "id-61",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-62@1.2.3",
+      "info": Object {
+        "name": "id-62",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-63@1.2.3",
+      "info": Object {
+        "name": "id-63",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-64@1.2.3",
+      "info": Object {
+        "name": "id-64",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-65@1.2.3",
+      "info": Object {
+        "name": "id-65",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-66@1.2.3",
+      "info": Object {
+        "name": "id-66",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-67@1.2.3",
+      "info": Object {
+        "name": "id-67",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-68@1.2.3",
+      "info": Object {
+        "name": "id-68",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-69@1.2.3",
+      "info": Object {
+        "name": "id-69",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-70@1.2.3",
+      "info": Object {
+        "name": "id-70",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-71@1.2.3",
+      "info": Object {
+        "name": "id-71",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-72@1.2.3",
+      "info": Object {
+        "name": "id-72",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-73@1.2.3",
+      "info": Object {
+        "name": "id-73",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-74@1.2.3",
+      "info": Object {
+        "name": "id-74",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-75@1.2.3",
+      "info": Object {
+        "name": "id-75",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-76@1.2.3",
+      "info": Object {
+        "name": "id-76",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-77@1.2.3",
+      "info": Object {
+        "name": "id-77",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-78@1.2.3",
+      "info": Object {
+        "name": "id-78",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-79@1.2.3",
+      "info": Object {
+        "name": "id-79",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-80@1.2.3",
+      "info": Object {
+        "name": "id-80",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-81@1.2.3",
+      "info": Object {
+        "name": "id-81",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-82@1.2.3",
+      "info": Object {
+        "name": "id-82",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-83@1.2.3",
+      "info": Object {
+        "name": "id-83",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-84@1.2.3",
+      "info": Object {
+        "name": "id-84",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-85@1.2.3",
+      "info": Object {
+        "name": "id-85",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-86@1.2.3",
+      "info": Object {
+        "name": "id-86",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-87@1.2.3",
+      "info": Object {
+        "name": "id-87",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-88@1.2.3",
+      "info": Object {
+        "name": "id-88",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-89@1.2.3",
+      "info": Object {
+        "name": "id-89",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-90@1.2.3",
+      "info": Object {
+        "name": "id-90",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-91@1.2.3",
+      "info": Object {
+        "name": "id-91",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-92@1.2.3",
+      "info": Object {
+        "name": "id-92",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-93@1.2.3",
+      "info": Object {
+        "name": "id-93",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-94@1.2.3",
+      "info": Object {
+        "name": "id-94",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-95@1.2.3",
+      "info": Object {
+        "name": "id-95",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-96@1.2.3",
+      "info": Object {
+        "name": "id-96",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-97@1.2.3",
+      "info": Object {
+        "name": "id-97",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-98@1.2.3",
+      "info": Object {
+        "name": "id-98",
+        "version": "1.2.3",
+      },
+    },
+    Object {
+      "id": "id-99@1.2.3",
+      "info": Object {
+        "name": "id-99",
+        "version": "1.2.3",
+      },
+    },
+  ],
+  "schemaVersion": "1.2.0",
+}
+`;

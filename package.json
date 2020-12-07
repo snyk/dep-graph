@@ -43,6 +43,7 @@
     "typescript": "~3.8.3"
   },
   "dependencies": {
+    "event-loop-spinner": "^2.0.0",
     "graphlib": "^2.1.8",
     "lodash.isequal": "^4.5.0",
     "object-hash": "^2.0.3",
