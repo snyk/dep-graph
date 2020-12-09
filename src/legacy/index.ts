@@ -234,13 +234,8 @@ async function graphToDepTree(
 ): Promise<DepTree> {
   const depGraph = depGraphInterface as types.DepGraphInternal;
 
-  // TODO: implement cycles support
-  if (depGraph.hasCycles()) {
-    throw new Error('Conversion to DepTree does not support cyclic graphs yet');
-  }
-
   const eventLoopSpinner = new EventLoopSpinner();
-  const depTree = await buildSubtree(
+  const [depTree] = await buildSubtree(
     depGraph,
     depGraph.rootNodeId,
     eventLoopSpinner,
@@ -288,15 +283,19 @@ function constructTargetOS(
   return { name, version };
 }
 
+type CyclePruned = boolean;
+
 async function buildSubtree(
   depGraph: types.DepGraphInternal,
   nodeId: string,
   eventLoopSpinner: EventLoopSpinner,
   maybeDeduplicationSet: Set<string> | null | false = false, // false = disabled; null = not in deduplication scope yet
+  ancestors: string[] = [],
   memoizationMap: Map<string, DepTree> = new Map(),
-): Promise<DepTree> {
+): Promise<[DepTree, CyclePruned]> {
   if (!maybeDeduplicationSet && memoizationMap.has(nodeId)) {
-    return memoizationMap.get(nodeId)!;
+    // Memoized subtrees not allowed to have cycles in them.
+    return [memoizationMap.get(nodeId)!, false];
   }
   const isRoot = nodeId === depGraph.rootNodeId;
   const nodePkg = depGraph.getNodePkg(nodeId);
@@ -314,7 +313,7 @@ async function buildSubtree(
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
   if (!depInstanceIds || depInstanceIds.length === 0) {
     memoizationMap.set(nodeId, depTree);
-    return depTree;
+    return [depTree, false];
   }
 
   if (maybeDeduplicationSet) {
@@ -322,24 +321,34 @@ async function buildSubtree(
       if (depInstanceIds.length > 0) {
         addLabel(depTree, 'pruned', 'true');
       }
-      return depTree;
+      return [depTree, false];
     }
     maybeDeduplicationSet.add(nodeId);
   }
 
+  let cyclePruned = false;
   for (const depInstId of depInstanceIds) {
+    if (ancestors.includes(depInstId)) {
+      cyclePruned = true;
+      addLabel(depTree, 'pruned', 'cyclic');
+      continue;
+    }
     // Deduplication of nodes occurs only within a scope of a top-level dependency.
     // Therefore, every top-level dep gets an independent set to track duplicates.
     if (isRoot && maybeDeduplicationSet !== false) {
       maybeDeduplicationSet = new Set();
     }
-    const subtree = await buildSubtree(
+    const [subtree, subtreeCyclePruned] = await buildSubtree(
       depGraph,
       depInstId,
       eventLoopSpinner,
       maybeDeduplicationSet,
+      ancestors.concat(depInstId),
       memoizationMap,
     );
+    if (subtreeCyclePruned) {
+      cyclePruned = true;
+    }
     if (!subtree) {
       continue;
     }
@@ -354,8 +363,12 @@ async function buildSubtree(
   if (eventLoopSpinner.isStarving()) {
     await eventLoopSpinner.spin();
   }
-  memoizationMap.set(nodeId, depTree);
-  return depTree;
+
+  if (!cyclePruned) {
+    memoizationMap.set(nodeId, depTree);
+  }
+
+  return [depTree, cyclePruned];
 }
 
 function trimAfterLastSep(str: string, sep: string) {
