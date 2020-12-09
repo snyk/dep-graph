@@ -209,11 +209,31 @@ describe('graphToDepTree with a linux pkgManager', () => {
   });
 });
 
-test('graphs with cycles are not supported', async () => {
+test('graphs with cycles are supported', async () => {
   const cyclicDepGraphData = helpers.loadFixture('cyclic-dep-graph.json');
   const cyclicDepGraph = depGraphLib.createFromJSON(cyclicDepGraphData);
 
-  await expect(
-    depGraphLib.legacy.graphToDepTree(cyclicDepGraph, 'pip'),
-  ).rejects.toThrow('Conversion to DepTree does not support cyclic graphs yet');
+  const depTree = await depGraphLib.legacy.graphToDepTree(
+    cyclicDepGraph,
+    'pip',
+  );
+  expect(depTree).toMatchSnapshot();
+});
+
+describe('memoization - repeating nodes should use same node', () => {
+  it('non cyclic graph', async () => validate('memoization-dep-graph.json'));
+  it('cyclic graph', async () => validate('memoization-cyclic-dep-graph.json'));
+
+  async function validate(name: string) {
+    const cyclicDepGraphData = helpers.loadFixture(name);
+    const cyclicDepGraph = depGraphLib.createFromJSON(cyclicDepGraphData);
+
+    const depTree = await depGraphLib.legacy.graphToDepTree(
+      cyclicDepGraph,
+      'pip',
+    );
+    expect(depTree.dependencies!.ccc!.dependencies!.aaa).toBe(
+      depTree.dependencies!.aaa,
+    );
+  }
 });

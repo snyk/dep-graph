@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.2.0",
+  "pkgManager": {
+    "name": "pip"
+  },
+  "pkgs": [
+    {
+      "id": "toor@1.0.0",
+      "info": {
+        "name": "toor",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "aaa@5",
+      "info": {
+        "name": "aaa",
+        "version": "5"
+      }
+    },
+    {
+      "id": "bbb@6",
+      "info": {
+        "name": "bbb",
+        "version": "6"
+      }
+    },
+    {
+      "id": "ccc@7",
+      "info": {
+        "name": "ccc",
+        "version": "7"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "toor",
+    "nodes": [
+      {
+        "nodeId": "toor",
+        "pkgId": "toor@1.0.0",
+        "deps": [
+          { "nodeId": "aaa@5|x" },
+          { "nodeId": "ccc@7|x" }
+        ]
+      },
+      {
+        "nodeId": "aaa@5|x",
+        "pkgId": "aaa@5",
+        "deps": [
+          {
+            "nodeId": "bbb@6|x"
+          }
+        ]
+      },
+      {
+        "nodeId": "bbb@6|x",
+        "pkgId": "bbb@6",
+        "deps": []
+      },
+      {
+        "nodeId": "ccc@7|x",
+        "pkgId": "ccc@7",
+        "deps": [
+          {
+            "nodeId": "aaa@5|x"
+          }
+        ]
+      }
+    ]
+  }
+}
