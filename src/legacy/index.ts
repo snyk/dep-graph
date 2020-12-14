@@ -2,10 +2,11 @@ import * as crypto from 'crypto';
 import * as types from '../core/types';
 import { DepGraphBuilder } from '../core/builder';
 import { EventLoopSpinner } from './event-loop-spinner';
+import { mapToNonCyclicGraph } from './map-to-non-cylic-graph';
 
 import objectHash = require('object-hash');
 
-export { depTreeToGraph, graphToDepTree, DepTree };
+export { depTreeToGraph, graphToDepTree, DepTree, mapToNonCyclicGraph };
 
 interface DepTreeDep {
   name?: string; // shouldn't, but might happen

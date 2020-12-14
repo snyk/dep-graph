@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mapToNonCyclicGraph cyclic graph should return a non-cyclic graph - snapshot 1`] = `
+Object {
+  "graph": Object {
+    "nodes": Array [
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "foo@2|x",
+          },
+        ],
+        "nodeId": "toor",
+        "pkgId": "toor@1.0.0",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "bar@3|x",
+          },
+        ],
+        "nodeId": "foo@2|x",
+        "pkgId": "foo@2",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "baz@4|x",
+          },
+        ],
+        "nodeId": "bar@3|x",
+        "pkgId": "bar@3",
+      },
+      Object {
+        "deps": Array [
+          Object {
+            "nodeId": "foo@2|x_pruned",
+          },
+        ],
+        "nodeId": "baz@4|x",
+        "pkgId": "baz@4",
+      },
+      Object {
+        "deps": Array [],
+        "info": Object {
+          "labels": Object {
+            "pruned": "cyclic",
+          },
+        },
+        "nodeId": "foo@2|x_pruned",
+        "pkgId": "foo@2",
+      },
+    ],
+    "rootNodeId": "toor",
+  },
+  "pkgManager": Object {
+    "name": "pip",
+  },
+  "pkgs": Array [
+    Object {
+      "id": "toor@1.0.0",
+      "info": Object {
+        "name": "toor",
+        "version": "1.0.0",
+      },
+    },
+    Object {
+      "id": "foo@2",
+      "info": Object {
+        "name": "foo",
+        "version": "2",
+      },
+    },
+    Object {
+      "id": "bar@3",
+      "info": Object {
+        "name": "bar",
+        "version": "3",
+      },
+    },
+    Object {
+      "id": "baz@4",
+      "info": Object {
+        "name": "baz",
+        "version": "4",
+      },
+    },
+  ],
+  "schemaVersion": "1.2.0",
+}
+`;
