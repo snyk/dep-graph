@@ -46,6 +46,10 @@ class DepGraphBuilder {
     this._pkgManager = pkgManager;
   }
 
+  public getPkgs(): types.PkgInfo[] {
+    return Object.values(this._pkgs);
+  }
+
   // TODO: this can create disconnected nodes
   public addPkgNode(
     pkgInfo: types.PkgInfo,
