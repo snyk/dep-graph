@@ -1,4 +1,4 @@
-import * as graphlib from 'graphlib';
+import * as graphlib from '../graphlib';
 import { ValidationError } from './errors';
 
 function assert(condition: boolean, msg: string) {

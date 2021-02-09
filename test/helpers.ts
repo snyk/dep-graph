@@ -45,12 +45,7 @@ export function depTreesEqual(a: any, b: any) {
   const bDeps = b.dependencies || {};
 
   if (
-    Object.keys(aDeps)
-      .sort()
-      .join(',') !==
-    Object.keys(bDeps)
-      .sort()
-      .join(',')
+    Object.keys(aDeps).sort().join(',') !== Object.keys(bDeps).sort().join(',')
   ) {
     return false;
   }
