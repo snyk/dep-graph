@@ -1,3 +1,5 @@
+/* eslint-disable prefer-rest-params */
+/* eslint-disable @typescript-eslint/no-this-alias */
 import * as constant from 'lodash.constant';
 import * as each from 'lodash.foreach';
 import * as _filter from 'lodash.foreach';
@@ -413,6 +415,7 @@ export class Graph {
    */
   setEdge(v: string, w: string, label?: any, name?: string): Graph;
   setEdge(edge: Edge, label?: any): Graph;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setEdge(...args: any[]) {
     let v, w, name, value;
     let valueSpecified = false;
