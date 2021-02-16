@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cycles pkgPathsToRoot - should work with cycles: bar@3 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "bar",
+      "version": "3",
+    },
+    Object {
+      "name": "foo",
+      "version": "2",
+    },
+    Object {
+      "name": "toor",
+      "version": "1.0.0",
+    },
+  ],
+]
+`;
+
+exports[`cycles pkgPathsToRoot - should work with cycles: baz@4 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "baz",
+      "version": "4",
+    },
+    Object {
+      "name": "foo",
+      "version": "2",
+    },
+    Object {
+      "name": "toor",
+      "version": "1.0.0",
+    },
+  ],
+  Array [
+    Object {
+      "name": "baz",
+      "version": "4",
+    },
+    Object {
+      "name": "bar",
+      "version": "3",
+    },
+    Object {
+      "name": "foo",
+      "version": "2",
+    },
+    Object {
+      "name": "toor",
+      "version": "1.0.0",
+    },
+  ],
+]
+`;
+
+exports[`cycles pkgPathsToRoot - should work with cycles: foo@2 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "foo",
+      "version": "2",
+    },
+    Object {
+      "name": "toor",
+      "version": "1.0.0",
+    },
+  ],
+]
+`;
+
+exports[`cycles pkgPathsToRoot - should work with cycles: toor@1.0.0 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "toor",
+      "version": "1.0.0",
+    },
+  ],
+]
+`;
