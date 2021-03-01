@@ -1,8 +1,8 @@
 import * as crypto from 'crypto';
+import { eventLoopSpinner } from 'event-loop-spinner';
+
 import * as types from '../core/types';
 import { DepGraphBuilder } from '../core/builder';
-import { EventLoopSpinner } from './event-loop-spinner';
-
 import objectHash = require('object-hash');
 
 export { depTreeToGraph, graphToDepTree, DepTree };
@@ -61,19 +61,17 @@ async function depTreeToGraph(
 
   const builder = new DepGraphBuilder(pkgManagerInfo, rootPkg);
 
-  const eventLoopSpinner = new EventLoopSpinner();
-  await buildGraph(builder, depTree, depTree.name!, eventLoopSpinner, true);
+  await buildGraph(builder, depTree, depTree.name!, true);
 
   const depGraph = await builder.build();
 
-  return shortenNodeIds(depGraph as types.DepGraphInternal, eventLoopSpinner);
+  return shortenNodeIds(depGraph as types.DepGraphInternal);
 }
 
 async function buildGraph(
   builder: DepGraphBuilder,
   depTree: DepTreeDep,
   pkgName: string,
-  eventLoopSpinner: EventLoopSpinner,
   isRoot = false,
   memoizationMap: Map<DepTree, string> = new Map(),
 ): Promise<string> {
@@ -106,7 +104,6 @@ async function buildGraph(
       builder,
       dep,
       depName,
-      eventLoopSpinner,
       false,
       memoizationMap,
     );
@@ -172,7 +169,6 @@ async function buildGraph(
 
 async function shortenNodeIds(
   depGraph: types.DepGraphInternal,
-  eventLoopSpinner: EventLoopSpinner,
 ): Promise<types.DepGraph> {
   const builder = new DepGraphBuilder(depGraph.pkgManager, depGraph.rootPkg);
 
@@ -239,11 +235,9 @@ async function graphToDepTree(
     throw new Error('Conversion to DepTree does not support cyclic graphs yet');
   }
 
-  const eventLoopSpinner = new EventLoopSpinner();
   const depTree = await buildSubtree(
     depGraph,
     depGraph.rootNodeId,
-    eventLoopSpinner,
     opts.deduplicateWithinTopLevelDeps ? null : false,
   );
 
@@ -291,8 +285,7 @@ function constructTargetOS(
 async function buildSubtree(
   depGraph: types.DepGraphInternal,
   nodeId: string,
-  eventLoopSpinner: EventLoopSpinner,
-  maybeDeduplicationSet: Set<string> | null | false = false, // false = disabled; null = not in deduplication scope yet
+  maybeDeduplicationSet: Set<string> | false | null = false, // false = disabled; null = not in deduplication scope yet
   memoizationMap: Map<string, DepTree> = new Map(),
 ): Promise<DepTree> {
   if (!maybeDeduplicationSet && memoizationMap.has(nodeId)) {
@@ -336,7 +329,6 @@ async function buildSubtree(
     const subtree = await buildSubtree(
       depGraph,
       depInstId,
-      eventLoopSpinner,
       maybeDeduplicationSet,
       memoizationMap,
     );

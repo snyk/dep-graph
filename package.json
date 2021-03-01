@@ -46,6 +46,7 @@
     "typescript": "~3.8.3"
   },
   "dependencies": {
+    "event-loop-spinner": "^2.1.0",
     "lodash.clone": "^4.5.0",
     "lodash.constant": "^3.0.0",
     "lodash.filter": "^4.6.0",
