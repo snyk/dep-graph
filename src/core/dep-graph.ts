@@ -64,10 +64,16 @@ class DepGraphImpl implements types.DepGraphInternal {
     return this._rootNodeId;
   }
 
+  /**
+   * Get all unique packages in the graph (including the root package)
+   */
   public getPkgs(): types.PkgInfo[] {
     return this._pkgList;
   }
 
+  /**
+   * Get all unique packages in the graph (excluding the root package)
+   */
   public getDepPkgs(): types.PkgInfo[] {
     return this._depPkgsList;
   }
@@ -199,6 +205,10 @@ class DepGraphImpl implements types.DepGraphInternal {
     return nodes.map((node) => this.getNodePkg(node));
   }
 
+  /**
+   * Create a JSON representation of a dep graph. This is typically used to
+   * send the dep graph over the wire
+   */
   public toJSON(): types.DepGraphData {
     const nodeIds = this._graph.nodes();
 
