@@ -9,6 +9,10 @@ import { DepGraphImpl } from './dep-graph';
 
 export const SUPPORTED_SCHEMA_RANGE = '^1.0.0';
 
+/**
+ * Create a DepGraph instance from a JSON representation of a dep graph. This
+ * is typically used after passing the graph over the wire as `DepGraphData`.
+ */
 export function createFromJSON(depGraphData: DepGraphData): DepGraph {
   validateDepGraphData(depGraphData);
 
