@@ -37,6 +37,7 @@
     "@types/semver": "^7",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
+    "benny": "^3.6.15",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "jest": "^26",
