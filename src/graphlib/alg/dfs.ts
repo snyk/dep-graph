@@ -1,5 +1,4 @@
 import * as each from 'lodash.foreach';
-import * as has from 'lodash.has';
 import { Graph } from '../graph';
 
 /*
@@ -29,8 +28,8 @@ export function dfs(g: Graph, vs: string[], order: 'pre' | 'post'): string[] {
   return acc;
 }
 
-function doDfs(g, v, postorder, visited, navigation, acc) {
-  if (!has(visited, v)) {
+function doDfs(g, v: string, postorder, visited, navigation, acc) {
+  if (!(v in visited)) {
     visited[v] = true;
 
     if (!postorder) {

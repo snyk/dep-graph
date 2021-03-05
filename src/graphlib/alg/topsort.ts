@@ -1,5 +1,4 @@
 import * as each from 'lodash.foreach';
-import * as has from 'lodash.has';
 import * as size from 'lodash.size';
 
 import { Graph } from '../graph';
@@ -9,12 +8,12 @@ export function topsort(g: Graph): string[] {
   const stack = {};
   const results: any[] = [];
 
-  function visit(node) {
-    if (has(stack, node)) {
+  function visit(node: string) {
+    if (node in stack) {
       throw new CycleException();
     }
 
-    if (!has(visited, node)) {
+    if (!(node in visited)) {
       stack[node] = true;
       visited[node] = true;
       each(g.predecessors(node), visit);
