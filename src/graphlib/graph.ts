@@ -3,7 +3,6 @@
 import * as constant from 'lodash.constant';
 import * as each from 'lodash.foreach';
 import * as _filter from 'lodash.foreach';
-import * as has from 'lodash.has';
 import * as isEmpty from 'lodash.isempty';
 import * as isFunction from 'lodash.isfunction';
 import * as isUndefined from 'lodash.isundefined';
@@ -48,7 +47,7 @@ export class Graph {
   _defaultNodeLabelFn;
   _defaultEdgeLabelFn;
 
-  _nodes;
+  _nodes: { [key: string]: unknown };
 
   _parent;
   _children;
@@ -58,12 +57,12 @@ export class Graph {
   _out;
   _sucs;
   _edgeObjs;
-  _edgeLabels;
+  _edgeLabels: { [key: string]: unknown };
 
   constructor(opts: GraphOptions) {
-    this._isDirected = has(opts, 'directed') ? opts.directed : true;
-    this._isMultigraph = has(opts, 'multigraph') ? opts.multigraph : false;
-    this._isCompound = has(opts, 'compound') ? opts.compound : false;
+    this._isDirected = opts?.directed ?? true;
+    this._isMultigraph = opts?.multigraph ?? false;
+    this._isCompound = opts?.compound ?? false;
 
     // Label for the graph itself
     this._label = undefined;
@@ -180,7 +179,7 @@ export class Graph {
   }
 
   setNode(v, value?) {
-    if (has(this._nodes, v)) {
+    if (v in this._nodes) {
       if (arguments.length > 1) {
         this._nodes[v] = value;
       }
@@ -206,12 +205,12 @@ export class Graph {
   }
 
   hasNode(v: string): boolean {
-    return has(this._nodes, v);
+    return v in this._nodes;
   }
 
   removeNode(v) {
     const self = this;
-    if (has(this._nodes, v)) {
+    if (v in this._nodes) {
       const removeEdge = function (e) {
         self.removeEdge(self._edgeObjs[e]);
       };
@@ -446,7 +445,7 @@ export class Graph {
     }
 
     const e = edgeArgsToId(this._isDirected, v, w, name);
-    if (has(this._edgeLabels, e)) {
+    if (e in this._edgeLabels) {
       if (valueSpecified) {
         this._edgeLabels[e] = value;
       }
@@ -494,7 +493,7 @@ export class Graph {
       arguments.length === 1
         ? edgeObjToId(this._isDirected, arguments[0])
         : edgeArgsToId(this._isDirected, v, w, name);
-    return has(this._edgeLabels, e);
+    return e in this._edgeLabels;
   }
 
   removeEdge(v, w?, name?) {
