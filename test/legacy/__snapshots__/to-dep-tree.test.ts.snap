@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`graphs with cycles are supported 1`] = `
+Object {
+  "dependencies": Object {
+    "b": Object {
+      "dependencies": Object {
+        "e": Object {
+          "dependencies": Object {
+            "f": Object {
+              "dependencies": Object {
+                "g": Object {
+                  "dependencies": Object {
+                    "e": Object {
+                      "labels": Object {
+                        "pruned": "cyclic",
+                      },
+                      "name": "e",
+                      "version": "5",
+                    },
+                  },
+                  "name": "g",
+                  "version": "7",
+                },
+              },
+              "name": "f",
+              "version": "6",
+            },
+          },
+          "name": "e",
+          "version": "5",
+        },
+      },
+      "name": "b",
+      "version": "2",
+    },
+    "c": Object {
+      "dependencies": Object {
+        "e": Object {
+          "dependencies": Object {
+            "f": Object {
+              "dependencies": Object {
+                "g": Object {
+                  "dependencies": Object {
+                    "e": Object {
+                      "labels": Object {
+                        "pruned": "cyclic",
+                      },
+                      "name": "e",
+                      "version": "5",
+                    },
+                  },
+                  "name": "g",
+                  "version": "7",
+                },
+              },
+              "name": "f",
+              "version": "6",
+            },
+          },
+          "name": "e",
+          "version": "5",
+        },
+      },
+      "name": "c",
+      "version": "3",
+    },
+    "d": Object {
+      "dependencies": Object {
+        "f": Object {
+          "dependencies": Object {
+            "g": Object {
+              "dependencies": Object {
+                "e": Object {
+                  "dependencies": Object {
+                    "f": Object {
+                      "labels": Object {
+                        "pruned": "cyclic",
+                      },
+                      "name": "f",
+                      "version": "6",
+                    },
+                  },
+                  "name": "e",
+                  "version": "5",
+                },
+              },
+              "name": "g",
+              "version": "7",
+            },
+          },
+          "name": "f",
+          "version": "6",
+        },
+      },
+      "name": "d",
+      "version": "4",
+    },
+  },
+  "name": "a",
+  "packageFormatVersion": "pip:0.0.1",
+  "type": "pip",
+  "version": "1",
+}
+`;
