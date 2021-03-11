@@ -209,11 +209,18 @@ describe('graphToDepTree with a linux pkgManager', () => {
   });
 });
 
-test('graphs with cycles are not supported', async () => {
-  const cyclicDepGraphData = helpers.loadFixture('cyclic-dep-graph.json');
+test('graphs with cycles are supported', async () => {
+  const cyclicDepGraphData = helpers.loadFixture(
+    'cyclic-complex-dep-graph.json',
+  );
   const cyclicDepGraph = depGraphLib.createFromJSON(cyclicDepGraphData);
 
-  await expect(
-    depGraphLib.legacy.graphToDepTree(cyclicDepGraph, 'pip'),
-  ).rejects.toThrow('Conversion to DepTree does not support cyclic graphs yet');
+  const depTree = await depGraphLib.legacy.graphToDepTree(
+    cyclicDepGraph,
+    'pip',
+  );
+  expect(depTree).toMatchSnapshot();
+  expect(depTree.dependencies!.b!.dependencies!.e).toBe(
+    depTree.dependencies!.c!.dependencies!.e,
+  );
 });

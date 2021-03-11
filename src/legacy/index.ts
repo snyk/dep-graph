@@ -4,6 +4,8 @@ import { eventLoopSpinner } from 'event-loop-spinner';
 import * as types from '../core/types';
 import { DepGraphBuilder } from '../core/builder';
 import objectHash = require('object-hash');
+import { getCycle, partitionCycles, Cycles } from './cycles';
+import { getMemoizedDepTree, memoize, MemoizationMap } from './memiozation';
 
 export { depTreeToGraph, graphToDepTree, DepTree };
 
@@ -230,12 +232,7 @@ async function graphToDepTree(
 ): Promise<DepTree> {
   const depGraph = depGraphInterface as types.DepGraphInternal;
 
-  // TODO: implement cycles support
-  if (depGraph.hasCycles()) {
-    throw new Error('Conversion to DepTree does not support cyclic graphs yet');
-  }
-
-  const depTree = await buildSubtree(
+  const [depTree] = await buildSubtree(
     depGraph,
     depGraph.rootNodeId,
     opts.deduplicateWithinTopLevelDeps ? null : false,
@@ -286,10 +283,18 @@ async function buildSubtree(
   depGraph: types.DepGraphInternal,
   nodeId: string,
   maybeDeduplicationSet: Set<string> | false | null = false, // false = disabled; null = not in deduplication scope yet
-  memoizationMap: Map<string, DepTree> = new Map(),
-): Promise<DepTree> {
-  if (!maybeDeduplicationSet && memoizationMap.has(nodeId)) {
-    return memoizationMap.get(nodeId)!;
+  ancestors: string[] = [],
+  memoizationMap: MemoizationMap = new Map(),
+): Promise<[DepTree, Cycles | undefined]> {
+  if (!maybeDeduplicationSet) {
+    const memoizedDepTree = getMemoizedDepTree(
+      nodeId,
+      ancestors,
+      memoizationMap,
+    );
+    if (memoizedDepTree) {
+      return [memoizedDepTree, undefined];
+    }
   }
   const isRoot = nodeId === depGraph.rootNodeId;
   const nodePkg = depGraph.getNodePkg(nodeId);
@@ -306,8 +311,15 @@ async function buildSubtree(
 
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
   if (!depInstanceIds || depInstanceIds.length === 0) {
-    memoizationMap.set(nodeId, depTree);
-    return depTree;
+    memoizationMap.set(nodeId, { depTree });
+    return [depTree, undefined];
+  }
+
+  const cycle = getCycle(ancestors, nodeId);
+  if (cycle) {
+    // This node starts a cycle and now it's the second visit.
+    addLabel(depTree, 'pruned', 'cyclic');
+    return [depTree, [cycle]];
   }
 
   if (maybeDeduplicationSet) {
@@ -315,23 +327,30 @@ async function buildSubtree(
       if (depInstanceIds.length > 0) {
         addLabel(depTree, 'pruned', 'true');
       }
-      return depTree;
+      return [depTree, undefined];
     }
     maybeDeduplicationSet.add(nodeId);
   }
 
+  const cycles: Cycles = [];
   for (const depInstId of depInstanceIds) {
     // Deduplication of nodes occurs only within a scope of a top-level dependency.
     // Therefore, every top-level dep gets an independent set to track duplicates.
     if (isRoot && maybeDeduplicationSet !== false) {
       maybeDeduplicationSet = new Set();
     }
-    const subtree = await buildSubtree(
+    const [subtree, subtreeCycles] = await buildSubtree(
       depGraph,
       depInstId,
       maybeDeduplicationSet,
+      ancestors.concat(nodeId),
       memoizationMap,
     );
+    if (subtreeCycles) {
+      for (const cycle of subtreeCycles) {
+        cycles.push(cycle);
+      }
+    }
     if (!subtree) {
       continue;
     }
@@ -346,8 +365,11 @@ async function buildSubtree(
   if (eventLoopSpinner.isStarving()) {
     await eventLoopSpinner.spin();
   }
-  memoizationMap.set(nodeId, depTree);
-  return depTree;
+
+  const partitionedCycles = partitionCycles(nodeId, cycles);
+  memoize(nodeId, memoizationMap, depTree, partitionedCycles);
+
+  return [depTree, partitionedCycles.cyclesWithThisNode];
 }
 
 function trimAfterLastSep(str: string, sep: string) {
