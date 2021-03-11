@@ -5,6 +5,8 @@ import { createFromJSON } from './create-from-json';
 
 export { DepGraphImpl };
 
+type NodeId = string;
+type PkgId = string;
 interface GraphNode {
   pkgId: string;
   info?: types.NodeInfo;
@@ -17,38 +19,26 @@ class DepGraphImpl implements types.DepGraphInternal {
     return `${pkg.name}@${pkg.version || ''}`;
   }
 
-  private _pkgs: { [pkgId: string]: types.PkgInfo };
-  private _pkgNodes: { [pkgId: string]: Set<string> };
-
   private _pkgList: types.PkgInfo[];
   private _depPkgsList: types.PkgInfo[];
 
-  private _graph: graphlib.Graph;
-  private _pkgManager: types.PkgManager;
+  private _rootPkgId: PkgId;
 
-  private _rootNodeId: string;
-  private _rootPkgId: string;
-
-  private _countNodePathsToRootCache: Map<string, number> = new Map();
+  private _countNodePathsToRootCache: Map<NodeId, number> = new Map();
+  private _pathsToRootCache: Map<NodeId, types.PkgInfo[][]> = new Map();
 
   private _hasCycles: boolean | undefined;
 
   public constructor(
-    graph: graphlib.Graph,
-    rootNodeId: string,
-    pkgs: { [pkgId: string]: types.PkgInfo },
-    pkgNodes: { [pkgId: string]: Set<string> },
-    pkgManager: types.PkgManager,
+    private _graph: graphlib.Graph,
+    private _rootNodeId: NodeId,
+    private _pkgs: Record<PkgId, types.PkgInfo>,
+    private _pkgNodes: Record<PkgId, Set<NodeId>>,
+    private _pkgManager: types.PkgManager,
   ) {
-    this._graph = graph;
-    this._pkgs = pkgs;
-    this._pkgNodes = pkgNodes;
-    this._pkgManager = pkgManager;
+    this._rootPkgId = (_graph.node(_rootNodeId) as GraphNode).pkgId;
 
-    this._rootNodeId = rootNodeId;
-    this._rootPkgId = (graph.node(rootNodeId) as GraphNode).pkgId;
-
-    this._pkgList = Object.values(pkgs);
+    this._pkgList = Object.values(_pkgs);
     this._depPkgsList = this._pkgList.filter((pkg) => pkg !== this.rootPkg);
   }
 
@@ -136,15 +126,10 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public pkgPathsToRoot(pkg: types.Pkg): types.PkgInfo[][] {
-    // TODO: implement cycles support
-    if (this.hasCycles()) {
-      throw new Error('pkgPathsToRoot does not support cyclic graphs yet');
-    }
-
     const pathsToRoot: types.PkgInfo[][] = [];
-    for (const id of this.getPkgNodeIds(pkg)) {
-      const paths = this.pathsFromNodeToRoot(id);
-      for (const path of paths) {
+    for (const nodeId of this.getPkgNodeIds(pkg)) {
+      const pathsFromNodeToRoot = this.pathsFromNodeToRoot(nodeId);
+      for (const path of pathsFromNodeToRoot) {
         pathsToRoot.push(path);
       }
     }
@@ -154,11 +139,6 @@ class DepGraphImpl implements types.DepGraphInternal {
   }
 
   public countPathsToRoot(pkg: types.Pkg): number {
-    // TODO: implement cycles support
-    if (this.hasCycles()) {
-      throw new Error('countPathsToRoot does not support cyclic graphs yet');
-    }
-
     let count = 0;
     for (const nodeId of this.getPkgNodeIds(pkg)) {
       count += this.countNodePathsToRoot(nodeId);
@@ -337,26 +317,55 @@ class DepGraphImpl implements types.DepGraphInternal {
     return node;
   }
 
-  private pathsFromNodeToRoot(nodeId: string): types.PkgInfo[][] {
+  private pathsFromNodeToRoot(
+    nodeId: string,
+    ancestors: string[] = [],
+  ): types.PkgInfo[][] {
+    if (this._pathsToRootCache.has(nodeId)) {
+      return this._pathsToRootCache.get(nodeId)!;
+    }
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
+    const pkgInfo = this.getNodePkg(nodeId);
+
     if (parentNodesIds.length === 0) {
-      return [[this.getNodePkg(nodeId)]];
+      const result = [[pkgInfo]];
+      this._pathsToRootCache.set(nodeId, result)!;
+      return result;
     }
 
     const allPaths: types.PkgInfo[][] = [];
-    parentNodesIds.map((id) => {
-      const out = this.pathsFromNodeToRoot(id).map((path) => {
-        return [this.getNodePkg(nodeId)].concat(path);
-      });
-      for (const path of out) {
+    ancestors = ancestors.concat(nodeId);
+
+    let shouldMemoize = true;
+    for (const id of parentNodesIds) {
+      if (ancestors.includes(id)) {
+        shouldMemoize = false;
+        continue;
+      }
+
+      const pathToRoot = this.pathsFromNodeToRoot(id, ancestors).map((path) =>
+        [pkgInfo].concat(path),
+      );
+
+      for (const path of pathToRoot) {
         allPaths.push(path);
       }
-    });
+    }
 
+    if (shouldMemoize) {
+      this._pathsToRootCache.set(nodeId, allPaths)!;
+    }
     return allPaths;
   }
 
-  private countNodePathsToRoot(nodeId: string): number {
+  private countNodePathsToRoot(
+    nodeId: string,
+    ancestors: string[] = [],
+  ): number {
+    if (ancestors.includes(nodeId)) {
+      return 0;
+    }
+
     if (this._countNodePathsToRootCache.has(nodeId)) {
       return this._countNodePathsToRootCache.get(nodeId) || 0;
     }
@@ -367,8 +376,9 @@ class DepGraphImpl implements types.DepGraphInternal {
       return 1;
     }
 
+    ancestors = ancestors.concat(nodeId);
     const count = parentNodesIds.reduce((acc, parentNodeId) => {
-      return acc + this.countNodePathsToRoot(parentNodeId);
+      return acc + this.countNodePathsToRoot(parentNodeId, ancestors);
     }, 0);
 
     this._countNodePathsToRootCache.set(nodeId, count);
