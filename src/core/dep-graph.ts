@@ -25,7 +25,6 @@ class DepGraphImpl implements types.DepGraphInternal {
   private _rootPkgId: PkgId;
 
   private _countNodePathsToRootCache: Map<NodeId, number> = new Map();
-  private _pathsToRootCache: Map<NodeId, types.PkgInfo[][]> = new Map();
 
   private _hasCycles: boolean | undefined;
 
@@ -321,27 +320,18 @@ class DepGraphImpl implements types.DepGraphInternal {
     nodeId: string,
     ancestors: string[] = [],
   ): types.PkgInfo[][] {
-    if (this._pathsToRootCache.has(nodeId)) {
-      return this._pathsToRootCache.get(nodeId)!;
-    }
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
     const pkgInfo = this.getNodePkg(nodeId);
 
     if (parentNodesIds.length === 0) {
-      const result = [[pkgInfo]];
-      this._pathsToRootCache.set(nodeId, result)!;
-      return result;
+      return [[pkgInfo]];
     }
 
     const allPaths: types.PkgInfo[][] = [];
     ancestors = ancestors.concat(nodeId);
 
-    let shouldMemoize = true;
     for (const id of parentNodesIds) {
-      if (ancestors.includes(id)) {
-        shouldMemoize = false;
-        continue;
-      }
+      if (ancestors.includes(id)) continue;
 
       const pathToRoot = this.pathsFromNodeToRoot(id, ancestors).map((path) =>
         [pkgInfo].concat(path),
@@ -352,9 +342,6 @@ class DepGraphImpl implements types.DepGraphInternal {
       }
     }
 
-    if (shouldMemoize) {
-      this._pathsToRootCache.set(nodeId, allPaths)!;
-    }
     return allPaths;
   }
 
