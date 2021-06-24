@@ -23,7 +23,6 @@ describe('cycles', () => {
 
       expect(pkgPathsToRoot).toMatchSnapshot(`${pkg.name}@${pkg.version}`);
     });
-    console.log(depGraph);
   });
 
   describe('countPathsToRoot - should work with cycles', () => {

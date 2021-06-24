@@ -206,9 +206,8 @@ test('fromJSON no deps', () => {
 });
 
 test('fromJSON inside schemaVersion', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
-    'simple-graph.json',
-  );
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
 
   graphJson.schemaVersion = '1.9.9';
 
@@ -218,9 +217,8 @@ test('fromJSON inside schemaVersion', () => {
 });
 
 test('fromJSON too old schemaVersion', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
-    'simple-graph.json',
-  );
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
 
   graphJson.schemaVersion = '0.0.1';
 
@@ -230,9 +228,8 @@ test('fromJSON too old schemaVersion', () => {
 });
 
 test('fromJSON too new schemaVersion', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
-    'simple-graph.json',
-  );
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
 
   graphJson.schemaVersion = '2.0.0';
 
@@ -242,10 +239,12 @@ test('fromJSON too new schemaVersion', () => {
 });
 
 test('fromJSON no schemaVersion', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
-    'simple-graph.json',
-  );
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
 
+  // @ts-expect-error: We're asserting that when used in an untyped
+  // codebase, this correctly throws. In a typed codebase we can rely on
+  // the compiler catching missing properties
   delete graphJson.schemaVersion;
 
   const go = () => depGraphLib.createFromJSON(graphJson);
@@ -254,9 +253,8 @@ test('fromJSON no schemaVersion', () => {
 });
 
 test('fromJSON bad schemaVersion', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
-    'simple-graph.json',
-  );
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
 
   graphJson.schemaVersion = 'foo';
 
@@ -266,9 +264,8 @@ test('fromJSON bad schemaVersion', () => {
 });
 
 test('fromJSON missing root', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
-    'simple-graph.json',
-  );
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
 
   graphJson.graph.nodes = graphJson.graph.nodes.map((x) => {
     if (x.nodeId === 'root-node') {
@@ -283,10 +280,12 @@ test('fromJSON missing root', () => {
 });
 
 test('fromJSON missing pkgManager.name', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
-    'simple-graph.json',
-  );
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
 
+  // @ts-expect-error: We're asserting that when used in an untyped
+  // codebase, this correctly throws. In a typed codebase we can rely on
+  // the compiler catching missing properties
   delete graphJson.pkgManager.name;
 
   const go = () => depGraphLib.createFromJSON(graphJson);
@@ -295,10 +294,12 @@ test('fromJSON missing pkgManager.name', () => {
 });
 
 test('fromJSON missing pkgManager', () => {
-  const graphJson: depGraphLib.DepGraphData = helpers.loadFixture(
-    'simple-graph.json',
-  );
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
 
+  // @ts-expect-error: We're asserting that when used in an untyped
+  // codebase, this correctly throws. In a typed codebase we can rely on
+  // the compiler catching missing properties
   delete graphJson.pkgManager;
 
   const go = () => depGraphLib.createFromJSON(graphJson);
@@ -590,7 +591,7 @@ test('fromJSON an instance without a pkg', () => {
   };
 
   const go = () =>
-    depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
+    depGraphLib.createFromJSON(graphJson as any as depGraphLib.DepGraphData);
   expect(go).toThrow(/instance/);
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });
@@ -707,7 +708,7 @@ test('fromJSON a pkg missing info field', () => {
   };
 
   const go = () =>
-    depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
+    depGraphLib.createFromJSON(graphJson as any as depGraphLib.DepGraphData);
   expect(go).toThrow(/\.info/);
   expect(go).toThrow(/^((?!(of undefined)).)*$/);
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
@@ -741,7 +742,7 @@ test('fromJSON a pkg missing name field', () => {
   };
 
   const go = () =>
-    depGraphLib.createFromJSON((graphJson as any) as depGraphLib.DepGraphData);
+    depGraphLib.createFromJSON(graphJson as any as depGraphLib.DepGraphData);
   expect(go).toThrow(/name/);
   expect(go).toThrow(depGraphLib.Errors.ValidationError);
 });

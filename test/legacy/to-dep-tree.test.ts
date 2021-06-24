@@ -200,6 +200,9 @@ describe('graphToDepTree with a linux pkgManager', () => {
     test('missing repository alias', async () => {
       const depGraphData = helpers.loadFixture('os-deb-graph.json');
       const depGraph = depGraphLib.createFromJSON(depGraphData);
+      // @ts-expect-error: We're asserting that when used in an untyped
+      // codebase, this correctly throws. In a typed codebase we can rely on
+      // the compiler catching missing properties
       delete depGraph.pkgManager.repositories![0].alias;
 
       await expect(
