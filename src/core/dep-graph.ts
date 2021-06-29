@@ -266,16 +266,14 @@ class DepGraphImpl implements types.DepGraphInternal {
     }
 
     // Sort dependencies by name@version string.
-    const sortFn = (graph: types.DepGraphInternal) => (
-      idA: string,
-      idB: string,
-    ) => {
-      const pkgA = graph.getNodePkg(idA);
-      const pkgB = graph.getNodePkg(idB);
-      return DepGraphImpl.getPkgId(pkgA).localeCompare(
-        DepGraphImpl.getPkgId(pkgB),
-      );
-    };
+    const sortFn =
+      (graph: types.DepGraphInternal) => (idA: string, idB: string) => {
+        const pkgA = graph.getNodePkg(idA);
+        const pkgB = graph.getNodePkg(idB);
+        return DepGraphImpl.getPkgId(pkgA).localeCompare(
+          DepGraphImpl.getPkgId(pkgB),
+        );
+      };
 
     depsA = depsA.sort(sortFn(graphA));
     depsB = depsB.sort(sortFn(graphB));
