@@ -23,6 +23,10 @@ interface DepTreeDep {
   };
 }
 
+/**
+ * @deprecated Use {@link DepGraph} instead of DepTree. You can construct a
+ * graph with {@link DepGraphBuilder}
+ */
 interface DepTree extends DepTreeDep {
   type?: string;
   packageFormatVersion?: string;
@@ -39,6 +43,12 @@ function addLabel(dep: DepTreeDep, key: string, value: string) {
   dep.labels[key] = value;
 }
 
+/**
+ * @deprecated Don't use dep trees as an intermediate step, because they are
+ * large structures, resulting in high memory usage and high CPU costs from
+ * serializing / deserializing. Instead, create a graph directly with
+ * {@link DepGraphBuilder}
+ */
 async function depTreeToGraph(
   depTree: DepTree,
   pkgManagerName: string,
@@ -225,6 +235,11 @@ export interface GraphToTreeOptions {
   deduplicateWithinTopLevelDeps: boolean;
 }
 
+/**
+ * @deprecated Don't use dep trees. You should adapt your code to use graphs,
+ * and enhance the dep-graph library if there is missing functionality from
+ * the graph structure
+ */
 async function graphToDepTree(
   depGraphInterface: types.DepGraph,
   pkgType: string,
