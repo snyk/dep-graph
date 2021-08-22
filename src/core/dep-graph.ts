@@ -2,6 +2,8 @@ import * as _isEqual from 'lodash.isequal';
 import * as graphlib from '../graphlib';
 import * as types from './types';
 import { createFromJSON } from './create-from-json';
+import { getMemoizedItem, MemoizationMap, memoize } from '../utils/memoization';
+import { Cycles, getCycle, partitionCycles } from '../utils/cycles';
 
 export { DepGraphImpl };
 
@@ -25,6 +27,7 @@ class DepGraphImpl implements types.DepGraphInternal {
   private _rootPkgId: PkgId;
 
   private _countNodePathsToRootCache: Map<NodeId, number> = new Map();
+  private _pathsToRootMemMap: MemoizationMap<types.PkgInfo[][]> = new Map();
 
   private _hasCycles: boolean | undefined;
 
@@ -127,9 +130,11 @@ class DepGraphImpl implements types.DepGraphInternal {
   public pkgPathsToRoot(pkg: types.Pkg): types.PkgInfo[][] {
     const pathsToRoot: types.PkgInfo[][] = [];
     for (const nodeId of this.getPkgNodeIds(pkg)) {
-      const pathsFromNodeToRoot = this.pathsFromNodeToRoot(nodeId);
+      const [pathsFromNodeToRoot] = this.pathsFromNodeToRoot(nodeId);
       for (const path of pathsFromNodeToRoot) {
-        pathsToRoot.push(path);
+        // the reason for the .slice() is to create a new path array for every call.
+        // in some places those paths are being mutated (i.e. with .reverse())
+        pathsToRoot.push(path.slice());
       }
     }
     // note: sorting to get shorter paths first -
@@ -317,21 +322,44 @@ class DepGraphImpl implements types.DepGraphInternal {
   private pathsFromNodeToRoot(
     nodeId: string,
     ancestors: string[] = [],
-  ): types.PkgInfo[][] {
+  ): [types.PkgInfo[][], Cycles | undefined] {
+    const memoizedPath = getMemoizedItem(
+      nodeId,
+      ancestors,
+      this._pathsToRootMemMap,
+    );
+    if (memoizedPath) {
+      return [memoizedPath, undefined];
+    }
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
     const pkgInfo = this.getNodePkg(nodeId);
 
     if (parentNodesIds.length === 0) {
-      return [[pkgInfo]];
+      const result = [[pkgInfo]];
+      this._pathsToRootMemMap.set(nodeId, { item: result });
+      return [result, undefined];
+    }
+
+    const cycle = getCycle(ancestors, nodeId);
+    if (cycle) {
+      // This node starts a cycle and now it's the second visit.
+      return [[], [cycle]];
     }
 
     const allPaths: types.PkgInfo[][] = [];
-    ancestors = ancestors.concat(nodeId);
 
+    const allCycles: Cycles = [];
     for (const id of parentNodesIds) {
-      if (ancestors.includes(id)) continue;
-
-      const pathToRoot = this.pathsFromNodeToRoot(id, ancestors).map((path) =>
+      const [pathsFromNodeToRoot, cycles] = this.pathsFromNodeToRoot(
+        id,
+        ancestors.concat(nodeId),
+      );
+      if (cycles) {
+        for (const cycle of cycles) {
+          allCycles.push(cycle);
+        }
+      }
+      const pathToRoot = pathsFromNodeToRoot.map((path) =>
         [pkgInfo].concat(path),
       );
 
@@ -340,7 +368,10 @@ class DepGraphImpl implements types.DepGraphInternal {
       }
     }
 
-    return allPaths;
+    const partitionedCycles = partitionCycles(nodeId, allCycles);
+    memoize(nodeId, this._pathsToRootMemMap, allPaths, partitionedCycles);
+
+    return [allPaths, partitionedCycles.cyclesWithThisNode];
   }
 
   private countNodePathsToRoot(

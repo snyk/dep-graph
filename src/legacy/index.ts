@@ -4,8 +4,8 @@ import { eventLoopSpinner } from 'event-loop-spinner';
 import * as types from '../core/types';
 import { DepGraphBuilder } from '../core/builder';
 import objectHash = require('object-hash');
-import { getCycle, partitionCycles, Cycles } from './cycles';
-import { getMemoizedDepTree, memoize, MemoizationMap } from './memiozation';
+import { getCycle, partitionCycles, Cycles } from '../utils/cycles';
+import { getMemoizedItem, memoize, MemoizationMap } from '../utils/memoization';
 
 export { depTreeToGraph, graphToDepTree, DepTree };
 
@@ -299,14 +299,10 @@ async function buildSubtree(
   nodeId: string,
   maybeDeduplicationSet: Set<string> | false | null = false, // false = disabled; null = not in deduplication scope yet
   ancestors: string[] = [],
-  memoizationMap: MemoizationMap = new Map(),
+  memoizationMap: MemoizationMap<DepTree> = new Map(),
 ): Promise<[DepTree, Cycles | undefined]> {
   if (!maybeDeduplicationSet) {
-    const memoizedDepTree = getMemoizedDepTree(
-      nodeId,
-      ancestors,
-      memoizationMap,
-    );
+    const memoizedDepTree = getMemoizedItem(nodeId, ancestors, memoizationMap);
     if (memoizedDepTree) {
       return [memoizedDepTree, undefined];
     }
@@ -326,7 +322,7 @@ async function buildSubtree(
 
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
   if (!depInstanceIds || depInstanceIds.length === 0) {
-    memoizationMap.set(nodeId, { depTree });
+    memoizationMap.set(nodeId, { item: depTree });
     return [depTree, undefined];
   }
 
