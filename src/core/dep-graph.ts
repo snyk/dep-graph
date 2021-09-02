@@ -2,8 +2,8 @@ import * as _isEqual from 'lodash.isequal';
 import * as graphlib from '../graphlib';
 import * as types from './types';
 import { createFromJSON } from './create-from-json';
-import { getMemoizedItem, MemoizationMap, memoize } from '../utils/memoization';
-import { Cycles, getCycle, partitionCycles } from '../utils/cycles';
+import { TraversalCache } from './traversal-cache';
+import { Cycles, getCycle, partitionCycles } from './cycles';
 
 export { DepGraphImpl };
 
@@ -27,7 +27,7 @@ class DepGraphImpl implements types.DepGraphInternal {
   private _rootPkgId: PkgId;
 
   private _countNodePathsToRootCache: Map<NodeId, number> = new Map();
-  private _pathsToRootMemMap: MemoizationMap<types.PkgInfo[][]> = new Map();
+  private _pathsToRootTraversalCache = new TraversalCache<types.PkgInfo[][]>();
 
   private _hasCycles: boolean | undefined;
 
@@ -323,20 +323,16 @@ class DepGraphImpl implements types.DepGraphInternal {
     nodeId: string,
     ancestors: string[] = [],
   ): [types.PkgInfo[][], Cycles | undefined] {
-    const memoizedPath = getMemoizedItem(
-      nodeId,
-      ancestors,
-      this._pathsToRootMemMap,
-    );
-    if (memoizedPath) {
-      return [memoizedPath, undefined];
+    const cachedPath = this._pathsToRootTraversalCache.get(nodeId, ancestors);
+    if (cachedPath) {
+      return [cachedPath, undefined];
     }
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
     const pkgInfo = this.getNodePkg(nodeId);
 
     if (parentNodesIds.length === 0) {
       const result = [[pkgInfo]];
-      this._pathsToRootMemMap.set(nodeId, { item: result });
+      this._pathsToRootTraversalCache.set(nodeId, result);
       return [result, undefined];
     }
 
@@ -369,7 +365,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     }
 
     const partitionedCycles = partitionCycles(nodeId, allCycles);
-    memoize(nodeId, this._pathsToRootMemMap, allPaths, partitionedCycles);
+    this._pathsToRootTraversalCache.set(nodeId, allPaths, partitionedCycles);
 
     return [allPaths, partitionedCycles.cyclesWithThisNode];
   }

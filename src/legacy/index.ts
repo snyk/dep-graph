@@ -4,8 +4,8 @@ import { eventLoopSpinner } from 'event-loop-spinner';
 import * as types from '../core/types';
 import { DepGraphBuilder } from '../core/builder';
 import objectHash = require('object-hash');
-import { getCycle, partitionCycles, Cycles } from '../utils/cycles';
-import { getMemoizedItem, memoize, MemoizationMap } from '../utils/memoization';
+import { getCycle, partitionCycles, Cycles } from '../core/cycles';
+import { TraversalCache } from '../core/traversal-cache';
 
 export { depTreeToGraph, graphToDepTree, DepTree };
 
@@ -299,10 +299,10 @@ async function buildSubtree(
   nodeId: string,
   maybeDeduplicationSet: Set<string> | false | null = false, // false = disabled; null = not in deduplication scope yet
   ancestors: string[] = [],
-  memoizationMap: MemoizationMap<DepTree> = new Map(),
+  traversalCache: TraversalCache<DepTree> = new TraversalCache(),
 ): Promise<[DepTree, Cycles | undefined]> {
   if (!maybeDeduplicationSet) {
-    const memoizedDepTree = getMemoizedItem(nodeId, ancestors, memoizationMap);
+    const memoizedDepTree = traversalCache.get(nodeId, ancestors);
     if (memoizedDepTree) {
       return [memoizedDepTree, undefined];
     }
@@ -322,7 +322,7 @@ async function buildSubtree(
 
   const depInstanceIds = depGraph.getNodeDepsNodeIds(nodeId);
   if (!depInstanceIds || depInstanceIds.length === 0) {
-    memoizationMap.set(nodeId, { item: depTree });
+    traversalCache.set(nodeId, depTree);
     return [depTree, undefined];
   }
 
@@ -355,7 +355,7 @@ async function buildSubtree(
       depInstId,
       maybeDeduplicationSet,
       ancestors.concat(nodeId),
-      memoizationMap,
+      traversalCache,
     );
     if (subtreeCycles) {
       for (const cycle of subtreeCycles) {
@@ -378,7 +378,7 @@ async function buildSubtree(
   }
 
   const partitionedCycles = partitionCycles(nodeId, cycles);
-  memoize(nodeId, memoizationMap, depTree, partitionedCycles);
+  traversalCache.set(nodeId, depTree, partitionedCycles);
 
   return [depTree, partitionedCycles.cyclesWithThisNode];
 }

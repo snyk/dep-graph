@@ -39,7 +39,7 @@ async function generateLargeGraph(width: number) {
 }
 
 describe('stress tests', () => {
-  test('graphToDepTree() with memoization (without deduplicateWithinTopLevelDeps) succeed for large dep-graphs', async () => {
+  test('graphToDepTree() with cache (without deduplicateWithinTopLevelDeps) succeed for large dep-graphs', async () => {
     const graph = await generateLargeGraph(125000);
 
     const depTree = await graphToDepTree(graph, 'gomodules', {
