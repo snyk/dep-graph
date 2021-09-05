@@ -1,6 +1,7 @@
 import * as _isEqual from 'lodash.isequal';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as depGraphLib from '../src';
 import { PkgInfo } from '../src';
 
 export function loadFixture(name: string) {
@@ -75,3 +76,35 @@ export const sortBy = (arr: any[], p: string) =>
       return 0;
     }
   });
+
+export function generateLargeGraph(width: number, dependencyName = 'needle') {
+  const builder = new depGraphLib.DepGraphBuilder(
+    { name: 'npm' },
+    { name: 'root', version: '1.2.3' },
+  );
+  const rootNodeId = 'root-node';
+
+  const deepDependency = { name: dependencyName, version: '1.2.3' };
+
+  builder.addPkgNode(deepDependency, dependencyName);
+  builder.connectDep(rootNodeId, dependencyName);
+
+  for (let j = 0; j < width; j++) {
+    const shallowName = `id-${j}`;
+    const shallowDependency = { name: shallowName, version: '1.2.3' };
+
+    builder.addPkgNode(shallowDependency, shallowName);
+    builder.connectDep(rootNodeId, shallowName);
+    // builder.connectDep(shallowName, dependencyName);
+    for (let k = 0; k < 3; k++) {
+      const shallowName1 = `id-${j}-${k}`;
+      const shallowDependency1 = { name: shallowName1, version: '1.2.3' };
+
+      builder.addPkgNode(shallowDependency1, shallowName1);
+      builder.connectDep(shallowName, shallowName1);
+      builder.connectDep(shallowName1, dependencyName);
+    }
+  }
+
+  return builder.build();
+}

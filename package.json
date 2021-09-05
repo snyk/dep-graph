@@ -31,6 +31,7 @@
     "url": "https://github.com/snyk/dep-graph/issues"
   },
   "devDependencies": {
+    "@types/glob": "^7.1.4",
     "@types/graphlib": "^2.1.7",
     "@types/jest": "^26.0.23",
     "@types/node": "^8",
@@ -41,6 +42,7 @@
     "benny": "^3.6.15",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
+    "glob": "^7.1.7",
     "jest": "^27.0.5",
     "prettier": "^2.3.1",
     "ts-jest": "^27.0.3",

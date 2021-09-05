@@ -12,6 +12,8 @@ interface GraphNode {
   info?: types.NodeInfo;
 }
 
+type LimitConfig = { limit?: number; counter: number };
+
 class DepGraphImpl implements types.DepGraphInternal {
   public static SCHEMA_VERSION = '1.2.0';
 
@@ -124,10 +126,15 @@ class DepGraphImpl implements types.DepGraphInternal {
     return this._hasCycles;
   }
 
-  public pkgPathsToRoot(pkg: types.Pkg): types.PkgInfo[][] {
+  public pkgPathsToRoot(pkg: types.Pkg, limit?: number): types.PkgInfo[][] {
+    const limitConfig: LimitConfig = { limit, counter: 0 };
     const pathsToRoot: types.PkgInfo[][] = [];
     for (const nodeId of this.getPkgNodeIds(pkg)) {
-      const pathsFromNodeToRoot = this.pathsFromNodeToRoot(nodeId);
+      const pathsFromNodeToRoot = this.pathsFromNodeToRoot(
+        nodeId,
+        [],
+        limitConfig,
+      );
       for (const path of pathsFromNodeToRoot) {
         pathsToRoot.push(path);
       }
@@ -316,12 +323,14 @@ class DepGraphImpl implements types.DepGraphInternal {
 
   private pathsFromNodeToRoot(
     nodeId: string,
-    ancestors: string[] = [],
+    ancestors: string[],
+    limitConfig: LimitConfig,
   ): types.PkgInfo[][] {
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
     const pkgInfo = this.getNodePkg(nodeId);
 
     if (parentNodesIds.length === 0) {
+      limitConfig.counter++;
       return [[pkgInfo]];
     }
 
@@ -330,10 +339,14 @@ class DepGraphImpl implements types.DepGraphInternal {
 
     for (const id of parentNodesIds) {
       if (ancestors.includes(id)) continue;
+      if (limitConfig.limit && limitConfig.counter >= limitConfig.limit)
+        continue;
 
-      const pathToRoot = this.pathsFromNodeToRoot(id, ancestors).map((path) =>
-        [pkgInfo].concat(path),
-      );
+      const pathToRoot = this.pathsFromNodeToRoot(
+        id,
+        ancestors,
+        limitConfig,
+      ).map((path) => [pkgInfo].concat(path));
 
       for (const path of pathToRoot) {
         allPaths.push(path);
