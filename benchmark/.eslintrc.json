@@ -1,0 +1,9 @@
+{
+  "extends": ["../.eslintrc"],
+  "parserOptions": {
+    "project": "./benchmark/tsconfig.json"
+  },
+  "rules": {
+    "no-console": "off"
+  }
+}
