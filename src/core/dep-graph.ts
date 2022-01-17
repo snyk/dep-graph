@@ -124,12 +124,24 @@ class DepGraphImpl implements types.DepGraphInternal {
     return this._hasCycles;
   }
 
-  public pkgPathsToRoot(pkg: types.Pkg): types.PkgInfo[][] {
+  public pkgPathsToRoot(
+    pkg: types.Pkg,
+    opts?: { limit?: number },
+  ): types.PkgInfo[][] {
     const pathsToRoot: types.PkgInfo[][] = [];
+    const limit = opts?.limit;
+
     for (const nodeId of this.getPkgNodeIds(pkg)) {
-      const pathsFromNodeToRoot = this.pathsFromNodeToRoot(nodeId);
+      const pathsFromNodeToRoot = this.pathsFromNodeToRoot(nodeId, [], {
+        limit,
+      });
+
       for (const path of pathsFromNodeToRoot) {
         pathsToRoot.push(path);
+      }
+
+      if (limit && pathsToRoot.length >= limit) {
+        break;
       }
     }
     // note: sorting to get shorter paths first -
@@ -317,6 +329,7 @@ class DepGraphImpl implements types.DepGraphInternal {
   private pathsFromNodeToRoot(
     nodeId: string,
     ancestors: string[] = [],
+    opts: { limit?: number },
   ): types.PkgInfo[][] {
     const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
     const pkgInfo = this.getNodePkg(nodeId);
@@ -327,16 +340,19 @@ class DepGraphImpl implements types.DepGraphInternal {
 
     const allPaths: types.PkgInfo[][] = [];
     ancestors = ancestors.concat(nodeId);
+    const limit = opts.limit;
 
     for (const id of parentNodesIds) {
       if (ancestors.includes(id)) continue;
 
-      const pathToRoot = this.pathsFromNodeToRoot(id, ancestors).map((path) =>
-        [pkgInfo].concat(path),
+      const pathsFromNodeToRoot = this.pathsFromNodeToRoot(id, ancestors, opts);
+
+      pathsFromNodeToRoot.forEach((path) =>
+        allPaths.push([pkgInfo].concat(path)),
       );
 
-      for (const path of pathToRoot) {
-        allPaths.push(path);
+      if (limit && allPaths.length >= limit) {
+        break;
       }
     }
 
