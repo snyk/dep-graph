@@ -15,7 +15,7 @@ jobs:
   include:
     - stage: npm release
       if: branch = master AND type != pull_request
-      node_js: "12"
+      node_js: "14"
       script: skip
       after_success:
         - npx semantic-release
