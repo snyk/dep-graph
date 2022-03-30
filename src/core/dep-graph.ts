@@ -347,9 +347,9 @@ class DepGraphImpl implements types.DepGraphInternal {
 
       const pathsFromNodeToRoot = this.pathsFromNodeToRoot(id, ancestors, opts);
 
-      pathsFromNodeToRoot.forEach((path) =>
-        allPaths.push([pkgInfo].concat(path)),
-      );
+      for (const path of pathsFromNodeToRoot) {
+        allPaths.push([pkgInfo].concat(path));
+      }
 
       if (limit && allPaths.length >= limit) {
         break;

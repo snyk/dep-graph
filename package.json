@@ -57,7 +57,6 @@
     "lodash.isequal": "^4.5.0",
     "lodash.isfunction": "^3.0.9",
     "lodash.isundefined": "^3.0.1",
-    "lodash.keys": "^4.2.0",
     "lodash.map": "^4.6.0",
     "lodash.reduce": "^4.6.0",
     "lodash.size": "^4.2.0",

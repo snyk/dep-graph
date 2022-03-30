@@ -6,7 +6,6 @@ import * as _filter from 'lodash.foreach';
 import * as isEmpty from 'lodash.isempty';
 import * as isFunction from 'lodash.isfunction';
 import * as isUndefined from 'lodash.isundefined';
-import * as keys from 'lodash.keys';
 import * as reduce from 'lodash.reduce';
 import * as union from 'lodash.union';
 import * as values from 'lodash.values';
@@ -148,7 +147,7 @@ export class Graph {
   }
 
   nodes() {
-    return keys(this._nodes);
+    return Object.keys(this._nodes);
   }
 
   sources() {
@@ -223,10 +222,10 @@ export class Graph {
         });
         delete this._children[v];
       }
-      each(keys(this._in[v]), removeEdge);
+      each(Object.keys(this._in[v]), removeEdge);
       delete this._in[v];
       delete this._preds[v];
-      each(keys(this._out[v]), removeEdge);
+      each(Object.keys(this._out[v]), removeEdge);
       delete this._out[v];
       delete this._sucs[v];
       --this._nodeCount;
@@ -291,7 +290,7 @@ export class Graph {
     if (this._isCompound) {
       const children = this._children[v];
       if (children) {
-        return keys(children);
+        return Object.keys(children);
       }
     } else if (v === GRAPH_NODE) {
       return this.nodes();
@@ -303,14 +302,14 @@ export class Graph {
   predecessors(v) {
     const predsV = this._preds[v];
     if (predsV) {
-      return keys(predsV);
+      return Object.keys(predsV);
     }
   }
 
   successors(v) {
     const sucsV = this._sucs[v];
     if (sucsV) {
-      return keys(sucsV);
+      return Object.keys(sucsV);
     }
   }
 
