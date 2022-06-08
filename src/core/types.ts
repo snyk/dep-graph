@@ -94,6 +94,7 @@ export interface DepGraph {
   getPkgNodes(pkg: Pkg): Node[];
   toJSON(): DepGraphData;
   pkgPathsToRoot(pkg: Pkg, opts?: { limit?: number }): PkgInfo[][];
+  isTransitive(pkg: Pkg): boolean;
   directDepsLeadingTo(pkg: Pkg): PkgInfo[];
   countPathsToRoot(pkg: Pkg): number;
   equals(other: DepGraph, options?: { compareRoot?: boolean }): boolean;
