@@ -1,0 +1,50 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: cimg/node:14.19
+    working_directory: ~/work
+    steps:
+      - checkout
+      - run:
+          name: Set npmjs user
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+      - run:
+          name: Install
+          command: npm install
+      - run:
+          name: Test
+          command: npm test
+  release:
+    docker:
+      - image: cimg/node:14.19
+    working_directory: ~/work
+    steps:
+      - checkout
+      - run:
+          name: Set npmjs user
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+      - run:
+          name: Install
+          command: npm install
+      - run:
+          name: Release
+          command: npx semantic-release@17
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test:
+          name: Test
+          context: nodejs-install
+      - release:
+          name: Release
+          requires:
+            - Test
+          context: nodejs-lib-release
+          filters:
+            branches:
+              only:
+                - master
