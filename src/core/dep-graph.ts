@@ -158,6 +158,14 @@ class DepGraphImpl implements types.DepGraphInternal {
     return count;
   }
 
+  public isTransitive(pkg: types.Pkg): boolean {
+    const checking = new Set(this.getPkgNodeIds(pkg));
+    for (const directDep of this.getNodeDepsNodeIds(this.rootNodeId)) {
+      if (checking.has(directDep)) return false;
+    }
+    return true;
+  }
+
   public equals(
     other: types.DepGraph,
     { compareRoot = true }: { compareRoot?: boolean } = {},
