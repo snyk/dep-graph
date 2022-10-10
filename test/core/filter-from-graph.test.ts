@@ -36,7 +36,9 @@ describe('filter-from-graph', function () {
         depGraph.getDepPkgs().length - 1,
       );
 
-      expect(result).toMatchSnapshot();
+      expect(result.toJSON()).toMatchSnapshot({
+        schemaVersion: expect.any(String),
+      });
     });
 
     it('should not mutate original depGraph', async () => {
@@ -70,7 +72,9 @@ describe('filter-from-graph', function () {
       expect(result.getDepPkgs().length).toEqual(
         depGraph.getDepPkgs().length - pkgs.length,
       );
-      expect(result).toMatchSnapshot();
+      expect(result.toJSON()).toMatchSnapshot({
+        schemaVersion: expect.any(String),
+      });
     });
 
     it('should return an empty graph', async () => {
@@ -78,7 +82,9 @@ describe('filter-from-graph', function () {
       const result = await filterPackagesFromGraph(depGraph, pkgs);
 
       expect(result.getDepPkgs().length).toBe(0);
-      expect(result).toMatchSnapshot();
+      expect(result.toJSON()).toMatchSnapshot({
+        schemaVersion: expect.any(String),
+      });
     });
   });
 });

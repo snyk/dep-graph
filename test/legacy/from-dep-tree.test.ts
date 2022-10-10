@@ -9,6 +9,7 @@ describe('depTreeToGraph simple dysmorphic', () => {
   // dependencies
   const simpleDepTree = helpers.loadFixture('simple-dep-tree.json');
   const expectedGraph = helpers.loadFixture('simple-graph.json');
+  expectedGraph.schemaVersion = expect.any(String);
 
   let depGraph: depGraphLib.DepGraph;
   beforeAll(async () => {
@@ -136,6 +137,7 @@ describe('depTreeToGraph 0 deps', () => {
 describe('depTreeToGraph goof', () => {
   const depTree = helpers.loadFixture('goof-dep-tree.json');
   const expectedGraph = helpers.loadFixture('goof-graph.json');
+  expectedGraph.schemaVersion = expect.any(String);
 
   let depGraph: types.DepGraph;
   test('create', async () => {
@@ -363,7 +365,9 @@ describe('with versionProvenance', () => {
   });
 
   it('matches snapshot', () => {
-    expect(depGraph.toJSON()).toMatchSnapshot();
+    expect(depGraph.toJSON()).toMatchSnapshot({
+      schemaVersion: expect.any(String),
+    });
   });
 
   it('equals orig depTree when converted back', async () => {
@@ -406,7 +410,9 @@ describe('without versionProvenance', () => {
   });
 
   it('matches snapshot', () => {
-    expect(depGraph.toJSON()).toMatchSnapshot();
+    expect(depGraph.toJSON()).toMatchSnapshot({
+      schemaVersion: expect.any(String),
+    });
   });
 });
 
@@ -420,7 +426,9 @@ describe('with labels', () => {
   });
 
   it('matches snapshot', () => {
-    expect(depGraph.toJSON()).toMatchSnapshot();
+    expect(depGraph.toJSON()).toMatchSnapshot({
+      schemaVersion: expect.any(String),
+    });
   });
 
   it('equals orig depTree when converted back', async () => {

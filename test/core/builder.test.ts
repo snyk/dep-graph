@@ -1,4 +1,5 @@
 import { DepGraphBuilder } from '../../src';
+import { ValidationError } from '../../src/core/errors';
 
 describe('builder', () => {
   let builder;
@@ -34,6 +35,89 @@ describe('builder', () => {
             pkg.name === pkgToAdd.name && pkg.version === pkgToAdd.version,
         );
       expect(packageAdded).toBeDefined();
+    });
+
+    it('should throw error if invalid package URL is defined', () => {
+      const pkgToAdd = {
+        name: 'json',
+        version: '1.0.0',
+        purl: 'this-is:not/a-/purl',
+      };
+      expect(() => {
+        builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      }).toThrow(ValidationError);
+    });
+    it('should throw error if package URL defines different name', () => {
+      const pkgToAdd = {
+        name: 'json',
+        version: '1.0.0',
+        purl: 'pkg:rpm/yaml@1.0.0',
+      };
+      expect(() => {
+        builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      }).toThrow(ValidationError);
+    });
+    it('should throw error if package URL defines different version', () => {
+      const pkgToAdd = {
+        name: 'json',
+        version: '1.0.0',
+        purl: 'pkg:rpm/json@1.0.1',
+      };
+      expect(() => {
+        builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      }).toThrow(ValidationError);
+    });
+    it('successfully adds package with package URL', () => {
+      const pkgToAdd = {
+        name: 'json',
+        version: '1.0.0',
+        purl: 'pkg:rpm/rhel/json@1.0.0?repositories=a,b,c',
+      };
+      builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      const packageAdded = builder
+        .getPkgs()
+        .find(
+          (pkg) =>
+            pkg.name === pkgToAdd.name && pkg.version === pkgToAdd.version,
+        );
+      expect(packageAdded).toEqual(pkgToAdd);
+    });
+    it('successfully handles maven special case', () => {
+      const pkgToAdd = {
+        name: 'com.namespace:foo',
+        version: '1.0.0',
+        purl: 'pkg:maven/com.namespace/foo@1.0.0',
+      };
+      builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      const packageAdded = builder
+        .getPkgs()
+        .find(
+          (pkg) =>
+            pkg.name === pkgToAdd.name && pkg.version === pkgToAdd.version,
+        );
+      expect(packageAdded).toEqual(pkgToAdd);
+    });
+    it('fails on missing group id on maven package', () => {
+      // the groupId in maven is the namespace in purl.
+      const pkgToAdd = {
+        name: 'foo',
+        version: '1.0.0',
+        purl: 'pkg:maven/com.namespace/foo@1.0.0',
+      };
+      expect(() => {
+        builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      }).toThrow(ValidationError);
+    });
+    it('fails on different group id on maven package', () => {
+      // the groupId in maven is the namespace in purl.
+      const pkgToAdd = {
+        name: 'com.namespace:foo',
+        version: '1.0.0',
+        purl: 'pkg:maven/com.other/foo@1.0.0',
+      };
+      expect(() => {
+        builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      }).toThrow(ValidationError);
     });
   });
 
