@@ -125,4 +125,18 @@ describe('equals', () => {
     expect(a.equals(b, { compareRoot: false })).toBe(true);
     expect(b.equals(a, { compareRoot: false })).toBe(true);
   });
+
+  test('same graphs with different minor schema version', async () => {
+    const a = depGraphLib.createFromJSON({
+      ...helpers.loadFixture('equals/simple.json'),
+      schemaVersion: '1.2.0',
+    });
+    const b = depGraphLib.createFromJSON({
+      ...helpers.loadFixture('equals/simple.json'),
+      schemaVersion: '1.3.0',
+    });
+
+    expect(a.equals(b)).toBe(true);
+    expect(b.equals(a)).toBe(true);
+  });
 });

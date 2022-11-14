@@ -8,9 +8,13 @@ export interface Pkg {
   version?: string;
 }
 
+export type PurlString = string;
+
 export interface PkgInfo {
   name: string;
   version?: string;
+  purl?: PurlString;
+
   // NOTE: consider adding in the future
   // requires?: {
   //   name: string;

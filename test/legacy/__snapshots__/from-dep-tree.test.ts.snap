@@ -140,7 +140,7 @@ Object {
       },
     },
   ],
-  "schemaVersion": "1.2.0",
+  "schemaVersion": Any<String>,
 }
 `;
 
@@ -659,7 +659,7 @@ Object {
       },
     },
   ],
-  "schemaVersion": "1.2.0",
+  "schemaVersion": Any<String>,
 }
 `;
 
@@ -7988,6 +7988,6 @@ Object {
       },
     },
   ],
-  "schemaVersion": "1.2.0",
+  "schemaVersion": Any<String>,
 }
 `;

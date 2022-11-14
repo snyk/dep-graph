@@ -13,7 +13,7 @@ interface GraphNode {
 }
 
 class DepGraphImpl implements types.DepGraphInternal {
-  public static SCHEMA_VERSION = '1.2.0';
+  public static SCHEMA_VERSION = '1.3.0';
 
   public static getPkgId(pkg: types.Pkg): string {
     return `${pkg.name}@${pkg.version || ''}`;
