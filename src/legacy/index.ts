@@ -21,6 +21,7 @@ interface DepTreeDep {
     scope?: 'dev' | 'prod';
     pruned?: 'cyclic' | 'true';
   };
+  purl?: string;
 }
 
 /**
@@ -53,10 +54,13 @@ async function depTreeToGraph(
   depTree: DepTree,
   pkgManagerName: string,
 ): Promise<types.DepGraph> {
-  const rootPkg = {
+  const rootPkg: types.PkgInfo = {
     name: depTree.name!,
     version: depTree.version || undefined,
   };
+  if (depTree.purl) {
+    rootPkg.purl = depTree.purl;
+  }
 
   const pkgManagerInfo: types.PkgManager = {
     name: pkgManagerName,
@@ -124,6 +128,10 @@ async function buildGraph(
       name: depName,
       version: dep.version,
     };
+
+    if (dep.purl) {
+      depPkg.purl = dep.purl;
+    }
 
     const depNodeId = getNodeId(depPkg.name, depPkg.version, subtreeHash);
 

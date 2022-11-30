@@ -260,6 +260,46 @@ describe('depTreeToGraph with funky pipes in the version', () => {
   });
 });
 
+describe('depTreeToGraph with purl', () => {
+  const depTree = {
+    name: 'oak',
+    version: '1.0',
+    purl: 'pkg:deb/oak@1.0',
+    dependencies: {
+      foo: {
+        version: 'v2.3.0',
+        purl: 'pkg:deb/foo@v2.3.0',
+      },
+      bar: {
+        version: '1',
+        purl: 'pkg:dep/bar@1',
+        dependencies: {
+          foo: {
+            version: 'v2.4.0',
+            purl: 'pkg:deb/foo@v2.4.0',
+          },
+        },
+      },
+    },
+  };
+
+  let depGraph: types.DepGraph;
+  test('create', async () => {
+    depGraph = await depGraphLib.legacy.depTreeToGraph(depTree, 'deb');
+    expect(depGraph.getPkgs()).toHaveLength(4);
+    expect(depGraph.getDepPkgs()).toHaveLength(3);
+    depGraph.getPkgs().forEach((pkg) => expect(pkg.purl).toBeDefined());
+  });
+
+  test('convert to JSON and back', async () => {
+    const graphJson = depGraph.toJSON();
+    const restoredGraph = await depGraphLib.createFromJSON(graphJson);
+
+    helpers.expectSamePkgs(restoredGraph.getPkgs(), depGraph.getPkgs());
+    helpers.expectSamePkgs(restoredGraph.getDepPkgs(), depGraph.getDepPkgs());
+  });
+});
+
 describe('depTreeToGraph cycle with root', () => {
   const depTree = {
     name: 'maple',
