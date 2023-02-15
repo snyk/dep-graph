@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.3.0",
+  "pkgManager": {
+    "name": "pip"
+  },
+  "pkgs": [
+    {
+      "id": "a@1",
+      "info": {
+        "name": "a",
+        "version": "1"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "root-node",
+        "pkgId": "a@1",
+        "deps": []
+      }
+    ]
+  }
+}

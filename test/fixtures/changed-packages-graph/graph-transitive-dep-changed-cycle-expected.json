@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "1.3.0",
+  "pkgManager": {
+    "name": "pip"
+  },
+  "pkgs": [
+    {
+      "id": "a@1",
+      "info": {
+        "name": "a",
+        "version": "1"
+      }
+    },
+    {
+      "id": "e@6",
+      "info": {
+        "name": "e",
+        "version": "6"
+      }
+    },
+    {
+      "id": "g@7",
+      "info": {
+        "name": "g",
+        "version": "7"
+      }
+    },
+    {
+      "id": "f@6",
+      "info": {
+        "name": "f",
+        "version": "6"
+      }
+    },
+    {
+      "id": "c@3",
+      "info": {
+        "name": "c",
+        "version": "3"
+      }
+    },
+    {
+      "id": "b@2",
+      "info": {
+        "name": "b",
+        "version": "2"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "2",
+        "pkgId": "b@2",
+        "deps": [
+          {
+            "nodeId": "5"
+          }
+        ]
+      },
+      {
+        "nodeId": "3",
+        "pkgId": "c@3",
+        "deps": [
+          {
+            "nodeId": "5"
+          }
+        ]
+      },
+      {
+        "nodeId": "5",
+        "pkgId": "e@6",
+        "deps": [
+          {
+            "nodeId": "6"
+          }
+        ]
+      },
+      {
+        "nodeId": "6",
+        "pkgId": "f@6",
+        "deps": [
+          {
+            "nodeId": "7"
+          }
+        ]
+      },
+      {
+        "nodeId": "7",
+        "pkgId": "g@7",
+        "deps": [
+          {
+            "nodeId": "5"
+          }
+        ]
+      },
+      {
+        "nodeId": "root-node",
+        "pkgId": "a@1",
+        "deps": [
+          {
+            "nodeId": "2"
+          },
+          {
+            "nodeId": "3"
+          }
+        ]
+      }
+    ]
+  }
+}
