@@ -132,6 +132,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     const limit = opts?.limit;
 
     for (const nodeId of this.getPkgNodeIds(pkg)) {
+      if (this.nodeIsPruned(nodeId)) continue;
       const pathsFromNodeToRoot = this.pathsFromNodeToRoot(nodeId, [], {
         limit,
       });
@@ -152,6 +153,7 @@ class DepGraphImpl implements types.DepGraphInternal {
   public countPathsToRoot(pkg: types.Pkg): number {
     let count = 0;
     for (const nodeId of this.getPkgNodeIds(pkg)) {
+      if (this.nodeIsPruned(nodeId)) continue;
       count += this.countNodePathsToRoot(nodeId);
     }
 
@@ -245,6 +247,11 @@ class DepGraphImpl implements types.DepGraphInternal {
         nodes,
       },
     };
+  }
+
+  private nodeIsPruned(nodeId: string): boolean {
+    const node = this.getNode(nodeId);
+    return !!node.labels?.pruned;
   }
 
   private nodeEquals(

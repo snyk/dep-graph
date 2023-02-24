@@ -81,4 +81,30 @@ describe('pkgPathsToRoot', () => {
     expect(pathsWithoutLimit.length).toBeGreaterThan(limit);
     expect(pathsWithlimit).toHaveLength(limit);
   });
+
+  it('ignores nodes labelled with pruned', () => {
+    const graphJson: DepGraphData = loadFixture('pruned/dep-graph.json');
+    const depGraph = createFromJSON(graphJson);
+
+    const received = depGraph.pkgPathsToRoot({
+      name: 'd',
+      version: '1.0.0',
+    });
+
+    expect(received.length).toBe(1); // without pruned label there would be 2 paths to d@1
+    expect(received[0]).toEqual([
+      {
+        name: 'd',
+        version: '1.0.0',
+      },
+      {
+        name: 'b',
+        version: '1.0.0',
+      },
+      {
+        name: 'root',
+        version: '0.0.0',
+      },
+    ]);
+  });
 });
