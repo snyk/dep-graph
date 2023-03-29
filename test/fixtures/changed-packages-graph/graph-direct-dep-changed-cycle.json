@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "1.2.0",
+  "pkgManager": {
+    "name": "pip"
+  },
+  "pkgs": [
+    {
+      "id": "a@1",
+      "info": {
+        "name": "a",
+        "version": "1"
+      }
+    },
+    {
+      "id": "b@2",
+      "info": {
+        "name": "b",
+        "version": "2"
+      }
+    },
+    {
+      "id": "c@3.1",
+      "info": {
+        "name": "c",
+        "version": "3.1"
+      }
+    },
+    {
+      "id": "d@4",
+      "info": {
+        "name": "d",
+        "version": "4"
+      }
+    },
+    {
+      "id": "e@5",
+      "info": {
+        "name": "e",
+        "version": "5"
+      }
+    },
+    {
+      "id": "f@6",
+      "info": {
+        "name": "f",
+        "version": "6"
+      }
+    },
+    {
+      "id": "g@7",
+      "info": {
+        "name": "g",
+        "version": "7"
+      }
+    },
+    {
+      "id": "h@2.1",
+      "info": {
+        "name": "h",
+        "version": "2.1"
+      }
+    },
+    {
+      "id": "i@9",
+      "info": {
+        "name": "i",
+        "version": "9"
+      }
+    },
+    {
+      "id": "j@1",
+      "info": {
+        "name": "j",
+        "version": "1"
+      }
+    },
+    {
+      "id": "k@3",
+      "info": {
+        "name": "k",
+        "version": "3"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "root-node",
+        "pkgId": "a@1",
+        "deps": [
+          {
+            "nodeId": "2"
+          },
+          {
+            "nodeId": "3"
+          },
+          {
+            "nodeId": "4"
+          }
+        ]
+      },
+      {
+        "nodeId": "2",
+        "pkgId": "b@2",
+        "deps": [
+          {
+            "nodeId": "5"
+          }
+        ]
+      },
+      {
+        "nodeId": "3",
+        "pkgId": "c@3.1",
+        "deps": [
+          {
+            "nodeId": "5"
+          }
+        ]
+      },
+      {
+        "nodeId": "4",
+        "pkgId": "d@4",
+        "deps": [
+          {
+            "nodeId": "8"
+          },
+          {
+            "nodeId": "9"
+          }
+        ]
+      },
+      {
+        "nodeId": "5",
+        "pkgId": "e@5",
+        "deps": [
+          {
+            "nodeId": "6"
+          }
+        ]
+      },
+      {
+        "nodeId": "6",
+        "pkgId": "f@6",
+        "deps": [
+          {
+            "nodeId": "7"
+          }
+        ]
+      },
+      {
+        "nodeId": "7",
+        "pkgId": "g@7",
+        "deps": [
+          {
+            "nodeId": "5"
+          }
+        ]
+      },
+      {
+        "nodeId": "8",
+        "pkgId": "h@2.1",
+        "deps": []
+      },
+      {
+        "nodeId": "9",
+        "pkgId": "i@9",
+        "deps": [
+          {
+            "nodeId": "10"
+          },
+          {
+            "nodeId": "11"
+          }
+        ]
+      },
+      {
+        "nodeId": "10",
+        "pkgId": "j@1",
+        "deps": []
+      },
+      {
+        "nodeId": "11",
+        "pkgId": "k@3",
+        "deps": []
+      }
+    ]
+  }
+}

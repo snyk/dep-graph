@@ -255,7 +255,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     compareRoot: boolean,
     traversedPairs = new Set<string>(),
   ): boolean {
-    // Skip root nodes comparision if needed.
+    // Skip root nodes comparison if needed.
     if (
       compareRoot ||
       (nodeIdA !== graphA.rootNodeId && nodeIdB !== graphB.rootNodeId)
