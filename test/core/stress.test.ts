@@ -36,4 +36,21 @@ describe('stress tests', () => {
     });
     expect(result).toBeDefined();
   });
+  test('countPathsToRoot() is cached', async () => {
+    const graph = await generateLargeGraph(100_000);
+    let start = Date.now();
+    graph.countPathsToRoot({
+      name: dependencyName,
+      version: '1.2.3',
+    });
+    const firstCallDuration = Date.now() - start;
+    start = Date.now();
+    graph.countPathsToRoot({
+      name: dependencyName,
+      version: '1.2.3',
+    });
+    const secondCallDuration = Date.now() - start;
+    // the second call must be *significantly* faster than the first
+    expect(secondCallDuration).toBeLessThan(firstCallDuration * 0.2);
+  });
 });

@@ -81,4 +81,15 @@ describe('pkgPathsToRoot', () => {
     expect(pathsWithoutLimit.length).toBeGreaterThan(limit);
     expect(pathsWithlimit).toHaveLength(limit);
   });
+
+  describe('cycles', () => {
+    const depGraphData = loadFixture('cyclic-complex-dep-graph.json');
+    const depGraph = createFromJSON(depGraphData);
+    it('returns expected paths for all packages', () => {
+      depGraph.getPkgs().forEach((pkg) => {
+        const pkgPathsToRoot = depGraph.pkgPathsToRoot(pkg);
+        expect(pkgPathsToRoot).toMatchSnapshot(`${pkg.name}@${pkg.version}`);
+      });
+    });
+  });
 });
