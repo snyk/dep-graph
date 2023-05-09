@@ -1,0 +1,234 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pkgPathsToRoot cycles returns expected paths for all packages: a@1 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+]
+`;
+
+exports[`pkgPathsToRoot cycles returns expected paths for all packages: b@2 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "b",
+      "version": "2",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+]
+`;
+
+exports[`pkgPathsToRoot cycles returns expected paths for all packages: c@3 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "c",
+      "version": "3",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+]
+`;
+
+exports[`pkgPathsToRoot cycles returns expected paths for all packages: d@4 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "d",
+      "version": "4",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+]
+`;
+
+exports[`pkgPathsToRoot cycles returns expected paths for all packages: e@5 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "e",
+      "version": "5",
+    },
+    Object {
+      "name": "b",
+      "version": "2",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+  Array [
+    Object {
+      "name": "e",
+      "version": "5",
+    },
+    Object {
+      "name": "c",
+      "version": "3",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+  Array [
+    Object {
+      "name": "e",
+      "version": "5",
+    },
+    Object {
+      "name": "g",
+      "version": "7",
+    },
+    Object {
+      "name": "f",
+      "version": "6",
+    },
+    Object {
+      "name": "d",
+      "version": "4",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+]
+`;
+
+exports[`pkgPathsToRoot cycles returns expected paths for all packages: f@6 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "f",
+      "version": "6",
+    },
+    Object {
+      "name": "d",
+      "version": "4",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+  Array [
+    Object {
+      "name": "f",
+      "version": "6",
+    },
+    Object {
+      "name": "e",
+      "version": "5",
+    },
+    Object {
+      "name": "b",
+      "version": "2",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+  Array [
+    Object {
+      "name": "f",
+      "version": "6",
+    },
+    Object {
+      "name": "e",
+      "version": "5",
+    },
+    Object {
+      "name": "c",
+      "version": "3",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+]
+`;
+
+exports[`pkgPathsToRoot cycles returns expected paths for all packages: g@7 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "g",
+      "version": "7",
+    },
+    Object {
+      "name": "f",
+      "version": "6",
+    },
+    Object {
+      "name": "d",
+      "version": "4",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+  Array [
+    Object {
+      "name": "g",
+      "version": "7",
+    },
+    Object {
+      "name": "f",
+      "version": "6",
+    },
+    Object {
+      "name": "e",
+      "version": "5",
+    },
+    Object {
+      "name": "b",
+      "version": "2",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+  Array [
+    Object {
+      "name": "g",
+      "version": "7",
+    },
+    Object {
+      "name": "f",
+      "version": "6",
+    },
+    Object {
+      "name": "e",
+      "version": "5",
+    },
+    Object {
+      "name": "c",
+      "version": "3",
+    },
+    Object {
+      "name": "a",
+      "version": "1",
+    },
+  ],
+]
+`;

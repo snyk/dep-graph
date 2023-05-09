@@ -152,9 +152,14 @@ class DepGraphImpl implements types.DepGraphInternal {
   public countPathsToRoot(pkg: types.Pkg): number {
     let count = 0;
     for (const nodeId of this.getPkgNodeIds(pkg)) {
-      count += this.countNodePathsToRoot(nodeId);
+      if (this._countNodePathsToRootCache.has(nodeId)) {
+        count += this._countNodePathsToRootCache.get(nodeId)!;
+      } else {
+        const c = this.countNodePathsToRoot(nodeId);
+        this._countNodePathsToRootCache.set(nodeId, c);
+        count += c;
+      }
     }
-
     return count;
   }
 
@@ -367,30 +372,17 @@ class DepGraphImpl implements types.DepGraphInternal {
     return allPaths;
   }
 
-  private countNodePathsToRoot(
-    nodeId: string,
-    ancestors: string[] = [],
-  ): number {
-    if (ancestors.includes(nodeId)) {
-      return 0;
-    }
-
-    if (this._countNodePathsToRootCache.has(nodeId)) {
-      return this._countNodePathsToRootCache.get(nodeId) || 0;
-    }
-
-    const parentNodesIds = this.getNodeParentsNodeIds(nodeId);
-    if (parentNodesIds.length === 0) {
-      this._countNodePathsToRootCache.set(nodeId, 1);
+  private countNodePathsToRoot(nodeId: string, visited: string[] = []): number {
+    if (nodeId === this._rootNodeId) {
       return 1;
     }
-
-    ancestors = ancestors.concat(nodeId);
-    const count = parentNodesIds.reduce((acc, parentNodeId) => {
-      return acc + this.countNodePathsToRoot(parentNodeId, ancestors);
-    }, 0);
-
-    this._countNodePathsToRootCache.set(nodeId, count);
+    visited = visited.concat(nodeId);
+    let count = 0;
+    for (const parentNodeId of this.getNodeParentsNodeIds(nodeId)) {
+      if (!visited.includes(parentNodeId)) {
+        count += this.countNodePathsToRoot(parentNodeId, visited);
+      }
+    }
     return count;
   }
 }
