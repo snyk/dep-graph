@@ -8,9 +8,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Set npmjs user
-          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
-      - run:
           name: Install
           command: npm install
       - run:
@@ -22,9 +19,6 @@ jobs:
     working_directory: ~/work
     steps:
       - checkout
-      - run:
-          name: Set npmjs user
-          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
       - run:
           name: Install
           command: npm install
@@ -38,7 +32,6 @@ workflows:
     jobs:
       - test:
           name: Test
-          context: nodejs-install
       - release:
           name: Release
           requires:
