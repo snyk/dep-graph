@@ -66,8 +66,12 @@ export function validatePackageURL(pkg: types.PkgInfo): void {
       // For now, make this exception only for deb to cover a support case.
       case 'deb': {
         const pkgName = pkg.name.split('/').pop();
+        // This was added to be backward compatible with the case where PURL might include the source name,
+        // it handles these combinations of PURL and package name, eg
+        // "pkg:deb/libsemanage%2Flibsemanage1@3.1-1%2Bb2?upstream=libsemanage@3.1-1" --> "libsemanage/libsemanage1"
+        // "pkg:deb/libsemanage%2Flibsemanage-common@3.1-1" --> "libsemanage/libsemanage-common"
         assert(
-          pkgName === purlPkg.name,
+          pkgName === purlPkg.name || pkg.name === purlPkg.name,
           'name and packageURL name do not match',
         );
         if (purlPkg.qualifiers?.['upstream'] && pkg.name.includes('/')) {

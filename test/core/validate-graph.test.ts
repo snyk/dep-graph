@@ -51,6 +51,14 @@ describe('validatePackageURL', () => {
           purl: 'pkg:deb/bar@1.2.3?upstream=foo%401.2.3',
         },
       ],
+      [
+        'matches on when source name is present and purl includes source name',
+        {
+          name: 'foo/bar',
+          version: '1.2.3',
+          purl: 'pkg:deb/debian/foo%2Fbar@1.2.3',
+        },
+      ],
     ])(
       'matches only on package name for debian purls: %s',
       (_testCaseName, pkg) => {
@@ -73,14 +81,6 @@ describe('validatePackageURL', () => {
           name: 'foo/bar',
           version: '1.2.3',
           purl: 'pkg:deb/bar@1.2.3?upstream=baz',
-        },
-      ],
-      [
-        'purl includes source name',
-        {
-          name: 'foo/bar',
-          version: '1.2.3',
-          purl: 'pkg:deb/debian/foo%2Fbar@1.2.3',
         },
       ],
     ])('should throw on invalid purl: %s', (_testCaseName, pkg) => {
