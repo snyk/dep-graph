@@ -35,7 +35,7 @@
     "@types/jest": "^27",
     "@types/node": "^10",
     "@types/object-hash": "^2.1.0",
-    "@types/semver": "^7.3.6",
+    "@types/semver": "^7.5.0",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
     "benny": "^3.6.15",
@@ -65,7 +65,7 @@
     "lodash.values": "^4.3.0",
     "object-hash": "^3.0.0",
     "packageurl-js": "^1.0.0",
-    "semver": "^7.0.0",
+    "semver": "^7.5.4",
     "tslib": "^2"
   }
 }
