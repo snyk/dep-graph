@@ -88,6 +88,58 @@ describe('validatePackageURL', () => {
     });
   });
 
+  describe('cocoapods Purl type tests', () => {
+    it.each([
+      [
+        'cocoapods package without subspec',
+        {
+          name: 'bar',
+          version: '1.2.3',
+          purl: 'pkg:cocoapods/bar@1.2.3',
+        },
+      ],
+      [
+        'cocoapods package with subspec',
+        {
+          name: 'spec/subspec',
+          version: '1.2.3',
+          purl: 'pkg:cocoapods/spec@1.2.3#subspec',
+        },
+      ],
+    ])('validates cocoapods Purls: %s', (name, pkg) => {
+      expect(() => validatePackageURL(pkg)).not.toThrow();
+    });
+
+    it.each([
+      [
+        'package name does not match purl name',
+        {
+          name: 'foo',
+          version: '1.2.3',
+          purl: 'pkg:cocoapods/baz@1.2.3',
+        },
+      ],
+      [
+        'package name does not match subspec',
+        {
+          name: 'baz/foo',
+          version: '1.2.3',
+          purl: 'pkg:cocoapods/baz@1.2.3#bar',
+        },
+      ],
+      [
+        'package name does not include subspec',
+        {
+          name: 'bar',
+          version: '1.2.3',
+          purl: 'pkg:cocoapods/bar@1.2.3#baz',
+        },
+      ],
+    ])('should throw on invalid purl: %s', (name, pkg) => {
+      expect(() => validatePackageURL(pkg)).toThrow();
+    });
+  });
+
   describe('composer Purl type tests', () => {
     it.each([
       [
