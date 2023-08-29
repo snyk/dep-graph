@@ -60,8 +60,16 @@ export function validatePackageURL(pkg: types.PkgInfo): void {
         );
         break;
 
+      case 'golang': {
+        let expected = purlPkg.namespace
+          ? `${purlPkg.namespace}/${purlPkg.name}`
+          : purlPkg.name;
+        if (purlPkg.subpath) expected += `/${purlPkg.subpath}`;
+        assert(pkg.name === expected, `name and packageURL name do not match`);
+        break;
+      }
+
       case 'composer':
-      case 'golang':
       case 'npm':
       case 'swift':
         assert(
