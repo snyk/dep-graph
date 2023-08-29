@@ -158,6 +158,14 @@ describe('validatePackageURL', () => {
           purl: 'pkg:golang/foo@1.2.3',
         },
       ],
+      [
+        'golang package with subpath',
+        {
+          name: 'github.com/foo/bar/pkg/baz',
+          version: '1.2.3',
+          purl: 'pkg:golang/github.com/foo/bar@1.2.3#pkg/baz',
+        },
+      ],
     ])('validates golang Purls: %s', (name, pkg) => {
       expect(() => validatePackageURL(pkg)).not.toThrow();
     });
@@ -180,11 +188,27 @@ describe('validatePackageURL', () => {
         },
       ],
       [
+        'package name does not match purl subpath',
+        {
+          name: 'bar/baz',
+          version: '1.2.3',
+          purl: 'pkg:golang/bar@1.2.3#pkg/baz',
+        },
+      ],
+      [
         'package name does not include purl namespace',
         {
           name: 'bar',
           version: '1.2.3',
           purl: 'pkg:golang/google.golang.org/bar@1.2.3',
+        },
+      ],
+      [
+        'package name does not include purl subpath',
+        {
+          name: 'bar',
+          version: '1.2.3',
+          purl: 'pkg:golang/bar@1.2.3#pkg/baz',
         },
       ],
     ])('should throw on invalid purl: %s', (name, pkg) => {
