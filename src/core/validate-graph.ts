@@ -60,6 +60,19 @@ export function validatePackageURL(pkg: types.PkgInfo): void {
         );
         break;
 
+      // CocoaPods have an optional subspec encoded in the subpath
+      // component of the purl, which – if present – should
+      // be appended to the spec.
+      case 'cocoapods':
+        assert(
+          pkg.name ===
+            (purlPkg.subpath
+              ? `${purlPkg.name}/${purlPkg.subpath}`
+              : purlPkg.name),
+          `name and packageURL name do not match`,
+        );
+        break;
+
       case 'golang': {
         let expected = purlPkg.namespace
           ? `${purlPkg.namespace}/${purlPkg.name}`
