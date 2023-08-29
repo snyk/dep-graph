@@ -218,6 +218,30 @@ describe('validatePackageURL', () => {
           purl: 'pkg:golang/github.com/foo/bar@1.2.3#pkg/baz',
         },
       ],
+      [
+        'golang package with exact version',
+        {
+          name: 'github.com/foo/bar',
+          version: '1.2.3',
+          purl: 'pkg:golang/github.com/foo/bar@v1.2.3',
+        },
+      ],
+      [
+        'golang package with incompatible version',
+        {
+          name: 'github.com/foo/bar',
+          version: '1.2.3',
+          purl: 'pkg:golang/github.com/foo/bar@v1.2.3+incompatible',
+        },
+      ],
+      [
+        'golang package with pseudo version',
+        {
+          name: 'github.com/foo/bar',
+          version: '#0123456abcde',
+          purl: 'pkg:golang/github.com/foo/bar@v0.0.0-19700101000000-0123456abcde',
+        },
+      ],
     ])('validates golang Purls: %s', (name, pkg) => {
       expect(() => validatePackageURL(pkg)).not.toThrow();
     });
