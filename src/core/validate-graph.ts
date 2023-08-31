@@ -3,6 +3,9 @@ import { PackageURL } from 'packageurl-js';
 import * as types from './types';
 import { ValidationError } from './errors';
 
+const reGolangPseudoVersion = /(v\d+\.\d+\.\d+)-(.*?)(\d{14})-([0-9a-f]{12})/;
+const reGolangExactVersion = /^(.*?)(\+incompatible)?$/;
+
 function assert(condition: boolean, msg: string) {
   if (!condition) {
     throw new ValidationError(msg);
@@ -14,7 +17,7 @@ export function validateGraph(
   rootNodeId: string,
   pkgs: { [pkgId: string]: any },
   pkgNodes: { [nodeId: string]: Set<string> },
-) {
+): void {
   assert(
     (graph.predecessors(rootNodeId) || []).length === 0,
     `"${rootNodeId}" is not really the root`,
@@ -48,14 +51,15 @@ export function validatePackageURL(pkg: types.PkgInfo): void {
   }
 
   try {
-    const purlPkg = PackageURL.fromString(pkg.purl);
+    const purl = PackageURL.fromString(pkg.purl);
 
-    switch (purlPkg.type) {
+    // validate package name
+    switch (purl.type) {
       // Within Snyk, maven packages use <namespace>:<name> as their *name*, but
       // we expect those to be separated correctly in the PackageURL.
       case 'maven':
         assert(
-          pkg.name === purlPkg.namespace + ':' + purlPkg.name,
+          pkg.name === purl.namespace + ':' + purl.name,
           `name and packageURL name do not match`,
         );
         break;
@@ -66,18 +70,16 @@ export function validatePackageURL(pkg: types.PkgInfo): void {
       case 'cocoapods':
         assert(
           pkg.name ===
-            (purlPkg.subpath
-              ? `${purlPkg.name}/${purlPkg.subpath}`
-              : purlPkg.name),
+            (purl.subpath ? `${purl.name}/${purl.subpath}` : purl.name),
           `name and packageURL name do not match`,
         );
         break;
 
       case 'golang': {
-        let expected = purlPkg.namespace
-          ? `${purlPkg.namespace}/${purlPkg.name}`
-          : purlPkg.name;
-        if (purlPkg.subpath) expected += `/${purlPkg.subpath}`;
+        let expected = purl.namespace
+          ? `${purl.namespace}/${purl.name}`
+          : purl.name;
+        if (purl.subpath) expected += `/${purl.subpath}`;
         assert(pkg.name === expected, `name and packageURL name do not match`);
         break;
       }
@@ -87,9 +89,7 @@ export function validatePackageURL(pkg: types.PkgInfo): void {
       case 'swift':
         assert(
           pkg.name ===
-            (purlPkg.namespace
-              ? `${purlPkg.namespace}/${purlPkg.name}`
-              : purlPkg.name),
+            (purl.namespace ? `${purl.namespace}/${purl.name}` : purl.name),
           `name and packageURL name do not match`,
         );
         break;
@@ -100,13 +100,10 @@ export function validatePackageURL(pkg: types.PkgInfo): void {
       // For now, make this exception only for deb to cover a support case.
       case 'deb': {
         const pkgName = pkg.name.split('/').pop();
-        assert(
-          pkgName === purlPkg.name,
-          'name and packageURL name do not match',
-        );
-        if (purlPkg.qualifiers?.['upstream'] && pkg.name.includes('/')) {
+        assert(pkgName === purl.name, 'name and packageURL name do not match');
+        if (purl.qualifiers?.['upstream'] && pkg.name.includes('/')) {
           const pkgSrc = pkg.name.split('/')[0];
-          const pkgUpstream = purlPkg.qualifiers['upstream'].split('@')[0];
+          const pkgUpstream = purl.qualifiers['upstream'].split('@')[0];
           assert(
             pkgSrc === pkgUpstream,
             'source and packageURL source do not match',
@@ -116,15 +113,38 @@ export function validatePackageURL(pkg: types.PkgInfo): void {
       }
 
       default:
+        assert(pkg.name === purl.name, `name and packageURL name do not match`);
+    }
+
+    // validate package version
+    switch (purl.type) {
+      // the Snyk version of a golang module is either
+      // - the version without "v", e.g. v1.2.3 -> 1.2.3
+      // - the pseudo-version hash, e.g. v0.0.0-000-acf48ae230a1 -> #acf48ae230a1
+      case 'golang': {
+        let version = purl.version;
+        if (purl.version) {
+          const maybePseudoVersion = reGolangPseudoVersion.exec(purl.version);
+          const maybeExactVersion = reGolangExactVersion.exec(purl.version);
+          if (maybePseudoVersion) {
+            version = `#${maybePseudoVersion[4]}`;
+          } else if (maybeExactVersion) {
+            version = maybeExactVersion[1].replace(/^v/, '');
+          }
+        }
         assert(
-          pkg.name === purlPkg.name,
-          `name and packageURL name do not match`,
+          pkg.version === version,
+          `version and packageURL version do not match. want ${pkg.version} have: ${version}`,
+        );
+        break;
+      }
+
+      default:
+        assert(
+          pkg.version === purl.version,
+          `version and packageURL version do not match`,
         );
     }
-    assert(
-      pkg.version === purlPkg.version,
-      `version and packageURL version do not match`,
-    );
   } catch (e) {
     throw new ValidationError(`packageURL validation failed: ${e}`);
   }
