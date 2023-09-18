@@ -40,7 +40,7 @@ workflows:
           name: Scan repository for secrets
           context:
             - snyk-bot-slack
-          channel: snyk-on-snyk-rapid-response
+          channel: snyk-on-snyk-os-arch
           filters:
             branches:
               ignore:
