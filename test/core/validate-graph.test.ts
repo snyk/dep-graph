@@ -231,7 +231,7 @@ describe('validatePackageURL', () => {
         {
           name: 'github.com/foo/bar',
           version: '1.2.3',
-          purl: 'pkg:golang/github.com/foo/bar@v1.2.3+incompatible',
+          purl: 'pkg:golang/github.com/foo/bar@v1.2.3%2Bincompatible',
         },
       ],
       [
@@ -285,6 +285,14 @@ describe('validatePackageURL', () => {
           name: 'bar',
           version: '1.2.3',
           purl: 'pkg:golang/bar@1.2.3#pkg/baz',
+        },
+      ],
+      [
+        'golang package with incorrectly encoded version',
+        {
+          name: 'github.com/foo/bar',
+          version: '1.2.3',
+          purl: 'pkg:golang/github.com/foo/bar@v1.2.3+incompatible',
         },
       ],
     ])('should throw on invalid purl: %s', (name, pkg) => {
