@@ -100,7 +100,7 @@ export interface DepGraph {
   pkgPathsToRoot(pkg: Pkg, opts?: { limit?: number }): PkgInfo[][];
   isTransitive(pkg: Pkg): boolean;
   directDepsLeadingTo(pkg: Pkg): PkgInfo[];
-  countPathsToRoot(pkg: Pkg): number;
+  countPathsToRoot(pkg: Pkg, opts?: { limit?: number }): number;
   equals(other: DepGraph, options?: { compareRoot?: boolean }): boolean;
 }
 
