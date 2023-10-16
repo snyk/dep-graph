@@ -149,15 +149,22 @@ class DepGraphImpl implements types.DepGraphInternal {
     return pathsToRoot.sort((a, b) => a.length - b.length);
   }
 
-  public countPathsToRoot(pkg: types.Pkg): number {
+  public countPathsToRoot(pkg: types.Pkg, opts?: { limit?: number }): number {
     let count = 0;
+    const limit = opts?.limit;
     for (const nodeId of this.getPkgNodeIds(pkg)) {
       if (this._countNodePathsToRootCache.has(nodeId)) {
         count += this._countNodePathsToRootCache.get(nodeId)!;
       } else {
-        const c = this.countNodePathsToRoot(nodeId);
-        this._countNodePathsToRootCache.set(nodeId, c);
+        const c = this.countNodePathsToRoot(nodeId, limit);
+        // don't cache if a limit was supplied
+        if (!limit) {
+          this._countNodePathsToRootCache.set(nodeId, c);
+        }
         count += c;
+      }
+      if (limit && count >= limit) {
+        return limit;
       }
     }
     return count;
@@ -372,15 +379,22 @@ class DepGraphImpl implements types.DepGraphInternal {
     return allPaths;
   }
 
-  private countNodePathsToRoot(nodeId: string, visited: string[] = []): number {
+  private countNodePathsToRoot(
+    nodeId: string,
+    limit = 0,
+    count = 0,
+    visited: string[] = [],
+  ): number {
     if (nodeId === this._rootNodeId) {
-      return 1;
+      return count + 1;
     }
     visited = visited.concat(nodeId);
-    let count = 0;
     for (const parentNodeId of this.getNodeParentsNodeIds(nodeId)) {
       if (!visited.includes(parentNodeId)) {
-        count += this.countNodePathsToRoot(parentNodeId, visited);
+        count = this.countNodePathsToRoot(parentNodeId, limit, count, visited);
+        if (limit && count >= limit) {
+          return limit;
+        }
       }
     }
     return count;
