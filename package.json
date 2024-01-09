@@ -64,7 +64,7 @@
     "lodash.union": "^4.6.0",
     "lodash.values": "^4.3.0",
     "object-hash": "^3.0.0",
-    "packageurl-js": "1.2.0",
+    "packageurl-js": "1.2.1",
     "semver": "^7.0.0",
     "tslib": "^2"
   }
