@@ -1,12 +1,28 @@
 version: 2.1
 
 orbs:
-  prodsec: snyk/prodsec-orb@1.0
+  prodsec: snyk/prodsec-orb@1.1
+
+defaults: &defaults
+  resource_class: small
+  docker:
+    - image: cimg/node:14.19
 
 jobs:
+  security-scans:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install
+          command: npm install
+      - prodsec/security_scans:
+          mode: auto
+          iac-scan: disabled
+          release-branch: master
+
   test:
-    docker:
-      - image: cimg/node:14.19
+    <<: *defaults
     working_directory: ~/work
     steps:
       - checkout
@@ -19,9 +35,9 @@ jobs:
       - run:
           name: Test
           command: npm test
+
   release:
-    docker:
-      - image: cimg/node:14.19
+    <<: *defaults
     working_directory: ~/work
     steps:
       - checkout
@@ -45,8 +61,18 @@ workflows:
             branches:
               ignore:
                 - master
+
+      - security-scans:
+          name: Security Scans
+          context:
+            - team-analysis-arch
+
       - test:
           name: Test
+          requires:
+            - Scan repository for secrets
+            - Security Scans
+
       - release:
           name: Release
           requires:
