@@ -97,8 +97,9 @@ export function validatePackageURL(pkg: types.PkgInfo): void {
       // The PURL spec for Linux distros does not include the source in the name.
       // This is why we relax the assertion here and match only on the package name:
       // <source name>/<package name> - we omit the source name
-      // For now, make this exception only for deb to cover a support case.
-      case 'deb': {
+      case 'deb':
+      case 'apk':
+      case 'rpm': {
         const pkgName = pkg.name.split('/').pop();
         assert(pkgName === purl.name, 'name and packageURL name do not match');
         if (purl.qualifiers?.['upstream'] && pkg.name.includes('/')) {
