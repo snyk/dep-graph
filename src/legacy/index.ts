@@ -1,4 +1,4 @@
-import * as crypto from 'crypto';
+import * as crypto from 'crypto-browserify';
 import { eventLoopSpinner } from 'event-loop-spinner';
 
 import * as types from '../core/types';
