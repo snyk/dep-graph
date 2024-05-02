@@ -102,9 +102,6 @@ async function buildGraph(
 
   const depNodesIds: string[] = [];
 
-  // raise an exception for testing to see if my tests cover this code path
-
-
   const hash = crypto.createHash('sha1');
   if (depTree.versionProvenance) {
     hash.update(objectHash(depTree.versionProvenance));
