@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  prodsec: snyk/prodsec-orb@dev:1832347c3f29956f31d8d8b8bc488108d9d7708b
+  prodsec: snyk/prodsec-orb@dev:7fb0180be4240dd89f26084e320f24c3b05f80d5
 
 defaults: &defaults
   resource_class: small
