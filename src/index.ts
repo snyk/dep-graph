@@ -8,7 +8,7 @@ export {
   PkgManager,
   VersionProvenance,
 } from './core/types';
-export { createFromJSON } from './core/create-from-json';
+export { createFromJSON, asyncCreateFromJSON } from './core/create-from-json';
 export { DepGraphBuilder } from './core/builder';
 
 import * as Errors from './core/errors';

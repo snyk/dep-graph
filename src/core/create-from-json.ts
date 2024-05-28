@@ -51,6 +51,54 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
   );
 }
 
+export async function asyncCreateFromJSON(depGraphData: DepGraphData, eventLoopSpinner?: any): Promise<DepGraph> {
+  validateDepGraphData(depGraphData);
+
+  const graph = new graphlib.Graph({
+    directed: true,
+    multigraph: false,
+    compound: false,
+  });
+  const pkgs: { [pkgId: string]: types.PkgInfo } = {};
+  const pkgNodes: { [pkgId: string]: Set<string> } = {};
+
+  for (const { id, info } of depGraphData.pkgs) {
+    pkgs[id] = info.version ? info : { ...info, version: undefined };
+  }
+
+  for (const node of depGraphData.graph.nodes) {
+    const pkgId = node.pkgId;
+    if (!pkgNodes[pkgId]) {
+      pkgNodes[pkgId] = new Set();
+    }
+    pkgNodes[pkgId].add(node.nodeId);
+
+    graph.setNode(node.nodeId, { pkgId, info: node.info });
+  }
+
+  for (const node of depGraphData.graph.nodes) {
+    if (eventLoopSpinner && eventLoopSpinner.isStarving()) {
+      await eventLoopSpinner.spin();
+    }
+    for (const depNodeId of node.deps) {
+      graph.setEdge(node.nodeId, depNodeId.nodeId);
+    }
+  }
+
+  if (eventLoopSpinner && eventLoopSpinner.isStarving()) {
+    await eventLoopSpinner.spin();
+  }
+  validateGraph(graph, depGraphData.graph.rootNodeId, pkgs, pkgNodes);
+
+  return new DepGraphImpl(
+    graph,
+    depGraphData.graph.rootNodeId,
+    pkgs,
+    pkgNodes,
+    depGraphData.pkgManager,
+  );
+}
+
 function assert(condition: boolean, msg: string) {
   if (!condition) {
     throw new ValidationError(msg);
