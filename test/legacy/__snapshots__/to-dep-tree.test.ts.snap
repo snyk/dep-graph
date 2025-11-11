@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`graphs with cycles are supported 1`] = `
-Object {
-  "dependencies": Object {
-    "b": Object {
-      "dependencies": Object {
-        "e": Object {
-          "dependencies": Object {
-            "f": Object {
-              "dependencies": Object {
-                "g": Object {
-                  "dependencies": Object {
-                    "e": Object {
-                      "labels": Object {
+{
+  "dependencies": {
+    "b": {
+      "dependencies": {
+        "e": {
+          "dependencies": {
+            "f": {
+              "dependencies": {
+                "g": {
+                  "dependencies": {
+                    "e": {
+                      "labels": {
                         "pruned": "cyclic",
                       },
                       "name": "e",
@@ -34,16 +34,16 @@ Object {
       "name": "b",
       "version": "2",
     },
-    "c": Object {
-      "dependencies": Object {
-        "e": Object {
-          "dependencies": Object {
-            "f": Object {
-              "dependencies": Object {
-                "g": Object {
-                  "dependencies": Object {
-                    "e": Object {
-                      "labels": Object {
+    "c": {
+      "dependencies": {
+        "e": {
+          "dependencies": {
+            "f": {
+              "dependencies": {
+                "g": {
+                  "dependencies": {
+                    "e": {
+                      "labels": {
                         "pruned": "cyclic",
                       },
                       "name": "e",
@@ -65,16 +65,16 @@ Object {
       "name": "c",
       "version": "3",
     },
-    "d": Object {
-      "dependencies": Object {
-        "f": Object {
-          "dependencies": Object {
-            "g": Object {
-              "dependencies": Object {
-                "e": Object {
-                  "dependencies": Object {
-                    "f": Object {
-                      "labels": Object {
+    "d": {
+      "dependencies": {
+        "f": {
+          "dependencies": {
+            "g": {
+              "dependencies": {
+                "e": {
+                  "dependencies": {
+                    "f": {
+                      "labels": {
                         "pruned": "cyclic",
                       },
                       "name": "f",

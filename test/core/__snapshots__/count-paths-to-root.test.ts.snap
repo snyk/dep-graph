@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`countPathsToRoot large returns expected path counts for all packages 1`] = `
-Object {
+{
   "abbrev@1.0.7": 2,
   "abbrev@1.1.1": 1,
   "accepts@1.1.4": 1,
