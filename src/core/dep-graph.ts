@@ -383,20 +383,22 @@ class DepGraphImpl implements types.DepGraphInternal {
     nodeId: string,
     limit = 0,
     count = 0,
-    visited: string[] = [],
+    visited: Set<string> = new Set(),
   ): number {
     if (nodeId === this._rootNodeId) {
       return count + 1;
     }
-    visited = visited.concat(nodeId);
+    visited.add(nodeId);
     for (const parentNodeId of this.getNodeParentsNodeIds(nodeId)) {
-      if (!visited.includes(parentNodeId)) {
+      if (!visited.has(parentNodeId)) {
         count = this.countNodePathsToRoot(parentNodeId, limit, count, visited);
         if (limit && count >= limit) {
+          visited.delete(nodeId);
           return limit;
         }
       }
     }
+    visited.delete(nodeId);
     return count;
   }
 }
