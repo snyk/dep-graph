@@ -8,6 +8,11 @@ defaults: &defaults
   docker:
     - image: cimg/node:14.19
 
+go_image: &go_image
+  resource_class: small
+  docker:
+    - image: cimg/go:1.24.9
+
 jobs:
   security-scans:
     <<: *defaults
@@ -21,7 +26,7 @@ jobs:
           iac-scan: disabled
           release-branch: master
 
-  test:
+  test_ts:
     <<: *defaults
     working_directory: ~/work
     steps:
@@ -35,6 +40,18 @@ jobs:
       - run:
           name: Test
           command: npm test
+
+  test_go:
+    <<: *go_image
+    working_directory: ~/work
+    steps:
+      - checkout
+      - run:
+          name: Test
+          working_directory: go
+          command: mkdir -p ../testresults && gotestsum --junitfile ../testresults/test-results.xml ./...
+      - store_test_results:
+          path: testresults/
 
   release:
     <<: *defaults
@@ -67,8 +84,14 @@ workflows:
           context:
             - team-analysis-arch
 
-      - test:
-          name: Test
+      - test_ts:
+          name: Test TS code
+          requires:
+            - Scan repository for secrets
+            - Security Scans
+
+      - test_go:
+          name: Test Go code
           requires:
             - Scan repository for secrets
             - Security Scans
@@ -76,7 +99,8 @@ workflows:
       - release:
           name: Release
           requires:
-            - Test
+            - Test TS code
+            - Test Go code
           context: nodejs-lib-release
           filters:
             branches:

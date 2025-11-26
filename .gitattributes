@@ -1,0 +1,2 @@
+# Ignore Go checksum file
+go.sum linguist-generated

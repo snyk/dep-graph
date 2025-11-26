@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.1.0",
+  "pkgManager": {
+    "name": "npm"
+  },
+  "pkgs": [
+    {
+      "id": "demo-app-for-test@1.1.1",
+      "info": {
+        "name": "demo-app-for-test",
+        "version": "1.1.1"
+      }
+    },
+    {
+      "id": "express@4.4.0",
+      "info": {
+        "name": "express",
+        "version": "4.4.0"
+      }
+    },
+    {
+      "id": "ws@1.0.0",
+      "info": {
+        "name": "ws",
+        "version": "1.0.0"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "root-node",
+        "pkgId": "demo-app-for-test@1.1.1",
+        "deps": [
+          {
+            "nodeId": "express@4.4.0"
+          },
+          {
+            "nodeId": "ws@1.0.0"
+          }
+        ]
+      },
+      {
+        "nodeId": "express@4.4.0",
+        "pkgId": "express@4.4.0",
+        "deps": []
+      },
+      {
+        "nodeId": "ws@1.0.0",
+        "pkgId": "ws@1.0.0",
+        "deps": []
+      }
+    ]
+  }
+}
