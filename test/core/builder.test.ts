@@ -16,6 +16,144 @@ describe('builder', () => {
     expect(depGraph.getDepPkgs()).toHaveLength(0);
   });
 
+  describe('constructor with nodeInfo for root node', () => {
+    it('should set nodeInfo on root node when provided', () => {
+      const rootPkg = { name: 'my-app', version: '1.0.0' };
+      const nodeInfo = {
+        labels: {
+          'maven:build_scope': 'compile',
+        },
+      };
+
+      const builderWithNodeInfo = new DepGraphBuilder(
+        { name: 'maven' },
+        rootPkg,
+        nodeInfo,
+      );
+
+      const depGraph = builderWithNodeInfo.build();
+      const graphJson = depGraph.toJSON();
+
+      const rootNode = graphJson.graph.nodes.find(
+        (node) => node.nodeId === 'root-node',
+      );
+
+      expect(rootNode).toBeDefined();
+      expect(rootNode!.info).toBeDefined();
+      expect(rootNode!.info!.labels).toBeDefined();
+      expect(rootNode!.info!.labels!['maven:build_scope']).toEqual('compile');
+    });
+
+    it('should not set info on root node when nodeInfo is not provided', () => {
+      const rootPkg = { name: 'my-app', version: '1.0.0' };
+
+      const builderWithoutNodeInfo = new DepGraphBuilder(
+        { name: 'maven' },
+        rootPkg,
+      );
+
+      const depGraph = builderWithoutNodeInfo.build();
+      const graphJson = depGraph.toJSON();
+
+      const rootNode = graphJson.graph.nodes.find(
+        (node) => node.nodeId === 'root-node',
+      );
+
+      expect(rootNode).toBeDefined();
+      expect(rootNode!.info).toBeUndefined();
+    });
+
+    it('should preserve root node info alongside dependency node info', () => {
+      const rootPkg = { name: 'my-app', version: '1.0.0' };
+      const rootNodeInfo = {
+        labels: {
+          'maven:build_scope': 'compile',
+        },
+      };
+
+      const builderWithNodeInfo = new DepGraphBuilder(
+        { name: 'maven' },
+        rootPkg,
+        rootNodeInfo,
+      );
+
+      // Add a dependency with its own nodeInfo
+      const depPkg = { name: 'dep-pkg', version: '2.0.0' };
+      const depNodeInfo = {
+        labels: {
+          'maven:build_scope': 'test',
+        },
+      };
+      builderWithNodeInfo.addPkgNode(depPkg, 'dep-node', depNodeInfo);
+      builderWithNodeInfo.connectDep('root-node', 'dep-node');
+
+      const depGraph = builderWithNodeInfo.build();
+      const graphJson = depGraph.toJSON();
+
+      // Check root node has its info
+      const rootNode = graphJson.graph.nodes.find(
+        (node) => node.nodeId === 'root-node',
+      );
+      expect(rootNode!.info!.labels!['maven:build_scope']).toEqual('compile');
+
+      // Check dependency node has its own info
+      const depNode = graphJson.graph.nodes.find(
+        (node) => node.nodeId === 'dep-node',
+      );
+      expect(depNode!.info!.labels!['maven:build_scope']).toEqual('test');
+    });
+
+    it('should handle nodeInfo with multiple labels', () => {
+      const rootPkg = { name: 'my-app', version: '1.0.0' };
+      const nodeInfo = {
+        labels: {
+          'maven:build_scope': 'compile',
+          scope: 'prod' as const,
+        },
+      };
+
+      const builderWithNodeInfo = new DepGraphBuilder(
+        { name: 'maven' },
+        rootPkg,
+        nodeInfo,
+      );
+
+      const depGraph = builderWithNodeInfo.build();
+      const graphJson = depGraph.toJSON();
+
+      const rootNode = graphJson.graph.nodes.find(
+        (node) => node.nodeId === 'root-node',
+      );
+
+      expect(rootNode!.info!.labels!['maven:build_scope']).toEqual('compile');
+      expect(rootNode!.info!.labels!['scope']).toEqual('prod');
+    });
+
+    it('should handle empty labels object in nodeInfo', () => {
+      const rootPkg = { name: 'my-app', version: '1.0.0' };
+      const nodeInfo = {
+        labels: {},
+      };
+
+      const builderWithNodeInfo = new DepGraphBuilder(
+        { name: 'maven' },
+        rootPkg,
+        nodeInfo,
+      );
+
+      const depGraph = builderWithNodeInfo.build();
+      const graphJson = depGraph.toJSON();
+
+      const rootNode = graphJson.graph.nodes.find(
+        (node) => node.nodeId === 'root-node',
+      );
+
+      // With empty labels, info should still be present but empty
+      expect(rootNode!.info).toBeDefined();
+      expect(rootNode!.info!.labels).toEqual({});
+    });
+  });
+
   describe('when using addPkgNode', () => {
     it('should throw error if trying to add root node in dependencies', () => {
       const pkgToAdd = { name: 'json' };

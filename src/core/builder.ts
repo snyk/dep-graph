@@ -23,7 +23,11 @@ class DepGraphBuilder {
   private _rootNodeId: string;
   private _rootPkgId: string;
 
-  public constructor(pkgManager: types.PkgManager, rootPkg?: types.PkgInfo) {
+  public constructor(
+    pkgManager: types.PkgManager,
+    rootPkg?: types.PkgInfo,
+    nodeInfo?: types.NodeInfo,
+  ) {
     const graph = new graphlib.Graph({
       directed: true,
       multigraph: false,
@@ -40,7 +44,7 @@ class DepGraphBuilder {
     this._rootPkgId = DepGraphBuilder._getPkgId(rootPkg);
     this._pkgs[this._rootPkgId] = rootPkg;
 
-    graph.setNode(this._rootNodeId, { pkgId: this._rootPkgId });
+    graph.setNode(this._rootNodeId, { pkgId: this._rootPkgId, info: nodeInfo });
     this._pkgNodes[this._rootPkgId] = new Set([this._rootNodeId]);
 
     this._graph = graph;
