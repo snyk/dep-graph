@@ -168,3 +168,24 @@ func TestGetPathsToPkg_Cycles(t *testing.T) {
 
 	assert.Equal(t, [][]string{{"simple-app@1.0.0", "trucolor@4.0.4", "term-ng@3.0.4", "yargs@17.7.2"}}, paths)
 }
+
+func TestNode_IsPruned(t *testing.T) {
+	n := &Node{
+		NodeID: "foobar@1.2.3",
+		PkgID:  "foobar@1.2.3",
+	}
+
+	assert.False(t, n.IsPruned())
+
+	n = &Node{
+		NodeID: "foobar@1.2.3|2",
+		PkgID:  "foobar@1.2.3",
+		Info: &NodeInfo{
+			Labels: map[string]string{
+				"pruned": "true",
+			},
+		},
+	}
+
+	assert.True(t, n.IsPruned())
+}

@@ -251,3 +251,11 @@ func (dg *DepGraph) indexNodes() error {
 
 	return nil
 }
+
+func (n *Node) IsPruned() bool {
+	if n.Info == nil || n.Info.Labels == nil {
+		return false
+	}
+
+	return n.Info.Labels["pruned"] != ""
+}
