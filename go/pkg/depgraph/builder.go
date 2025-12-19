@@ -42,7 +42,7 @@ func NewBuilder(pkgManager *PkgManager, rootPkg *PkgInfo) (*Builder, error) {
 		nodes:         orderedmap.NewOrderedMap[string, *Node](),
 	}
 
-	b.addNode(b.rootNodeID, rootPkg)
+	b.addNode(b.rootNodeID, rootPkg, nil)
 
 	return b, nil
 }
@@ -101,10 +101,14 @@ func (b *Builder) GetRootNode() *Node {
 }
 
 func (b *Builder) AddNode(nodeID string, pkgInfo *PkgInfo) *Node {
-	return b.addNode(nodeID, pkgInfo)
+	return b.addNode(nodeID, pkgInfo, nil)
 }
 
-func (b *Builder) addNode(nodeID string, pkgInfo *PkgInfo) *Node {
+func (b *Builder) AddNodeWithInfo(nodeID string, pkgInfo *PkgInfo, nodeInfo *NodeInfo) *Node {
+	return b.addNode(nodeID, pkgInfo, nodeInfo)
+}
+
+func (b *Builder) addNode(nodeID string, pkgInfo *PkgInfo, nodeInfo *NodeInfo) *Node {
 	if n, ok := b.nodes.Get(nodeID); ok {
 		return n
 	}
@@ -118,6 +122,7 @@ func (b *Builder) addNode(nodeID string, pkgInfo *PkgInfo) *Node {
 	b.nodes.Set(nodeID, &Node{
 		NodeID: nodeID,
 		PkgID:  pkgID,
+		Info:   nodeInfo,
 		Deps:   make([]Dependency, 0),
 	})
 
