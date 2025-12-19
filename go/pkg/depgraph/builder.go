@@ -65,12 +65,14 @@ func (b *Builder) Build() *DepGraph {
 		nodeID := node.NodeID
 		pkgID := node.PkgID
 		deps := node.Deps
+		info := node.Info
 		pkg := b.pkgs.GetOrDefault(pkgID, nil)
 
 		dg.pkgIdx[pkg.ID] = pkg
 		dg.Graph.Nodes[i] = Node{
 			NodeID: nodeID,
 			PkgID:  pkgID,
+			Info:   info,
 			Deps:   deps,
 		}
 
@@ -98,8 +100,22 @@ func (b *Builder) GetRootNode() *Node {
 	return b.nodes.GetOrDefault(b.rootNodeID, nil)
 }
 
-func (b *Builder) AddNode(nodeID string, pkgInfo *PkgInfo) *Node {
-	return b.addNode(nodeID, pkgInfo)
+type nodeOpt = func(*Node)
+
+func WithNodeInfo(info *NodeInfo) nodeOpt {
+	return func(node *Node) {
+		node.Info = info
+	}
+}
+
+func (b *Builder) AddNode(nodeID string, pkgInfo *PkgInfo, opts ...nodeOpt) *Node {
+	node := b.addNode(nodeID, pkgInfo)
+
+	for _, opt := range opts {
+		opt(node)
+	}
+
+	return node
 }
 
 func (b *Builder) addNode(nodeID string, pkgInfo *PkgInfo) *Node {
