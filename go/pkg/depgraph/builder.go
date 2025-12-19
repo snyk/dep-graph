@@ -65,12 +65,14 @@ func (b *Builder) Build() *DepGraph {
 		nodeID := node.NodeID
 		pkgID := node.PkgID
 		deps := node.Deps
+		info := node.Info
 		pkg := b.pkgs.GetOrDefault(pkgID, nil)
 
 		dg.pkgIdx[pkg.ID] = pkg
 		dg.Graph.Nodes[i] = Node{
 			NodeID: nodeID,
 			PkgID:  pkgID,
+			Info:   info,
 			Deps:   deps,
 		}
 
