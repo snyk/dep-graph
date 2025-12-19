@@ -96,7 +96,7 @@ func TestBuilder_Build(t *testing.T) {
 	builder, err := NewBuilder(&PkgManager{Name: "golang"}, nil)
 	require.NoError(t, err)
 
-	builder.AddNodeWithInfo("dep@1.0.0", &PkgInfo{Name: "dep", Version: "1.0.0"}, &NodeInfo{
+	builder.AddNode("dep@1.0.0", &PkgInfo{Name: "dep", Version: "1.0.0"}, WithNodeInfo(&NodeInfo{
 		VersionProvenance: &VersionProvenance{
 			Type:     "file",
 			Location: "deps.txt",
@@ -105,7 +105,7 @@ func TestBuilder_Build(t *testing.T) {
 		Labels: map[string]string{
 			"scope": "prod",
 		},
-	})
+	}))
 
 	dg := builder.Build()
 
