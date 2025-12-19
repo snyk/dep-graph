@@ -96,10 +96,30 @@ func TestBuilder_Build(t *testing.T) {
 	builder, err := NewBuilder(&PkgManager{Name: "golang"}, nil)
 	require.NoError(t, err)
 
+	node := builder.AddNode("dep@1.0.0", &PkgInfo{Name: "dep", Version: "1.0.0"})
+	node.Info = &NodeInfo{
+		VersionProvenance: &VersionProvenance{
+			Type:     "file",
+			Location: "deps.txt",
+			Property: &Property{Name: "dep"},
+		},
+		Labels: map[string]string{
+			"scope": "prod",
+		},
+	}
+
 	dg := builder.Build()
 
 	assert.NotNil(t, dg.rootPkg)
 	assert.Equal(t, &Pkg{ID: "_root@unknown", Info: PkgInfo{Name: "_root", Version: "unknown"}}, dg.rootPkg)
+
+	require.Len(t, dg.Graph.Nodes, 2)
+	depNode := dg.Graph.Nodes[1]
+	require.NotNil(t, depNode.Info)
+	assert.Equal(t, "file", depNode.Info.VersionProvenance.Type)
+	assert.Equal(t, "deps.txt", depNode.Info.VersionProvenance.Location)
+	assert.Equal(t, "dep", depNode.Info.VersionProvenance.Property.Name)
+	assert.Equal(t, "prod", depNode.Info.Labels["scope"])
 }
 
 func TestBuilder_Build_GetPkg(t *testing.T) {
