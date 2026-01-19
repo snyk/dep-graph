@@ -168,3 +168,33 @@ func TestGetPathsToPkg_Cycles(t *testing.T) {
 
 	assert.Equal(t, [][]string{{"simple-app@1.0.0", "trucolor@4.0.4", "term-ng@3.0.4", "yargs@17.7.2"}}, paths)
 }
+
+func TestValidateGraph_ValidGraph(t *testing.T) {
+	depGraph, err := UnmarshalJSON(fixedDepGraph)
+	require.NoError(t, err)
+
+	err = depGraph.ValidateGraph()
+	assert.NoError(t, err)
+}
+
+func TestValidateGraph_RootReferencedAsDependency(t *testing.T) {
+	depGraph := &DepGraph{
+		SchemaVersion: "1.1.0",
+		PkgManager:    PkgManager{Name: "npm"},
+		Pkgs: []Pkg{
+			{ID: "root@1.0.0", Info: PkgInfo{Name: "root", Version: "1.0.0"}},
+			{ID: "dep-a@1.0.0", Info: PkgInfo{Name: "dep-a", Version: "1.0.0"}},
+		},
+		Graph: Graph{
+			RootNodeID: "root-node",
+			Nodes: []Node{
+				{NodeID: "root-node", PkgID: "root@1.0.0", Deps: []Dependency{{NodeID: "dep-a@1.0.0"}}},
+				{NodeID: "dep-a@1.0.0", PkgID: "dep-a@1.0.0", Deps: []Dependency{{NodeID: "root-node"}}},
+			},
+		},
+	}
+
+	err := depGraph.ValidateGraph()
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), `dependency graph root "root-node" is referenced as a dependency`)
+}

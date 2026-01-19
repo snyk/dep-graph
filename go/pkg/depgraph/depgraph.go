@@ -251,3 +251,23 @@ func (dg *DepGraph) indexNodes() error {
 
 	return nil
 }
+
+func (dg *DepGraph) ValidateGraph() error {
+	if err := dg.validateRootNotReferenced(); err != nil {
+		return fmt.Errorf("failed to validate graph: %w", err)
+	}
+	return nil
+}
+
+func (dg *DepGraph) validateRootNotReferenced() error {
+	rootNodeID := dg.Graph.RootNodeID
+	for _, node := range dg.Graph.Nodes {
+		for _, dep := range node.Deps {
+			if dep.NodeID == rootNodeID {
+				return fmt.Errorf("dependency graph root %q is referenced as a dependency", rootNodeID)
+			}
+		}
+	}
+
+	return nil
+}
