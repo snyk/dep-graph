@@ -687,7 +687,7 @@ test('fromJSON a pkg missing info field', () => {
       name: 'pip',
     },
     pkgs: [
-      { id: 'toor', info: { name: 'toor', version: '1.0.0' } },
+      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
       { id: 'foo@2' },
     ],
     graph: {
