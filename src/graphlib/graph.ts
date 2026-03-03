@@ -429,7 +429,6 @@ export class Graph {
     v = edgeObj.v;
     w = edgeObj.w;
 
-    Object.freeze(edgeObj);
     this._edgeObjs[e] = edgeObj;
     this._preds[w].push(v);
     this._sucs[v].push(w);
