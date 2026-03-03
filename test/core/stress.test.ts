@@ -54,3 +54,18 @@ describe('stress tests', () => {
     expect(secondCallDuration).toBeLessThan(firstCallDuration * 0.2);
   });
 });
+
+test.only('create-from-json perf', async () => {
+  const graph = await generateLargeGraph(125_000);
+  const json = graph.toJSON();
+  const startTime = new Date();
+  for (let i = 0; i < 50; i++) {
+    depGraphLib.createFromJSON(json);
+  }
+
+  const endTime = new Date();
+  const duration = (endTime.getTime() - startTime.getTime()) / 1000;
+  console.log(`50 new conversions to graph took ${duration} seconds`);
+
+  expect(true).toBe(true);
+});

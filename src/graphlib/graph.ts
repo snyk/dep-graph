@@ -98,9 +98,6 @@ export class Graph {
   /* Number of nodes in the graph. Should only be changed by the implementation. */
   _nodeCount = 0;
 
-  /* Number of edges in the graph. Should only be changed by the implementation. */
-  _edgeCount = 0;
-
   /* === Graph functions ========= */
 
   isDirected() {
@@ -361,10 +358,6 @@ export class Graph {
     return this;
   }
 
-  edgeCount() {
-    return this._edgeCount;
-  }
-
   edges() {
     return values(this._edgeObjs);
   }
@@ -449,7 +442,6 @@ export class Graph {
     this._edgeObjs[e] = edgeObj;
     incrementOrInitEntry(this._preds[w], v);
     incrementOrInitEntry(this._sucs[v], w);
-    this._edgeCount++;
     return this;
   }
 
@@ -482,7 +474,6 @@ export class Graph {
       delete this._edgeObjs[e];
       decrementOrRemoveEntry(this._preds[w], v);
       decrementOrRemoveEntry(this._sucs[v], w);
-      this._edgeCount--;
     }
     return this;
   }
