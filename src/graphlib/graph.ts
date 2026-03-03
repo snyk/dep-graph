@@ -51,9 +51,7 @@ export class Graph {
   _parent;
   _children;
 
-  _in;
   _preds;
-  _out;
   _sucs;
   _edgeObjs;
   _edgeLabels: { [key: string]: unknown };
@@ -84,14 +82,8 @@ export class Graph {
       this._children[GRAPH_NODE] = {};
     }
 
-    // v -> edgeObj
-    this._in = {};
-
     // u -> v -> Number
     this._preds = {};
-
-    // v -> edgeObj
-    this._out = {};
 
     // v -> w -> Number
     this._sucs = {};
@@ -150,17 +142,10 @@ export class Graph {
     return Object.keys(this._nodes);
   }
 
-  sources() {
-    const self = this;
-    return _filter(this.nodes(), function (v) {
-      return isEmpty(self._in[v]);
-    });
-  }
-
   sinks() {
     const self = this;
     return _filter(this.nodes(), function (v) {
-      return isEmpty(self._out[v]);
+      return isEmpty(self._sucs[v]);
     });
   }
 
@@ -191,9 +176,7 @@ export class Graph {
       this._children[v] = {};
       this._children[GRAPH_NODE][v] = true;
     }
-    this._in[v] = {};
     this._preds[v] = {};
-    this._out[v] = {};
     this._sucs[v] = {};
     ++this._nodeCount;
     return this;
@@ -210,9 +193,6 @@ export class Graph {
   removeNode(v) {
     const self = this;
     if (v in this._nodes) {
-      const removeEdge = function (e) {
-        self.removeEdge(self._edgeObjs[e]);
-      };
       delete this._nodes[v];
       if (this._isCompound) {
         this._removeFromParentsChildList(v);
@@ -222,11 +202,7 @@ export class Graph {
         });
         delete this._children[v];
       }
-      each(Object.keys(this._in[v]), removeEdge);
-      delete this._in[v];
       delete this._preds[v];
-      each(Object.keys(this._out[v]), removeEdge);
-      delete this._out[v];
       delete this._sucs[v];
       --this._nodeCount;
     }
@@ -473,8 +449,6 @@ export class Graph {
     this._edgeObjs[e] = edgeObj;
     incrementOrInitEntry(this._preds[w], v);
     incrementOrInitEntry(this._sucs[v], w);
-    this._in[w][e] = edgeObj;
-    this._out[v][e] = edgeObj;
     this._edgeCount++;
     return this;
   }
@@ -508,44 +482,9 @@ export class Graph {
       delete this._edgeObjs[e];
       decrementOrRemoveEntry(this._preds[w], v);
       decrementOrRemoveEntry(this._sucs[v], w);
-      delete this._in[w][e];
-      delete this._out[v][e];
       this._edgeCount--;
     }
     return this;
-  }
-
-  inEdges(v, u) {
-    const inV = this._in[v];
-    if (inV) {
-      const edges = values(inV);
-      if (!u) {
-        return edges;
-      }
-      return _filter(edges, function (edge) {
-        return edge.v === u;
-      });
-    }
-  }
-
-  outEdges(v, w) {
-    const outV = this._out[v];
-    if (outV) {
-      const edges = values(outV);
-      if (!w) {
-        return edges;
-      }
-      return _filter(edges, function (edge) {
-        return edge.w === w;
-      });
-    }
-  }
-
-  nodeEdges(v, w) {
-    const inEdges = this.inEdges(v, w);
-    if (inEdges) {
-      return inEdges.concat(this.outEdges(v, w));
-    }
   }
 }
 
