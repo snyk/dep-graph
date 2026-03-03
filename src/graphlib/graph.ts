@@ -51,8 +51,8 @@ export class Graph {
   _parent;
   _children;
 
-  _preds;
-  _sucs;
+  _preds: Record<string, string[]>;
+  _sucs: Record<string, string[]>;
   _edgeObjs;
   _edgeLabels: { [key: string]: unknown };
 
@@ -96,7 +96,6 @@ export class Graph {
   }
 
   /* Number of nodes in the graph. Should only be changed by the implementation. */
-  _nodeCount = 0;
 
   /* === Graph functions ========= */
 
@@ -132,7 +131,7 @@ export class Graph {
   }
 
   nodeCount() {
-    return this._nodeCount;
+    return this._nodes.length;
   }
 
   nodes() {
@@ -173,9 +172,8 @@ export class Graph {
       this._children[v] = {};
       this._children[GRAPH_NODE][v] = true;
     }
-    this._preds[v] = {};
-    this._sucs[v] = {};
-    ++this._nodeCount;
+    this._preds[v] = [];
+    this._sucs[v] = [];
     return this;
   }
 
@@ -201,7 +199,6 @@ export class Graph {
       }
       delete this._preds[v];
       delete this._sucs[v];
-      --this._nodeCount;
     }
     return this;
   }
@@ -273,17 +270,11 @@ export class Graph {
   }
 
   predecessors(v) {
-    const predsV = this._preds[v];
-    if (predsV) {
-      return Object.keys(predsV);
-    }
+    return this._preds[v];
   }
 
   successors(v) {
-    const sucsV = this._sucs[v];
-    if (sucsV) {
-      return Object.keys(sucsV);
-    }
+    return this._sucs[v];
   }
 
   neighbors(v) {
@@ -424,10 +415,10 @@ export class Graph {
       throw new Error('Cannot set a named edge when isMultigraph = false');
     }
 
-    // It didn't exist, so we need to create it.
-    // First ensure the nodes exist.
-    this.setNode(v);
-    this.setNode(w);
+    // // It didn't exist, so we need to create it.
+    // // First ensure the nodes exist.
+    // this.setNode(v);
+    // this.setNode(w);
 
     this._edgeLabels[e] = valueSpecified
       ? value
@@ -440,8 +431,8 @@ export class Graph {
 
     Object.freeze(edgeObj);
     this._edgeObjs[e] = edgeObj;
-    incrementOrInitEntry(this._preds[w], v);
-    incrementOrInitEntry(this._sucs[v], w);
+    this._preds[w].push(v);
+    this._sucs[v].push(w);
     return this;
   }
 
@@ -472,24 +463,10 @@ export class Graph {
       w = edge.w;
       delete this._edgeLabels[e];
       delete this._edgeObjs[e];
-      decrementOrRemoveEntry(this._preds[w], v);
-      decrementOrRemoveEntry(this._sucs[v], w);
+      this._preds[w] = this._preds[w].filter((p) => p !== v);
+      this._sucs[v] = this._sucs[v].filter((p) => p !== w);
     }
     return this;
-  }
-}
-
-function incrementOrInitEntry(map, k) {
-  if (map[k]) {
-    map[k]++;
-  } else {
-    map[k] = 1;
-  }
-}
-
-function decrementOrRemoveEntry(map, k) {
-  if (!--map[k]) {
-    delete map[k];
   }
 }
 
