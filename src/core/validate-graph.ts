@@ -35,14 +35,6 @@ export function validateGraph(
     (pkgId) => !pkgNodes[pkgId] || pkgNodes[pkgId].size === 0,
   );
   assert(pkgsWithoutInstances.length === 0, 'not all pkgs have instance nodes');
-
-  for (const pkgId in pkgs) {
-    try {
-      validatePackageURL(pkgs[pkgId] as types.PkgInfo);
-    } catch (e) {
-      throw new ValidationError(`invalid pkg ${pkgId}: ${e}`);
-    }
-  }
 }
 
 export function validatePackageURL(pkg: types.PkgInfo): void {

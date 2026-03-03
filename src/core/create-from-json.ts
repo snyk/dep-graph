@@ -4,7 +4,7 @@ import * as types from './types';
 
 import { DepGraph, DepGraphData } from './types';
 import { ValidationError } from './errors';
-import { validateGraph } from './validate-graph';
+import { validateGraph, validatePackageURL } from './validate-graph';
 import { DepGraphImpl } from './dep-graph';
 
 export const SUPPORTED_SCHEMA_RANGE = '^1.0.0';
@@ -27,6 +27,12 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
   for (const { id, info } of depGraphData.pkgs) {
     assertValidPkg(id, info, pkgs);
     pkgs[id] = info.version ? info : { ...info, version: undefined };
+
+    try {
+      validatePackageURL(pkgs[id]);
+    } catch (e) {
+      throw new ValidationError(`invalid pkg ${id}: ${e}`);
+    }
   }
 
   const rootNodeId = depGraphData.graph.rootNodeId;
