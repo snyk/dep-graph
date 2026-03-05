@@ -103,12 +103,6 @@ export class Graph {
     this._edgeLabels = {};
   }
 
-  /* Number of nodes in the graph. Should only be changed by the implementation. */
-  _nodeCount = 0;
-
-  /* Number of edges in the graph. Should only be changed by the implementation. */
-  _edgeCount = 0;
-
   /* === Graph functions ========= */
 
   isDirected() {
@@ -142,11 +136,11 @@ export class Graph {
     return this;
   }
 
-  nodeCount() {
-    return this._nodeCount;
+  nodeCount(): number {
+    return this.nodes.length;
   }
 
-  nodes() {
+  nodes(): string[] {
     return Object.keys(this._nodes);
   }
 
@@ -195,7 +189,6 @@ export class Graph {
     this._preds[v] = {};
     this._out[v] = {};
     this._sucs[v] = {};
-    ++this._nodeCount;
     return this;
   }
 
@@ -228,7 +221,6 @@ export class Graph {
       each(Object.keys(this._out[v]), removeEdge);
       delete this._out[v];
       delete this._sucs[v];
-      --this._nodeCount;
     }
     return this;
   }
@@ -385,11 +377,11 @@ export class Graph {
     return this;
   }
 
-  edgeCount() {
-    return this._edgeCount;
+  edgeCount(): number {
+    return this.edges.length;
   }
 
-  edges() {
+  edges(): Edge[] {
     return values(this._edgeObjs);
   }
 
@@ -475,7 +467,6 @@ export class Graph {
     incrementOrInitEntry(this._sucs[v], w);
     this._in[w][e] = edgeObj;
     this._out[v][e] = edgeObj;
-    this._edgeCount++;
     return this;
   }
 
@@ -510,7 +501,6 @@ export class Graph {
       decrementOrRemoveEntry(this._sucs[v], w);
       delete this._in[w][e];
       delete this._out[v][e];
-      this._edgeCount--;
     }
     return this;
   }
