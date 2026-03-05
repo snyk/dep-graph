@@ -99,8 +99,9 @@ describe('validatePackageURL', () => {
           purl: 'pkg:deb/debian/foo%2Fbar@1.2.3',
         },
       ],
-    ])('should throw on invalid purl: %s', (_testCaseName, pkg) => {
-      expect(() => validatePackageURL(pkg)).toThrow();
+    ])('should delete invalid purl: %s', (_testCaseName, pkg) => {
+      expect(() => validatePackageURL(pkg)).not.toThrow();
+      expect(pkg.purl).toBeUndefined();
     });
   });
 
@@ -151,8 +152,9 @@ describe('validatePackageURL', () => {
           purl: 'pkg:cocoapods/bar@1.2.3#baz',
         },
       ],
-    ])('should throw on invalid purl: %s', (name, pkg) => {
-      expect(() => validatePackageURL(pkg)).toThrow();
+    ])('should delete invalid purl: %s', (name, pkg) => {
+      expect(() => validatePackageURL(pkg)).not.toThrow();
+      expect(pkg.purl).toBeUndefined();
     });
   });
 
@@ -174,7 +176,7 @@ describe('validatePackageURL', () => {
           purl: 'pkg:composer/vendor/bar@1.2.3',
         },
       ],
-    ])('validates composer Purls: %s', (name, pkg) => {
+    ])('validates composer purls: %s', (name, pkg) => {
       expect(() => validatePackageURL(pkg)).not.toThrow();
     });
 
@@ -203,8 +205,9 @@ describe('validatePackageURL', () => {
           purl: 'pkg:composer/baz/bar@1.2.3',
         },
       ],
-    ])('should throw on invalid purl: %s', (name, pkg) => {
-      expect(() => validatePackageURL(pkg)).toThrow();
+    ])('should delete invalid purl: %s', (_, pkg) => {
+      expect(() => validatePackageURL(pkg)).not.toThrow();
+      expect(pkg.purl).toBeUndefined();
     });
   });
 
@@ -303,8 +306,17 @@ describe('validatePackageURL', () => {
           purl: 'pkg:golang/bar@1.2.3#pkg/baz',
         },
       ],
-    ])('should throw on invalid purl: %s', (name, pkg) => {
-      expect(() => validatePackageURL(pkg)).toThrow();
+      [
+        'package version does not match purl version',
+        {
+          name: 'bar',
+          version: 'unknown',
+          purl: 'pkg:golang/bar',
+        },
+      ],
+    ])('should delete invalid purl: %s', (_, pkg) => {
+      expect(() => validatePackageURL(pkg)).not.toThrow();
+      expect(pkg.purl).toBeUndefined();
     });
   });
 
@@ -355,8 +367,9 @@ describe('validatePackageURL', () => {
           purl: 'pkg:npm/%40baz/bar@1.2.3',
         },
       ],
-    ])('should throw on invalid purl: %s', (name, pkg) => {
-      expect(() => validatePackageURL(pkg)).toThrow();
+    ])('should delete invalid purl: %s', (name, pkg) => {
+      expect(() => validatePackageURL(pkg)).not.toThrow();
+      expect(pkg.purl).toBeUndefined();
     });
   });
 
@@ -399,8 +412,9 @@ describe('validatePackageURL', () => {
           purl: 'pkg:swift/baz/bar@1.2.3',
         },
       ],
-    ])('should throw on invalid purl: %s', (name, pkg) => {
-      expect(() => validatePackageURL(pkg)).toThrow();
+    ])('should delete invalid purl: %s', (name, pkg) => {
+      expect(() => validatePackageURL(pkg)).not.toThrow();
+      expect(pkg.purl).toBeUndefined();
     });
   });
 });

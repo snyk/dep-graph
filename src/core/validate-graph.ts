@@ -37,11 +37,7 @@ export function validateGraph(
   assert(pkgsWithoutInstances.length === 0, 'not all pkgs have instance nodes');
 
   for (const pkgId in pkgs) {
-    try {
-      validatePackageURL(pkgs[pkgId] as types.PkgInfo);
-    } catch (e) {
-      throw new ValidationError(`invalid pkg ${pkgId}: ${e}`);
-    }
+    validatePackageURL(pkgs[pkgId] as types.PkgInfo);
   }
 }
 
@@ -146,6 +142,6 @@ export function validatePackageURL(pkg: types.PkgInfo): void {
         );
     }
   } catch (e) {
-    throw new ValidationError(`packageURL validation failed: ${e}`);
+    delete pkg.purl;
   }
 }

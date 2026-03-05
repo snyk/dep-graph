@@ -1,8 +1,7 @@
-import { DepGraphBuilder } from '../../src';
-import { ValidationError } from '../../src/core/errors';
+import { DepGraphBuilder, PkgInfo } from '../../src';
 
 describe('builder', () => {
-  let builder;
+  let builder: DepGraphBuilder;
 
   beforeEach(() => {
     builder = new DepGraphBuilder({ name: 'poetry' });
@@ -166,58 +165,52 @@ describe('builder', () => {
       const pkgToAdd = { name: 'json', version: '1.0.0' };
       builder.addPkgNode(pkgToAdd, pkgToAdd.name);
 
-      const packageAdded = builder
-        .getPkgs()
-        .find(
-          (pkg) =>
-            pkg.name === pkgToAdd.name && pkg.version === pkgToAdd.version,
-        );
+      const packageAdded = findAddedPackage(builder, pkgToAdd);
       expect(packageAdded).toBeDefined();
     });
 
-    it('should throw error if invalid package URL is defined', () => {
+    it('should delete invalid PackageURL', () => {
       const pkgToAdd = {
         name: 'json',
-        version: '1.0.0',
+        version: '2.0.0',
         purl: 'this-is:not/a-/purl',
       };
-      expect(() => {
-        builder.addPkgNode(pkgToAdd, pkgToAdd.name);
-      }).toThrow(ValidationError);
+
+      builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      const packageAdded = findAddedPackage(builder, pkgToAdd);
+      expect(packageAdded!.purl).toBeUndefined();
     });
-    it('should throw error if package URL defines different name', () => {
+
+    it('should delete a PackageURL that defines a different name', () => {
       const pkgToAdd = {
         name: 'json',
-        version: '1.0.0',
-        purl: 'pkg:rpm/yaml@1.0.0',
+        version: '2.0.0',
+        purl: 'pkg:rpm/yaml@2.0.0',
       };
-      expect(() => {
-        builder.addPkgNode(pkgToAdd, pkgToAdd.name);
-      }).toThrow(ValidationError);
+      builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      const packageAdded = findAddedPackage(builder, pkgToAdd);
+      expect(packageAdded!.purl).toBeUndefined();
     });
-    it('should throw error if package URL defines different version', () => {
+
+    it('should delete a PackageURL which defines a different version', () => {
       const pkgToAdd = {
         name: 'json',
-        version: '1.0.0',
-        purl: 'pkg:rpm/json@1.0.1',
+        version: '3.0.0',
+        purl: 'pkg:rpm/json@3.0.1',
       };
-      expect(() => {
-        builder.addPkgNode(pkgToAdd, pkgToAdd.name);
-      }).toThrow(ValidationError);
+      builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+
+      const packageAdded = findAddedPackage(builder, pkgToAdd);
+      expect(packageAdded!.purl).toBeUndefined();
     });
-    it('successfully adds package with package URL', () => {
+    it('successfully adds package with PackageURL', () => {
       const pkgToAdd = {
         name: 'json',
         version: '1.0.0',
         purl: 'pkg:rpm/rhel/json@1.0.0?repositories=a,b,c',
       };
       builder.addPkgNode(pkgToAdd, pkgToAdd.name);
-      const packageAdded = builder
-        .getPkgs()
-        .find(
-          (pkg) =>
-            pkg.name === pkgToAdd.name && pkg.version === pkgToAdd.version,
-        );
+      const packageAdded = findAddedPackage(builder, pkgToAdd);
       expect(packageAdded).toEqual(pkgToAdd);
     });
     it('successfully handles maven special case', () => {
@@ -227,35 +220,32 @@ describe('builder', () => {
         purl: 'pkg:maven/com.namespace/foo@1.0.0',
       };
       builder.addPkgNode(pkgToAdd, pkgToAdd.name);
-      const packageAdded = builder
-        .getPkgs()
-        .find(
-          (pkg) =>
-            pkg.name === pkgToAdd.name && pkg.version === pkgToAdd.version,
-        );
+      const packageAdded = findAddedPackage(builder, pkgToAdd);
       expect(packageAdded).toEqual(pkgToAdd);
     });
-    it('fails on missing group id on maven package', () => {
+
+    it('deletes purl with missing group id on maven package', () => {
       // the groupId in maven is the namespace in purl.
       const pkgToAdd = {
-        name: 'foo',
-        version: '1.0.0',
-        purl: 'pkg:maven/com.namespace/foo@1.0.0',
+        name: 'com.acmecorp:foo',
+        version: '2.0.0',
+        purl: 'pkg:maven/foo@2.0.0',
       };
-      expect(() => {
-        builder.addPkgNode(pkgToAdd, pkgToAdd.name);
-      }).toThrow(ValidationError);
+      builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      const packageAdded = findAddedPackage(builder, pkgToAdd);
+      expect(packageAdded!.purl).toBeUndefined();
     });
-    it('fails on different group id on maven package', () => {
+
+    it('deletes purl with different group id on maven package', () => {
       // the groupId in maven is the namespace in purl.
       const pkgToAdd = {
-        name: 'com.namespace:foo',
-        version: '1.0.0',
-        purl: 'pkg:maven/com.other/foo@1.0.0',
+        name: 'com.tyrellcorp:foo',
+        version: '4.0.0',
+        purl: 'pkg:maven/com.other/foo@4.0.0',
       };
-      expect(() => {
-        builder.addPkgNode(pkgToAdd, pkgToAdd.name);
-      }).toThrow(ValidationError);
+      builder.addPkgNode(pkgToAdd, pkgToAdd.name);
+      const packageAdded = findAddedPackage(builder, pkgToAdd);
+      expect(packageAdded!.purl).toBeUndefined();
     });
   });
 
@@ -289,10 +279,22 @@ describe('builder', () => {
       const parentDepInGraph = graphJson.nodes.find(
         (dep) => dep.nodeId === parentDepNodeId,
       );
-      expect(parentDepInGraph.deps.length).toBe(1);
+      expect(parentDepInGraph!.deps.length).toBe(1);
       expect(
-        parentDepInGraph.deps.find((dep) => dep.nodeId === childDepNodeId),
+        parentDepInGraph!.deps.find((dep) => dep.nodeId === childDepNodeId),
       ).toBeDefined();
     });
   });
 });
+
+function findAddedPackage(haystack: DepGraphBuilder, needle: PkgInfo): PkgInfo {
+  const pkg = haystack
+    .getPkgs()
+    .find(
+      ({ name, version }) => name === needle.name && version === needle.version,
+    );
+  if (!pkg) {
+    fail('could not find package');
+  }
+  return pkg;
+}
