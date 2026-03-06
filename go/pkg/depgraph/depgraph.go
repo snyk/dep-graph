@@ -2,8 +2,10 @@ package depgraph
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"sort"
 )
 
 type (
@@ -270,4 +272,97 @@ func (dg *DepGraph) validateRootNotReferenced() error {
 	}
 
 	return nil
+}
+
+// ContentHash returns a deterministic hash of the graph structure for content-addressing.
+// Structurally equivalent graphs (same deps, PkgInfo, NodeInfo; root package may differ) must produce the same hash.
+// If BuildGraph hasn't been called already on the DepGraph, this function will invoke the method first.
+func (dg *DepGraph) ContentHash() []byte {
+	if dg.pkgIdx == nil || dg.nodeIdx == nil {
+		if err := dg.BuildGraph(); err != nil {
+			return nil
+		}
+	}
+	if dg.rootNode == nil {
+		// Empty or invalid graph: still return a deterministic hash
+		h := sha256.Sum256([]byte("depgraph:empty"))
+		return h[:]
+	}
+	visited := make(map[*Node]struct{})
+	w := &bytes.Buffer{}
+	dg.hashGraphRecursively(dg.rootNode, visited, w)
+	sum := sha256.Sum256(w.Bytes())
+	return sum[:]
+}
+
+// getPkgIDFromPkg returns a canonical package id (name@version) for sorting and hashing.
+func getPkgIDFromPkg(pkg *Pkg) string {
+	if pkg == nil {
+		return ""
+	}
+	return getPkgIDFromPkgInfo(&pkg.Info)
+}
+
+func (dg *DepGraph) hashGraphRecursively(node *Node, visited map[*Node]struct{}, w *bytes.Buffer) {
+	if node == nil {
+		return
+	}
+	if _, ok := visited[node]; ok {
+		// Cycle: write deterministic marker (pkgId only, no nodeId)
+		w.WriteString("cycle:")
+		w.WriteString(getPkgIDFromPkg(node.pkg))
+		w.WriteByte(0)
+		return
+	}
+	visited[node] = struct{}{}
+	defer func() { delete(visited, node) }()
+
+	if node.pkg != nil && node != dg.rootNode {
+		// PkgInfo: name, version, purl (canonical order)
+		w.WriteString("pkg:")
+		w.WriteString(node.pkg.Info.Name)
+		w.WriteByte(0)
+		w.WriteString(node.pkg.Info.Version)
+		w.WriteByte(0)
+		w.WriteString(node.pkg.Info.PackageURL)
+		w.WriteByte(0)
+		// NodeInfo
+		if node.Info != nil {
+			w.WriteString("info:")
+			if node.Info.VersionProvenance != nil {
+				w.WriteString(node.Info.VersionProvenance.Type)
+				w.WriteByte(0)
+				w.WriteString(node.Info.VersionProvenance.Location)
+				w.WriteByte(0)
+				if node.Info.VersionProvenance.Property != nil {
+					w.WriteString(node.Info.VersionProvenance.Property.Name)
+				}
+				w.WriteByte(0)
+			}
+			if len(node.Info.Labels) > 0 {
+				keys := make([]string, 0, len(node.Info.Labels))
+				for k := range node.Info.Labels {
+					keys = append(keys, k)
+				}
+				sort.Strings(keys)
+				for _, k := range keys {
+					w.WriteString(k)
+					w.WriteByte(0)
+					w.WriteString(node.Info.Labels[k])
+					w.WriteByte(0)
+				}
+			}
+		}
+	}
+
+	// Sort deps by getPkgId (match TS) then recurse
+	deps := make([]*Node, len(node.deps))
+	copy(deps, node.deps)
+	sort.Slice(deps, func(i, j int) bool {
+		pi, pj := getPkgIDFromPkg(deps[i].pkg), getPkgIDFromPkg(deps[j].pkg)
+		return pi < pj
+	})
+	for _, dep := range deps {
+		dg.hashGraphRecursively(dep, visited, w)
+	}
 }
