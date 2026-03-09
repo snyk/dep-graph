@@ -1,7 +1,6 @@
 import * as graphlib from '../graphlib';
 import * as types from './types';
 import { DepGraphImpl } from './dep-graph';
-import { validatePackageURL } from './validate-graph';
 
 export { DepGraphBuilder };
 
@@ -64,8 +63,6 @@ class DepGraphBuilder {
     if (nodeId === this._rootNodeId) {
       throw new Error('DepGraphBuilder.addPkgNode() cant override root node');
     }
-
-    validatePackageURL(pkgInfo);
 
     const pkgId = DepGraphBuilder._getPkgId(pkgInfo);
 
