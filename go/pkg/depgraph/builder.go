@@ -37,7 +37,7 @@ func NewBuilder(pkgManager *PkgManager, rootPkg *PkgInfo) (*Builder, error) {
 		schemaVersion: schemaVersion,
 		pkgManager:    pkgManager,
 		rootNodeID:    rootNodeID,
-		rootPkgID:     getPkgID(rootPkg),
+		rootPkgID:     getPkgIDFromPkgInfo(rootPkg),
 		pkgs:          orderedmap.NewOrderedMap[string, *Pkg](),
 		nodes:         orderedmap.NewOrderedMap[string, *Node](),
 	}
@@ -122,7 +122,7 @@ func (b *Builder) addNode(nodeID string, pkgInfo *PkgInfo) *Node {
 	if n, ok := b.nodes.Get(nodeID); ok {
 		return n
 	}
-	pkgID := getPkgID(pkgInfo)
+	pkgID := getPkgIDFromPkgInfo(pkgInfo)
 
 	b.pkgs.Set(pkgID, &Pkg{
 		ID:   pkgID,
@@ -156,6 +156,11 @@ func (b *Builder) ConnectNodes(parentNodeID, childNodeID string) error {
 	return nil
 }
 
-func getPkgID(pkgInfo *PkgInfo) string {
+// getPkgIDFromPkgInfo returns the canonical package id (name@version).
+// Nil-safe: returns "" if pkgInfo is nil.
+func getPkgIDFromPkgInfo(pkgInfo *PkgInfo) string {
+	if pkgInfo == nil {
+		return ""
+	}
 	return fmt.Sprintf("%s@%s", pkgInfo.Name, pkgInfo.Version)
 }

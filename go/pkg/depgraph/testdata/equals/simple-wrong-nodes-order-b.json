@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "1.2.0",
+  "pkgManager": {
+    "name": "maven"
+  },
+  "pkgs": [
+    {
+      "id": "root@0.0.0",
+      "info": {
+        "name": "root",
+        "version": "0.0.0"
+      }
+    },
+    {
+      "id": "a@0.0.0",
+      "info": {
+        "name": "a",
+        "version": "0.0.0"
+      }
+    },
+    {
+      "id": "b@0.0.0",
+      "info": {
+        "name": "b",
+        "version": "0.0.0"
+      }
+    },
+    {
+      "id": "c@0.0.0",
+      "info": {
+        "name": "c",
+        "version": "0.0.0"
+      }
+    },
+    {
+      "id": "d@0.0.0",
+      "info": {
+        "name": "d",
+        "version": "0.0.0"
+      }
+    },
+    {
+      "id": "e@0.0.0",
+      "info": {
+        "name": "e",
+        "version": "0.0.0"
+      }
+    }
+  ],
+  "graph": {
+    "rootNodeId": "root-node",
+    "nodes": [
+      {
+        "nodeId": "root-node",
+        "pkgId": "root@0.0.0",
+        "deps": [
+          {
+            "nodeId": "a@0.0.0"
+          },
+          {
+            "nodeId": "b@0.0.0"
+          }
+        ]
+      },
+      {
+        "nodeId": "a@0.0.0",
+        "pkgId": "a@0.0.0",
+        "deps": [
+          {
+            "nodeId": "c@0.0.0|2"
+          }
+        ]
+      },
+      {
+        "nodeId": "b@0.0.0",
+        "pkgId": "b@0.0.0",
+        "deps": [
+          {
+            "nodeId": "c@0.0.0|1"
+          }
+        ]
+      },
+      {
+        "nodeId": "c@0.0.0|1",
+        "pkgId": "c@0.0.0",
+        "deps": [
+          {
+            "nodeId": "d@0.0.0"
+          }
+        ]
+      },
+      {
+        "nodeId": "d@0.0.0",
+        "pkgId": "d@0.0.0",
+        "deps": []
+      },
+      {
+        "nodeId": "c@0.0.0|2",
+        "pkgId": "c@0.0.0",
+        "deps": [
+          {
+            "nodeId": "e@0.0.0"
+          }
+        ]
+      },
+      {
+        "nodeId": "e@0.0.0",
+        "pkgId": "e@0.0.0",
+        "deps": []
+      }
+    ]
+  }
+}
