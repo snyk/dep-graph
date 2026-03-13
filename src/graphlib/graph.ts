@@ -461,7 +461,6 @@ export class Graph {
     v = edgeObj.v;
     w = edgeObj.w;
 
-    Object.freeze(edgeObj);
     this._edgeObjs[e] = edgeObj;
     incrementOrInitEntry(this._preds[w], v);
     incrementOrInitEntry(this._sucs[v], w);
