@@ -13,8 +13,13 @@ export const SUPPORTED_SCHEMA_RANGE = '^1.0.0';
  * Create a DepGraph instance from a JSON representation of a dep graph. This
  * is typically used after passing the graph over the wire as `DepGraphData`.
  */
-export function createFromJSON(depGraphData: DepGraphData): DepGraph {
-  assertValidSchema(depGraphData);
+export function createFromJSON(
+  depGraphData: DepGraphData,
+  shouldValidate = true,
+): DepGraph {
+  if (shouldValidate) {
+    assertValidSchema(depGraphData);
+  }
 
   const graph = new graphlib.Graph({
     directed: true,
@@ -25,7 +30,9 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
   const pkgNodes: { [pkgId: string]: Set<string> } = {};
 
   for (const { id, info } of depGraphData.pkgs) {
-    assertValidPkg(id, info, pkgs);
+    if (shouldValidate) {
+      assertValidPkg(id, info, pkgs);
+    }
     pkgs[id] = info.version ? info : { ...info, version: undefined };
   }
 
@@ -33,13 +40,14 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
   let rootNode;
 
   for (const node of depGraphData.graph.nodes) {
-    assert(!graph.hasNode(node.nodeId), 'more than one node with same id');
-
+    if (shouldValidate) {
+      assert(!graph.hasNode(node.nodeId), 'more than one node with same id');
+      assert(
+        !!pkgs[node.pkgId],
+        'some instance nodes belong to non-existing pkgIds',
+      );
+    }
     if (node.nodeId === rootNodeId) rootNode = node;
-    assert(
-      !!pkgs[node.pkgId],
-      'some instance nodes belong to non-existing pkgIds',
-    );
     const pkgId = node.pkgId;
     if (!pkgNodes[pkgId]) {
       pkgNodes[pkgId] = new Set();
@@ -55,11 +63,13 @@ export function createFromJSON(depGraphData: DepGraphData): DepGraph {
     }
   }
 
-  assert(!!rootNode, `.${rootNodeId} root graph node is missing`);
-  const rootPkgId = rootNode.pkgId;
-  assert(!!pkgs[rootPkgId], `.${rootPkgId} root pkg missing`);
+  if (shouldValidate) {
+    assert(!!rootNode, `.${rootNodeId} root graph node is missing`);
+    const rootPkgId = rootNode.pkgId;
+    assert(!!pkgs[rootPkgId], `.${rootPkgId} root pkg missing`);
 
-  validateGraph(graph, depGraphData.graph.rootNodeId, pkgs, pkgNodes);
+    validateGraph(graph, depGraphData.graph.rootNodeId, pkgs, pkgNodes);
+  }
 
   return new DepGraphImpl(
     graph,
