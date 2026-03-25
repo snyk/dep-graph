@@ -137,7 +137,7 @@ export class Graph {
   }
 
   nodeCount(): number {
-    return this.nodes.length;
+    return this.nodes().length;
   }
 
   nodes(): string[] {
@@ -378,7 +378,7 @@ export class Graph {
   }
 
   edgeCount(): number {
-    return this.edges.length;
+    return this.edges().length;
   }
 
   edges(): Edge[] {
