@@ -153,16 +153,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     let count = 0;
     const limit = opts?.limit;
     for (const nodeId of this.getPkgNodeIds(pkg)) {
-      if (this._countNodePathsToRootCache.has(nodeId)) {
-        count += this._countNodePathsToRootCache.get(nodeId)!;
-      } else {
-        const c = this.countNodePathsToRoot(nodeId, limit);
-        // don't cache if a limit was supplied
-        if (!limit) {
-          this._countNodePathsToRootCache.set(nodeId, c);
-        }
-        count += c;
-      }
+      count += this.countNodePathsToRoot(nodeId, limit);
       if (limit && count >= limit) {
         return limit;
       }
@@ -379,7 +370,50 @@ class DepGraphImpl implements types.DepGraphInternal {
     return allPaths;
   }
 
-  private countNodePathsToRoot(
+  private countNodePathsToRoot(nodeId: string, limit?: number): number {
+    if (this._countNodePathsToRootCache.has(nodeId)) {
+      return this._countNodePathsToRootCache.get(nodeId)!;
+    }
+
+    let count: number;
+    if (nodeId === this._rootNodeId) {
+      count = 1;
+    } else if (this.hasCycles()) {
+      // When cycles exist, we must walk every path individually to avoid
+      // counting paths that loop back on themselves.
+      count = this.countNodePathsToRootBacktracking(nodeId, limit);
+    } else {
+      // Without cycles, we can compute path counts by summing each parent's
+      // count. This avoids the exponential cost of enumerating every path.
+      count = this.countNodePathsToRootMemoized(nodeId, limit);
+    }
+
+    if (!limit) {
+      this._countNodePathsToRootCache.set(nodeId, count);
+    }
+    return count;
+  }
+
+  /**
+   * Memoized path counting, the count is the sum of the counts of the parents.
+   * Only valid for acyclic graphs.
+   */
+  private countNodePathsToRootMemoized(nodeId: string, limit = 0): number {
+    let count = 0;
+    for (const parentNodeId of this.getNodeParentsNodeIds(nodeId)) {
+      count += this.countNodePathsToRoot(parentNodeId, limit);
+      if (limit && count >= limit) {
+        return limit;
+      }
+    }
+    return count;
+  }
+
+  /**
+   * Backtracking approach that enumerates simple paths.
+   * Required for cyclic graphs where memoization is not applicable.
+   */
+  private countNodePathsToRootBacktracking(
     nodeId: string,
     limit = 0,
     count = 0,
@@ -390,12 +424,18 @@ class DepGraphImpl implements types.DepGraphInternal {
     }
     visited.add(nodeId);
     for (const parentNodeId of this.getNodeParentsNodeIds(nodeId)) {
-      if (!visited.has(parentNodeId)) {
-        count = this.countNodePathsToRoot(parentNodeId, limit, count, visited);
-        if (limit && count >= limit) {
-          visited.delete(nodeId);
-          return limit;
-        }
+      if (visited.has(parentNodeId)) {
+        continue;
+      }
+      count = this.countNodePathsToRootBacktracking(
+        parentNodeId,
+        limit,
+        count,
+        visited,
+      );
+      if (limit && count >= limit) {
+        visited.delete(nodeId);
+        return limit;
       }
     }
     visited.delete(nodeId);

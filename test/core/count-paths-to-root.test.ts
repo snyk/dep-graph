@@ -1,5 +1,34 @@
+import { performance } from 'perf_hooks';
 import * as depGraphLib from '../../src';
 import * as helpers from '../helpers';
+
+function buildDiamondChain(layers: number): depGraphLib.DepGraph {
+  const builder = new depGraphLib.DepGraphBuilder(
+    { name: 'npm' },
+    { name: 'root', version: '1.0.0' },
+  );
+  const rootNodeId = 'root-node';
+
+  let prevNodeId = rootNodeId;
+  for (let i = 0; i < layers; i++) {
+    const leftId = `left-${i}`;
+    const rightId = `right-${i}`;
+    const joinId = `join-${i}`;
+
+    builder.addPkgNode({ name: leftId, version: '1.0.0' }, leftId);
+    builder.addPkgNode({ name: rightId, version: '1.0.0' }, rightId);
+    builder.addPkgNode({ name: joinId, version: '1.0.0' }, joinId);
+
+    builder.connectDep(prevNodeId, leftId);
+    builder.connectDep(prevNodeId, rightId);
+    builder.connectDep(leftId, joinId);
+    builder.connectDep(rightId, joinId);
+
+    prevNodeId = joinId;
+  }
+
+  return builder.build();
+}
 
 describe('countPathsToRoot', () => {
   describe('basic', () => {
@@ -120,6 +149,51 @@ describe('countPathsToRoot', () => {
       expect(depGraph.countPathsToRoot(pkg)).toBe(
         depGraph.pkgPathsToRoot(pkg).length,
       );
+    });
+  });
+
+  describe('diamond chain (exponential paths)', () => {
+    it('computes correct count for a small diamond chain', () => {
+      const graph = buildDiamondChain(5);
+      const leafPkg = { name: 'join-4', version: '1.0.0' };
+      expect(graph.countPathsToRoot(leafPkg)).toBe(Math.pow(2, 5));
+    });
+
+    it('handles 50-layer diamond chain (2^50 paths) efficiently', () => {
+      const layers = 50;
+      const graph = buildDiamondChain(layers);
+      const leafPkg = { name: `join-${layers - 1}`, version: '1.0.0' };
+
+      const start = performance.now();
+      const count = graph.countPathsToRoot(leafPkg);
+      const elapsed = performance.now() - start;
+
+      expect(count).toBe(Math.pow(2, layers));
+      expect(elapsed).toBeLessThan(5000);
+    });
+
+    it('respects limit on exponential-path graph', () => {
+      const graph = buildDiamondChain(50);
+      const leafPkg = { name: 'join-49', version: '1.0.0' };
+      expect(graph.countPathsToRoot(leafPkg, { limit: 100 })).toBe(100);
+    });
+
+    it('counts scale linearly with layers, not exponentially', () => {
+      const small = buildDiamondChain(100);
+      const large = buildDiamondChain(400);
+
+      const startSmall = performance.now();
+      small.countPathsToRoot({ name: 'join-99', version: '1.0.0' });
+      const timeSmall = performance.now() - startSmall || 1;
+
+      const startLarge = performance.now();
+      large.countPathsToRoot({ name: 'join-399', version: '1.0.0' });
+      const timeLarge = performance.now() - startLarge || 1;
+
+      // With DP, 4x the layers should take ~4x the time (linear).
+      // With backtracking, it would be 2^300 times slower (never finish).
+      // Use a generous bound to avoid flakiness.
+      expect(timeLarge).toBeLessThan(timeSmall * 50);
     });
   });
 });
