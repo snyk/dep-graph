@@ -325,6 +325,9 @@ async function buildSubtree(
   const depTree: DepTree = {};
   depTree.name = nodePkg.name;
   depTree.version = nodePkg.version;
+  if (nodePkg.purl) {
+    depTree.purl = nodePkg.purl;
+  }
   if (nodeInfo.versionProvenance) {
     depTree.versionProvenance = nodeInfo.versionProvenance;
   }
