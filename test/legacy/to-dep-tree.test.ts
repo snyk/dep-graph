@@ -99,6 +99,12 @@ describe('dep-trees survive serialisation through dep-graphs', () => {
       pkgManagerName: 'maven',
       pkgType: 'maven',
     },
+    {
+      description: 'gomodules dep-tree with purls',
+      path: 'gomodules-dep-tree-with-purls.json',
+      pkgManagerName: 'gomodules',
+      pkgType: 'gomodules',
+    },
   ];
 
   // Recursively delete named properties and properties pointing to
