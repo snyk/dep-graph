@@ -1,0 +1,20 @@
+{
+  "name": "github.com/example/project",
+  "version": "0.0.0",
+  "packageFormatVersion": "gomodules:0.0.1",
+  "purl": "pkg:golang/github.com/example/project@0.0.0",
+  "dependencies": {
+    "github.com/aws/aws-sdk-go": {
+      "name": "github.com/aws/aws-sdk-go",
+      "version": "1.29.4",
+      "purl": "pkg:golang/github.com/aws/aws-sdk-go@v1.29.4",
+      "dependencies": {
+        "github.com/jmespath/go-jmespath": {
+          "name": "github.com/jmespath/go-jmespath",
+          "version": "0.4.0",
+          "purl": "pkg:golang/github.com/jmespath/go-jmespath@v0.4.0"
+        }
+      }
+    }
+  }
+}
