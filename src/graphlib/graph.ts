@@ -57,9 +57,7 @@ export class Graph {
   _parent;
   _children;
 
-  _in: Record<NodeId, Record<EdgeId, Edge>>;
   _preds: Record<NodeId, AdjacencyCounts>;
-  _out: Record<NodeId, Record<EdgeId, Edge>>;
   _sucs: Record<NodeId, AdjacencyCounts>;
   _edgeObjs: Record<EdgeId, Edge>;
   _edgeLabels: Record<EdgeId, unknown>;
@@ -90,14 +88,8 @@ export class Graph {
       this._children[GRAPH_NODE] = {};
     }
 
-    // v -> edgeObj
-    this._in = {};
-
     // u -> v -> Number
     this._preds = {};
-
-    // v -> edgeObj
-    this._out = {};
 
     // v -> w -> Number
     this._sucs = {};
@@ -153,14 +145,14 @@ export class Graph {
   sources(): NodeId[] {
     const self = this;
     return _filter(this.nodes(), (v: NodeId) => {
-      return isEmpty(self._in[v]);
+      return isEmpty(self._preds[v]);
     });
   }
 
   sinks(): NodeId[] {
     const self = this;
     return _filter(this.nodes(), (v: NodeId) => {
-      return isEmpty(self._out[v]);
+      return isEmpty(self._sucs[v]);
     });
   }
 
@@ -191,9 +183,7 @@ export class Graph {
       this._children[v] = {};
       this._children[GRAPH_NODE][v] = true;
     }
-    this._in[v] = {};
     this._preds[v] = {};
-    this._out[v] = {};
     this._sucs[v] = {};
     return this;
   }
@@ -209,9 +199,13 @@ export class Graph {
   removeNode(v: NodeId): Graph {
     const self = this;
     if (v in this._nodes) {
-      const removeEdge = (e: EdgeId) => {
-        self.removeEdge(self._edgeObjs[e]);
-      };
+      const incidentEdges: Edge[] = [];
+      for (const e in this._edgeObjs) {
+        const edge = this._edgeObjs[e];
+        if (edge.v === v || edge.w === v) {
+          incidentEdges.push(edge);
+        }
+      }
       delete this._nodes[v];
       if (this._isCompound) {
         this._removeFromParentsChildList(v);
@@ -221,11 +215,10 @@ export class Graph {
         });
         delete this._children[v];
       }
-      each(Object.keys(this._in[v]), removeEdge);
-      delete this._in[v];
+      for (const edge of incidentEdges) {
+        this.removeEdge(edge);
+      }
       delete this._preds[v];
-      each(Object.keys(this._out[v]), removeEdge);
-      delete this._out[v];
       delete this._sucs[v];
     }
     return this;
@@ -465,8 +458,6 @@ export class Graph {
     this._edgeObjs[e] = edgeObj;
     incrementOrInitEntry(this._preds[w], v);
     incrementOrInitEntry(this._sucs[v], w);
-    this._in[w][e] = edgeObj;
-    this._out[v][e] = edgeObj;
     return this;
   }
 
@@ -499,38 +490,30 @@ export class Graph {
       delete this._edgeObjs[e];
       decrementOrRemoveEntry(this._preds[w], v);
       decrementOrRemoveEntry(this._sucs[v], w);
-      delete this._in[w][e];
-      delete this._out[v][e];
     }
     return this;
   }
 
   inEdges(v: NodeId, u?: NodeId): Edge[] {
-    const inV = this._in[v];
-    if (inV) {
-      const edges = values(inV);
-      if (!u) {
-        return edges;
+    const edges: Edge[] = [];
+    for (const e in this._edgeObjs) {
+      const edge = this._edgeObjs[e];
+      if (edge.w === v && (!u || edge.v === u)) {
+        edges.push(edge);
       }
-      return _filter(edges, function (edge) {
-        return edge.v === u;
-      });
     }
-    return [];
+    return edges;
   }
 
   outEdges(v: NodeId, w?: NodeId): Edge[] {
-    const outV = this._out[v];
-    if (outV) {
-      const edges = values(outV);
-      if (!w) {
-        return edges;
+    const edges: Edge[] = [];
+    for (const e in this._edgeObjs) {
+      const edge = this._edgeObjs[e];
+      if (edge.v === v && (!w || edge.w === w)) {
+        edges.push(edge);
       }
-      return _filter(edges, function (edge) {
-        return edge.w === w;
-      });
     }
-    return [];
+    return edges;
   }
 
   nodeEdges(v: NodeId, w?: NodeId): Edge[] {
