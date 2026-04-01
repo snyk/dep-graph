@@ -20,12 +20,18 @@ export interface GraphOptions {
   compound?: boolean; // default: false.
 }
 
+type NodeId = string;
+type EdgeId = string;
+
 export interface Edge {
-  v: string;
-  w: string;
+  v: NodeId;
+  w: NodeId;
   /** The name that uniquely identifies a multi-edge. */
   name?: string;
 }
+
+/** Map counting edges from the current node to neighbouring nodes */
+type AdjacencyCounts = Record<NodeId, number>;
 
 // Implementation notes:
 //
@@ -46,17 +52,17 @@ export class Graph {
   _defaultNodeLabelFn;
   _defaultEdgeLabelFn;
 
-  _nodes: { [key: string]: unknown };
+  _nodes: Record<NodeId, unknown>;
 
   _parent;
   _children;
 
-  _in;
-  _preds;
-  _out;
-  _sucs;
-  _edgeObjs;
-  _edgeLabels: { [key: string]: unknown };
+  _in: Record<NodeId, Record<EdgeId, Edge>>;
+  _preds: Record<NodeId, AdjacencyCounts>;
+  _out: Record<NodeId, Record<EdgeId, Edge>>;
+  _sucs: Record<NodeId, AdjacencyCounts>;
+  _edgeObjs: Record<EdgeId, Edge>;
+  _edgeLabels: Record<EdgeId, unknown>;
 
   constructor(opts: GraphOptions) {
     this._isDirected = opts?.directed ?? true;
@@ -105,15 +111,15 @@ export class Graph {
 
   /* === Graph functions ========= */
 
-  isDirected() {
+  isDirected(): boolean {
     return this._isDirected;
   }
 
-  isMultigraph() {
+  isMultigraph(): boolean {
     return this._isMultigraph;
   }
 
-  isCompound() {
+  isCompound(): boolean {
     return this._isCompound;
   }
 
@@ -144,24 +150,24 @@ export class Graph {
     return Object.keys(this._nodes);
   }
 
-  sources() {
+  sources(): NodeId[] {
     const self = this;
-    return _filter(this.nodes(), function (v) {
+    return _filter(this.nodes(), (v: NodeId) => {
       return isEmpty(self._in[v]);
     });
   }
 
-  sinks() {
+  sinks(): NodeId[] {
     const self = this;
-    return _filter(this.nodes(), function (v) {
+    return _filter(this.nodes(), (v: NodeId) => {
       return isEmpty(self._out[v]);
     });
   }
 
-  setNodes(vs, value) {
+  setNodes(vs: NodeId[], value?: unknown): Graph {
     const args = arguments;
     const self = this;
-    each(vs, function (v) {
+    each(vs, (v: NodeId) => {
       if (args.length > 1) {
         self.setNode(v, value);
       } else {
@@ -171,7 +177,7 @@ export class Graph {
     return this;
   }
 
-  setNode(v, value?) {
+  setNode(v: NodeId, value?: unknown): Graph {
     if (v in this._nodes) {
       if (arguments.length > 1) {
         this._nodes[v] = value;
@@ -192,7 +198,7 @@ export class Graph {
     return this;
   }
 
-  node(v) {
+  node(v: NodeId): unknown {
     return this._nodes[v];
   }
 
@@ -200,10 +206,10 @@ export class Graph {
     return v in this._nodes;
   }
 
-  removeNode(v) {
+  removeNode(v: NodeId): Graph {
     const self = this;
     if (v in this._nodes) {
-      const removeEdge = function (e) {
+      const removeEdge = (e: EdgeId) => {
         self.removeEdge(self._edgeObjs[e]);
       };
       delete this._nodes[v];
@@ -291,28 +297,23 @@ export class Graph {
     }
   }
 
-  predecessors(v) {
+  predecessors(v: NodeId): NodeId[] {
     const predsV = this._preds[v];
-    if (predsV) {
-      return Object.keys(predsV);
-    }
+    if (!predsV) return [];
+    return Object.keys(predsV);
   }
 
-  successors(v) {
+  successors(v: NodeId): NodeId[] {
     const sucsV = this._sucs[v];
-    if (sucsV) {
-      return Object.keys(sucsV);
-    }
+    if (!sucsV) return [];
+    return Object.keys(sucsV);
   }
 
-  neighbors(v) {
-    const preds = this.predecessors(v);
-    if (preds) {
-      return union(preds, this.successors(v));
-    }
+  neighbors(v: NodeId): NodeId[] {
+    return union(this.predecessors(v), this.successors(v));
   }
 
-  isLeaf(v) {
+  isLeaf(v: NodeId): boolean {
     let neighbors;
     if (this.isDirected()) {
       neighbors = this.successors(v);
@@ -322,7 +323,7 @@ export class Graph {
     return neighbors.length === 0;
   }
 
-  filterNodes(filter) {
+  filterNodes(filter: (v: NodeId) => boolean): Graph {
     const copy = new Graph({
       directed: this._isDirected,
       multigraph: this._isMultigraph,
@@ -469,7 +470,7 @@ export class Graph {
     return this;
   }
 
-  edge(v, w?, name?) {
+  edge(v: NodeId, w?: NodeId, name?: string): unknown {
     const e =
       arguments.length === 1
         ? edgeObjToId(this._isDirected, arguments[0])
@@ -477,7 +478,7 @@ export class Graph {
     return this._edgeLabels[e];
   }
 
-  hasEdge(v, w, name) {
+  hasEdge(v: NodeId, w: NodeId, name?: string): boolean {
     const e =
       arguments.length === 1
         ? edgeObjToId(this._isDirected, arguments[0])
@@ -485,7 +486,7 @@ export class Graph {
     return e in this._edgeLabels;
   }
 
-  removeEdge(v, w?, name?) {
+  removeEdge(v: Edge | NodeId, w?: NodeId, name?: string): Graph {
     const e =
       arguments.length === 1
         ? edgeObjToId(this._isDirected, arguments[0])
@@ -504,7 +505,7 @@ export class Graph {
     return this;
   }
 
-  inEdges(v, u) {
+  inEdges(v: NodeId, u?: NodeId): Edge[] {
     const inV = this._in[v];
     if (inV) {
       const edges = values(inV);
@@ -515,9 +516,10 @@ export class Graph {
         return edge.v === u;
       });
     }
+    return [];
   }
 
-  outEdges(v, w) {
+  outEdges(v: NodeId, w?: NodeId): Edge[] {
     const outV = this._out[v];
     if (outV) {
       const edges = values(outV);
@@ -528,17 +530,15 @@ export class Graph {
         return edge.w === w;
       });
     }
+    return [];
   }
 
-  nodeEdges(v, w) {
-    const inEdges = this.inEdges(v, w);
-    if (inEdges) {
-      return inEdges.concat(this.outEdges(v, w));
-    }
+  nodeEdges(v: NodeId, w?: NodeId): Edge[] {
+    return this.inEdges(v, w).concat(this.outEdges(v, w));
   }
 }
 
-function incrementOrInitEntry(map, k) {
+function incrementOrInitEntry(map: AdjacencyCounts, k: NodeId): void {
   if (map[k]) {
     map[k]++;
   } else {
@@ -546,7 +546,7 @@ function incrementOrInitEntry(map, k) {
   }
 }
 
-function decrementOrRemoveEntry(map, k) {
+function decrementOrRemoveEntry(map: AdjacencyCounts, k: NodeId): void {
   if (!--map[k]) {
     delete map[k];
   }
