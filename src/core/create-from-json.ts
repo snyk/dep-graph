@@ -8,6 +8,9 @@ import { validateGraph } from './validate-graph';
 import { DepGraphImpl } from './dep-graph';
 
 export const SUPPORTED_SCHEMA_RANGE = '^1.0.0';
+export interface Options {
+  shouldValidate?: boolean;
+}
 
 /**
  * Create a DepGraph instance from a JSON representation of a dep graph. This
@@ -15,8 +18,10 @@ export const SUPPORTED_SCHEMA_RANGE = '^1.0.0';
  */
 export function createFromJSON(
   depGraphData: DepGraphData,
-  shouldValidate = true,
+  options: Options = {},
 ): DepGraph {
+  // Validate by default, unless skipped by user provided options
+  const shouldValidate = options?.shouldValidate ?? true;
   if (shouldValidate) {
     assertValidSchema(depGraphData);
   }
