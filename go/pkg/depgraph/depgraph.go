@@ -61,7 +61,7 @@ type (
 
 	NodeInfo struct {
 		VersionProvenance *VersionProvenance `json:"versionProvenance,omitempty"`
-		Labels            map[string]string  `json:"labels,omitempty"`
+		Labels            Labels             `json:"labels,omitempty"`
 	}
 
 	Dependency struct {
