@@ -62,9 +62,10 @@ export function createFromJSON(
     graph.setNode(node.nodeId, { pkgId, info: node.info });
   }
 
+  // Populate the edges in the graph, assuming all nodes already exist.
   for (const node of depGraphData.graph.nodes) {
-    for (const depNodeId of node.deps) {
-      graph.setEdge(node.nodeId, depNodeId.nodeId);
+    for (const depNode of node.deps) {
+      graph.setEdgeExistingNodes(node.nodeId, depNode.nodeId);
     }
   }
 
