@@ -48,6 +48,7 @@
     "typescript": "~5.9.3"
   },
   "dependencies": {
+    "crypto-browserify": "^3.12.0",
     "event-loop-spinner": "^2.1.0",
     "lodash.clone": "^4.5.0",
     "lodash.constant": "^3.0.0",
