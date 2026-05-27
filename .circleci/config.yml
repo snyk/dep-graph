@@ -14,7 +14,7 @@ go_image: &go_image
     - image: cimg/go:1.24.9
 
 jobs:
-  security-scans:
+  security-scans-node:
     <<: *defaults
     steps:
       - checkout
@@ -23,6 +23,22 @@ jobs:
           command: npm install
       - prodsec/security_scans:
           mode: auto
+          open-source-additional-arguments: --exclude=go
+          iac-scan: disabled
+          release-branch: master
+
+  security-scans-go:
+    <<: *go_image
+    working_directory: ~/project/go
+    steps:
+      - checkout:
+          path: ../
+      - run:
+          name: Download Go modules
+          command: go mod download
+      - prodsec/security_scans:
+          mode: auto
+          code-scan: disabled
           iac-scan: disabled
           release-branch: master
 
@@ -79,8 +95,13 @@ workflows:
               ignore:
                 - master
 
-      - security-scans:
-          name: Security Scans
+      - security-scans-node:
+          name: Security Scans (Node)
+          context:
+            - team-analysis-arch
+
+      - security-scans-go:
+          name: Security Scans (Go)
           context:
             - team-analysis-arch
 
