@@ -88,13 +88,11 @@ workflows:
           name: Test TS code
           requires:
             - Scan repository for secrets
-            - Security Scans
 
       - test_go:
           name: Test Go code
           requires:
             - Scan repository for secrets
-            - Security Scans
 
       - release:
           name: Release
