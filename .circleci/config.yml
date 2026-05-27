@@ -91,13 +91,9 @@ workflows:
 
       - test_ts:
           name: Test TS code
-          requires:
-            - Scan repository for secrets
 
       - test_go:
           name: Test Go code
-          requires:
-            - Scan repository for secrets
 
       - release:
           name: Release
