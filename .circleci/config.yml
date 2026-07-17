@@ -80,12 +80,14 @@ workflows:
           name: Scan repository for secrets
           context:
             - snyk-bot-slack
+            - prodsec-orb-runtime
           channel: snyk-vuln-alerts-arch
 
       - security-scans:
           name: Security Scans
           context:
             - team-analysis-arch
+            - prodsec-orb-runtime
 
       - test_ts:
           name: Test TS code
