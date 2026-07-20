@@ -18,6 +18,11 @@ go_node_image: &go_node_image
   docker:
     - image: cimg/go:1.25-node
 
+performance_image: &performance_image
+  resource_class: medium
+  docker:
+    - image: cimg/node:20.20.2@sha256:0d73af8b6c5a1bb95f66f78e919a2e174dcfccbfd602536ba33dea0a74116a02
+
 jobs:
   security-scans:
     <<: *go_node_image
@@ -58,6 +63,35 @@ jobs:
       - store_test_results:
           path: testresults/
 
+  performance_create_from_json:
+    <<: *performance_image
+    working_directory: ~/work
+    steps:
+      - checkout
+      - run:
+          name: Install
+          command: npm install
+      - run:
+          name: Blocking createFromJSON performance regression gate
+          no_output_timeout: 30m
+          command: |
+            mkdir -p benchmark/results/create-from-json-ci
+            benchmark_base=()
+            if [ "${CIRCLE_BRANCH}" = "master" ]; then
+              benchmark_base=(--base HEAD^)
+            fi
+            set +e
+            npm run benchmark:create-from-json:ci -- --output benchmark/results/create-from-json-ci "${benchmark_base[@]}" 2>&1 | tee benchmark/results/create-from-json-ci/ci.log
+            benchmark_status=${PIPESTATUS[0]}
+            set -e
+            echo "${benchmark_status}" > benchmark/results/create-from-json-ci/exit-code
+      - store_artifacts:
+          path: benchmark/results/create-from-json-ci
+          destination: create-from-json-performance
+      - run:
+          name: Enforce createFromJSON performance decision
+          command: exit "$(cat benchmark/results/create-from-json-ci/exit-code)"
+
   release:
     <<: *defaults
     working_directory: ~/work
@@ -95,11 +129,15 @@ workflows:
       - test_go:
           name: Test Go code
 
+      - performance_create_from_json:
+          name: createFromJSON performance regression
+
       - release:
           name: Release
           requires:
             - Test TS code
             - Test Go code
+            - createFromJSON performance regression
           context:
             - nodejs-install
             - github-release

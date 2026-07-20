@@ -15,12 +15,16 @@
   "scripts": {
     "build": "tsc",
     "build-dev": "tsc -w",
-    "format": "prettier --write '{src,test,scripts}/**/*.?s'",
-    "lint:eslint": "eslint 'src/**/*.ts' && (cd test && eslint '**/*.ts')",
-    "lint:prettier": "prettier --check '{src,test,scripts}/**/*.ts'",
+    "format": "prettier --write '{src,test,scripts,benchmark}/**/*.?s'",
+    "lint:benchmark": "eslint 'benchmark/create-from-json/**/*.ts'",
+    "lint:eslint": "eslint 'src/**/*.ts' && (cd test && eslint '**/*.ts') && npm run lint:benchmark",
+    "lint:prettier": "prettier --check '{src,test,scripts}/**/*.ts' 'benchmark/create-from-json/**/*.ts'",
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "test": "jest --runInBand",
     "test:coverage": "npm run test -- --coverage",
+    "benchmark:create-from-json": "node -r ts-node/register/transpile-only benchmark/create-from-json/run.ts",
+    "benchmark:create-from-json:compare": "node -r ts-node/register/transpile-only benchmark/create-from-json/compare.ts",
+    "benchmark:create-from-json:ci": "node -r ts-node/register/transpile-only benchmark/create-from-json/ci.ts",
     "prepare": "npm run build"
   },
   "engines": {
@@ -34,6 +38,7 @@
     "url": "https://github.com/snyk/dep-graph/issues"
   },
   "devDependencies": {
+    "@types/benchmark": "^2.1.5",
     "@types/graphlib": "^2.1.7",
     "@types/jest": "^29",
     "@types/node": "^22",
