@@ -274,11 +274,6 @@ func (dg *DepGraph) validateRootNotReferenced() error {
 	return nil
 }
 
-// ContentHash returns a deterministic hash of the graph structure for content-addressing.
-// Structurally equivalent graphs (same root, deps, PkgInfo, NodeInfo) produce the same hash;
-// any difference, including in the root node, produces a different hash. This mirrors the
-// @snyk/dep-graph TypeScript DepGraph.equals() default (compareRoot=true).
-// If BuildGraph hasn't been called already on the DepGraph, this function will invoke the method first.
 func (dg *DepGraph) ContentHash() []byte {
 	if dg.pkgIdx == nil || dg.nodeIdx == nil {
 		if err := dg.BuildGraph(); err != nil {
@@ -287,14 +282,13 @@ func (dg *DepGraph) ContentHash() []byte {
 	}
 	if dg.rootNode == nil {
 		// Empty or invalid graph: still return a deterministic hash
-		h := sha256.Sum256([]byte("depgraph:empty"))
-		return h[:]
+		hash := sha256.Sum256([]byte("depgraph:empty"))
+		return hash[:]
 	}
-	visited := make(map[*Node]struct{})
-	w := &bytes.Buffer{}
-	dg.hashGraphRecursively(dg.rootNode, visited, w)
-	sum := sha256.Sum256(w.Bytes())
-	return sum[:]
+
+	digest, _ := dg.hashGraphRecursively(dg.rootNode, make(map[*Node]int), make(map[*Node][]byte))
+	hash := sha256.Sum256(digest)
+	return hash[:]
 }
 
 // getPkgIDFromPkg returns a canonical package id (name@version) for sorting and hashing.
@@ -305,67 +299,99 @@ func getPkgIDFromPkg(pkg *Pkg) string {
 	return getPkgIDFromPkgInfo(&pkg.Info)
 }
 
-func (dg *DepGraph) hashGraphRecursively(node *Node, visited map[*Node]struct{}, w *bytes.Buffer) {
-	if node == nil {
-		return
+func (dg *DepGraph) hashGraphRecursively(node *Node, path map[*Node]int, memo map[*Node][]byte) ([]byte, int) {
+	depth := len(path)
+	if cached, ok := memo[node]; ok {
+		return cached, depth
 	}
-	if _, ok := visited[node]; ok {
-		// Cycle: write deterministic marker (pkgId only, no nodeId)
-		w.WriteString("cycle:")
-		w.WriteString(getPkgIDFromPkg(node.pkg))
-		w.WriteByte(0)
-		return
-	}
-	visited[node] = struct{}{}
-	defer func() { delete(visited, node) }()
 
-	if node.pkg != nil {
-		// PkgInfo: name, version, purl (canonical order). The root node is included
-		// to match the TS DepGraph.equals() default (compareRoot=true).
-		w.WriteString("pkg:")
-		w.WriteString(node.pkg.Info.Name)
-		w.WriteByte(0)
-		w.WriteString(node.pkg.Info.Version)
-		w.WriteByte(0)
-		w.WriteString(node.pkg.Info.PackageURL)
-		w.WriteByte(0)
-		// NodeInfo
-		if node.Info != nil {
-			w.WriteString("info:")
-			if node.Info.VersionProvenance != nil {
-				w.WriteString(node.Info.VersionProvenance.Type)
-				w.WriteByte(0)
-				w.WriteString(node.Info.VersionProvenance.Location)
-				w.WriteByte(0)
-				if node.Info.VersionProvenance.Property != nil {
-					w.WriteString(node.Info.VersionProvenance.Property.Name)
-				}
-				w.WriteByte(0)
-			}
-			if len(node.Info.Labels) > 0 {
-				keys := make([]string, 0, len(node.Info.Labels))
-				for k := range node.Info.Labels {
-					keys = append(keys, k)
-				}
-				sort.Strings(keys)
-				for _, k := range keys {
-					w.WriteString(k)
-					w.WriteByte(0)
-					w.WriteString(node.Info.Labels[k])
-					w.WriteByte(0)
-				}
-			}
+	path[node] = depth
+	defer delete(path, node)
+
+	buf := &bytes.Buffer{}
+	writeNodeFields(node, buf)
+
+	minDepthFromCurrentNode := depth
+	currentNodeParticipatesInCycle := false
+	for _, dep := range sortDepsByPkgID(node.deps) {
+		childBytes, minDepthFromChild := dg.childDigest(dep, path, memo)
+		buf.Write(childBytes)
+		if minDepthFromChild < minDepthFromCurrentNode {
+			minDepthFromCurrentNode = minDepthFromChild
+			currentNodeParticipatesInCycle = true
 		}
 	}
 
-	// Sort deps by getPkgId (match TS) then recurse
-	deps := make([]*Node, len(node.deps))
-	copy(deps, node.deps)
-	sort.Slice(deps, func(i, j int) bool {
-		pi, pj := getPkgIDFromPkg(deps[i].pkg), getPkgIDFromPkg(deps[j].pkg)
-		return pi < pj
+	sum := sha256.Sum256(buf.Bytes())
+	digest := sum[:]
+	if currentNodeParticipatesInCycle {
+		return digest, minDepthFromCurrentNode
+	}
+	memo[node] = digest
+	return digest, minDepthFromCurrentNode
+}
+
+func sortDepsByPkgID(deps []*Node) []*Node {
+	sorted := make([]*Node, len(deps))
+	copy(sorted, deps)
+	sort.Slice(sorted, func(i, j int) bool {
+		return getPkgIDFromPkg(sorted[i].pkg) < getPkgIDFromPkg(sorted[j].pkg)
 	})
-	for _, dep := range deps {
-		dg.hashGraphRecursively(dep, visited, w)
+	return sorted
+}
+
+func (dg *DepGraph) childDigest(dep *Node, path map[*Node]int, memo map[*Node][]byte) ([]byte, int) {
+	if d, ok := path[dep]; ok {
+		return cycleMarker(dep), d
+	}
+	return dg.hashGraphRecursively(dep, path, memo)
+}
+
+func cycleMarker(dep *Node) []byte {
+	buf := &bytes.Buffer{}
+	buf.WriteString("cycle:")
+	buf.WriteString(getPkgIDFromPkg(dep.pkg))
+	buf.WriteByte(0)
+	return buf.Bytes()
+}
+
+func writeNodeFields(node *Node, w *bytes.Buffer) {
+	if node.pkg == nil {
+		return
+	}
+	// PkgInfo: name, version, purl (canonical order).
+	w.WriteString("pkg:")
+	w.WriteString(node.pkg.Info.Name)
+	w.WriteByte(0)
+	w.WriteString(node.pkg.Info.Version)
+	w.WriteByte(0)
+	w.WriteString(node.pkg.Info.PackageURL)
+	w.WriteByte(0)
+	// NodeInfo
+	if node.Info != nil {
+		w.WriteString("info:")
+		if node.Info.VersionProvenance != nil {
+			w.WriteString(node.Info.VersionProvenance.Type)
+			w.WriteByte(0)
+			w.WriteString(node.Info.VersionProvenance.Location)
+			w.WriteByte(0)
+			if node.Info.VersionProvenance.Property != nil {
+				w.WriteString(node.Info.VersionProvenance.Property.Name)
+			}
+			w.WriteByte(0)
+		}
+		if len(node.Info.Labels) > 0 {
+			keys := make([]string, 0, len(node.Info.Labels))
+			for k := range node.Info.Labels {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys {
+				w.WriteString(k)
+				w.WriteByte(0)
+				w.WriteString(node.Info.Labels[k])
+				w.WriteByte(0)
+			}
+		}
 	}
 }

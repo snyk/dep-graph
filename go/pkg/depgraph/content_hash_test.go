@@ -1,7 +1,9 @@
 package depgraph
 
 import (
+	"crypto/sha256"
 	_ "embed"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -171,4 +173,58 @@ func TestContentHash_OneNodeCycleVsNoCycle_DifferentHash(t *testing.T) {
 	b := mustParseContentHash(t, contentHashCyclesOneNodeB)
 
 	assert.NotEqual(t, a.ContentHash(), b.ContentHash(), "graph with self-loop vs graph without cycle must have different hashes")
+}
+
+func TestContentHash_DiamondChain(t *testing.T) {
+	diamonds := 20
+	dg := buildDiamondChain(t, diamonds)
+
+	require.Equalf(t, 3*diamonds+1, len(dg.Graph.Nodes), "node count must be linear in n (n=%d)", diamonds)
+
+	digest := dg.ContentHash()
+	require.Lenf(t, digest, sha256.Size,
+		"ContentHash must return a %d-byte digest for a %d-diamond chain (2^%d paths)", sha256.Size, diamonds, diamonds)
+
+	assert.Equalf(t, digest, dg.ContentHash(), "ContentHash must be deterministic (n=%d)", diamonds)
+}
+
+func buildDiamondChain(t *testing.T, n int) *DepGraph {
+	t.Helper()
+	dg := New()
+	dg.SchemaVersion = "1.3.0"
+	dg.PkgManager = PkgManager{Name: "test"}
+
+	addPkg := func(id string) {
+		dg.Pkgs = append(dg.Pkgs, Pkg{ID: id, Info: PkgInfo{Name: id, Version: "1.0.0"}})
+	}
+	addNode := func(nodeID, pkgID string, deps ...string) {
+		d := make([]Dependency, len(deps))
+		for i, x := range deps {
+			d[i] = Dependency{NodeID: x}
+		}
+		dg.Graph.Nodes = append(dg.Graph.Nodes, Node{NodeID: nodeID, PkgID: pkgID, Deps: d})
+	}
+	mergePkg := func(i int) string {
+		if i == 0 {
+			return "root"
+		}
+		return fmt.Sprintf("m%d", i)
+	}
+
+	dg.Graph.RootNodeID = "m0"
+	addPkg("root")
+	for i := 0; i < n; i++ {
+		addPkg(fmt.Sprintf("a%d", i))
+		addPkg(fmt.Sprintf("b%d", i))
+		addPkg(fmt.Sprintf("m%d", i+1))
+	}
+
+	for i := 0; i < n; i++ {
+		addNode(fmt.Sprintf("m%d", i), mergePkg(i), fmt.Sprintf("a%d", i), fmt.Sprintf("b%d", i))
+		addNode(fmt.Sprintf("a%d", i), fmt.Sprintf("a%d", i), fmt.Sprintf("m%d", i+1))
+		addNode(fmt.Sprintf("b%d", i), fmt.Sprintf("b%d", i), fmt.Sprintf("m%d", i+1))
+	}
+	addNode(fmt.Sprintf("m%d", n), mergePkg(n)) // leaf
+
+	return dg
 }
