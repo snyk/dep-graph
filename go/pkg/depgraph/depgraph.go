@@ -282,13 +282,10 @@ func (dg *DepGraph) ContentHash() []byte {
 	}
 	if dg.rootNode == nil {
 		// Empty or invalid graph: still return a deterministic hash
-		hash := sha256.Sum256([]byte("depgraph:empty"))
-		return hash[:]
+		return hashOf([]byte("depgraph:empty"))
 	}
-
-	digest, _ := dg.hashGraphRecursively(dg.rootNode, make(map[*Node]int), make(map[*Node][]byte))
-	hash := sha256.Sum256(digest)
-	return hash[:]
+	hash, _ := dg.hashGraphRecursively(dg.rootNode, make(map[*Node]int), make(map[*Node][]byte))
+	return hash
 }
 
 // getPkgIDFromPkg returns a canonical package id (name@version) for sorting and hashing.
@@ -322,13 +319,18 @@ func (dg *DepGraph) hashGraphRecursively(node *Node, path map[*Node]int, memo ma
 		}
 	}
 
-	sum := sha256.Sum256(buf.Bytes())
-	digest := sum[:]
+	hash := hashOf(buf.Bytes())
 	if currentNodeParticipatesInCycle {
-		return digest, minDepthFromCurrentNode
+		return hash, minDepthFromCurrentNode
 	}
-	memo[node] = digest
-	return digest, minDepthFromCurrentNode
+	memo[node] = hash
+	return hash, minDepthFromCurrentNode
+}
+
+func hashOf(buf []byte) []byte {
+	sum := sha256.Sum256(buf)
+	hash := sum[:]
+	return hash
 }
 
 func sortDepsByPkgID(deps []*Node) []*Node {
