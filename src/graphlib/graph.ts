@@ -461,6 +461,19 @@ export class Graph {
     return this;
   }
 
+  /**
+   * Add an edge (default label, unnamed) without calling setNode on the
+   * endpoints. Both nodes must already exist — used for bulk graph construction.
+   */
+  setEdgeExistingNodes(v: NodeId, w: NodeId): void {
+    const e = edgeArgsToId(this._isDirected, v, w, undefined);
+    const edgeObj = edgeArgsToObj(this._isDirected, v, w, undefined);
+    this._edgeLabels[e] = this._defaultEdgeLabelFn(v, w, undefined);
+    this._edgeObjs[e] = edgeObj;
+    incrementOrInitEntry(this._preds[w], v);
+    incrementOrInitEntry(this._sucs[v], w);
+  }
+
   edge(v: NodeId, w?: NodeId, name?: string): unknown {
     const e =
       arguments.length === 1
@@ -535,9 +548,7 @@ function decrementOrRemoveEntry(map: AdjacencyCounts, k: NodeId): void {
   }
 }
 
-function edgeArgsToId(isDirected, v_, w_, name) {
-  let v = '' + v_;
-  let w = '' + w_;
+function edgeArgsToId(isDirected, v, w, name) {
   if (!isDirected && v > w) {
     const tmp = v;
     v = w;
@@ -552,9 +563,7 @@ function edgeArgsToId(isDirected, v_, w_, name) {
   );
 }
 
-function edgeArgsToObj(isDirected, v_, w_, name): Edge {
-  let v = '' + v_;
-  let w = '' + w_;
+function edgeArgsToObj(isDirected, v, w, name) {
   if (!isDirected && v > w) {
     const tmp = v;
     v = w;
