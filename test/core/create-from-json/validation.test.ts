@@ -1,0 +1,351 @@
+import * as depGraphLib from '../../../src';
+
+import * as helpers from '../../helpers';
+
+test('fromJSON inside schemaVersion', () => {
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
+
+  graphJson.schemaVersion = '1.9.9';
+
+  const depGraph = depGraphLib.createFromJSON(graphJson);
+  expect(depGraph.getPkgs()).toHaveLength(7);
+  expect(depGraph.getDepPkgs()).toHaveLength(6);
+});
+
+test('fromJSON too old schemaVersion', () => {
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
+
+  graphJson.schemaVersion = '0.0.1';
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/schemaVersion/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON too new schemaVersion', () => {
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
+
+  graphJson.schemaVersion = '2.0.0';
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/schemaVersion/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON no schemaVersion', () => {
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
+
+  // @ts-expect-error: We're asserting that when used in an untyped
+  // codebase, this correctly throws. In a typed codebase we can rely on
+  // the compiler catching missing properties
+  delete graphJson.schemaVersion;
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/schemaVersion/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON bad schemaVersion', () => {
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
+
+  graphJson.schemaVersion = 'foo';
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/schemaVersion/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON missing root', () => {
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
+
+  graphJson.graph.nodes = graphJson.graph.nodes.map((x) => {
+    if (x.nodeId === 'root-node') {
+      x.nodeId = 'root-not-named-correctly';
+    }
+    return x;
+  });
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/root/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON missing pkgManager.name', () => {
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
+
+  // @ts-expect-error: We're asserting that when used in an untyped
+  // codebase, this correctly throws. In a typed codebase we can rely on
+  // the compiler catching missing properties
+  delete graphJson.pkgManager.name;
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/pkgManager\.name/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON missing pkgManager', () => {
+  const graphJson: depGraphLib.DepGraphData =
+    helpers.loadFixture('simple-graph.json');
+
+  // @ts-expect-error: We're asserting that when used in an untyped
+  // codebase, this correctly throws. In a typed codebase we can rely on
+  // the compiler catching missing properties
+  delete graphJson.pkgManager;
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/pkgManager/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON root pkg id doesnt match name@version', () => {
+  const graphJson: depGraphLib.DepGraphData = {
+    schemaVersion: '1.0.0',
+    pkgManager: {
+      name: 'pip',
+    },
+    pkgs: [
+      { id: 'rooty', info: { name: 'toor', version: '1.0.0' } },
+      { id: 'foo@2', info: { name: 'foo', version: '2' } },
+    ],
+    graph: {
+      rootNodeId: 'toor',
+      nodes: [
+        {
+          nodeId: 'toor',
+          pkgId: 'rooty',
+          deps: [{ nodeId: 'foo@2|x' }],
+        },
+        {
+          nodeId: 'foo@2|x',
+          pkgId: 'foo@2',
+          deps: [],
+        },
+      ],
+    },
+  };
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/name@version/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON a pkg missing info field', () => {
+  const graphJson = {
+    schemaVersion: '1.0.0',
+    pkgManager: {
+      name: 'pip',
+    },
+    pkgs: [
+      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
+      { id: 'foo@2' },
+    ],
+    graph: {
+      rootNodeId: 'toor',
+      nodes: [
+        {
+          nodeId: 'toor',
+          pkgId: 'toor',
+          deps: [{ nodeId: 'foo@2|x' }],
+        },
+        {
+          nodeId: 'foo@2|x',
+          pkgId: 'foo@2',
+          deps: [],
+        },
+      ],
+    },
+  };
+
+  const go = () =>
+    depGraphLib.createFromJSON(graphJson as any as depGraphLib.DepGraphData);
+  expect(go).toThrow(/\.info/);
+  expect(go).toThrow(/^((?!(of undefined)).)*$/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON a pkg missing name field', () => {
+  const graphJson = {
+    schemaVersion: '1.0.0',
+    pkgManager: {
+      name: 'pip',
+    },
+    pkgs: [
+      { id: 'toor', info: { name: 'toor', version: '1.0.0' } },
+      { id: 'foo@2', info: { version: '2' } },
+    ],
+    graph: {
+      rootNodeId: 'toor',
+      nodes: [
+        {
+          nodeId: 'toor',
+          pkgId: 'toor',
+          deps: [{ nodeId: 'foo@2|x' }],
+        },
+        {
+          nodeId: 'foo@2|x',
+          pkgId: 'foo@2',
+          deps: [],
+        },
+      ],
+    },
+  };
+
+  const go = () =>
+    depGraphLib.createFromJSON(graphJson as any as depGraphLib.DepGraphData);
+  expect(go).toThrow(/name/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON a pkg missing version field', () => {
+  const graphJson = {
+    schemaVersion: '1.0.0',
+    pkgManager: {
+      name: 'pip',
+    },
+    pkgs: [
+      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
+      { id: 'foo@', info: { name: 'foo' } },
+    ],
+    graph: {
+      rootNodeId: 'toor',
+      nodes: [
+        {
+          nodeId: 'toor',
+          pkgId: 'toor@1.0.0',
+          deps: [{ nodeId: 'foo@|x' }],
+        },
+        {
+          nodeId: 'foo@|x',
+          pkgId: 'foo@',
+          deps: [],
+        },
+      ],
+    },
+  };
+
+  const depGraph = depGraphLib.createFromJSON(graphJson as any);
+  helpers.expectSamePkgs(depGraph.getPkgs(), [
+    { name: 'toor', version: '1.0.0' },
+    { name: 'foo' },
+  ]);
+  helpers.expectSamePkgs(depGraph.getDepPkgs(), [{ name: 'foo' }]);
+});
+
+test('fromJSON pkg-id is not name@version', () => {
+  const graphJson: depGraphLib.DepGraphData = {
+    schemaVersion: '1.0.0',
+    pkgManager: {
+      name: 'pip',
+    },
+    pkgs: [
+      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
+      { id: 'foo@3', info: { name: 'foo', version: '2' } },
+    ],
+    graph: {
+      rootNodeId: 'toor',
+      nodes: [
+        {
+          nodeId: 'toor',
+          pkgId: 'toor@1.0.0',
+          deps: [{ nodeId: 'foo@3|x' }],
+        },
+        {
+          nodeId: 'foo@3|x',
+          pkgId: 'foo@3',
+          deps: [],
+        },
+      ],
+    },
+  };
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/name/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON duplicate node-id', () => {
+  const graphJson: depGraphLib.DepGraphData = {
+    schemaVersion: '1.0.0',
+    pkgManager: {
+      name: 'pip',
+    },
+    pkgs: [
+      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
+      { id: 'foo@2', info: { name: 'foo', version: '2' } },
+    ],
+    graph: {
+      rootNodeId: 'toor',
+      nodes: [
+        {
+          nodeId: 'toor',
+          pkgId: 'toor@1.0.0',
+          deps: [{ nodeId: 'foo@2|x' }],
+        },
+        {
+          nodeId: 'foo@2|x',
+          pkgId: 'foo@2',
+          deps: [],
+        },
+        {
+          nodeId: 'foo@2|x',
+          pkgId: 'foo@2',
+          deps: [],
+        },
+      ],
+    },
+  };
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/node.*same id/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+test('fromJSON duplicate pkg-id', () => {
+  const graphJson: depGraphLib.DepGraphData = {
+    schemaVersion: '1.0.0',
+    pkgManager: {
+      name: 'pip',
+    },
+    pkgs: [
+      { id: 'toor@1.0.0', info: { name: 'toor', version: '1.0.0' } },
+      { id: 'foo@2', info: { name: 'foo', version: '2' } },
+      { id: 'foo@2', info: { name: 'foo', version: '2' } },
+    ],
+    graph: {
+      rootNodeId: 'toor',
+      nodes: [
+        {
+          nodeId: 'toor',
+          pkgId: 'toor@1.0.0',
+          deps: [{ nodeId: 'foo@2|x' }],
+        },
+        {
+          nodeId: 'foo@2|x',
+          pkgId: 'foo@2',
+          deps: [],
+        },
+      ],
+    },
+  };
+
+  const go = () => depGraphLib.createFromJSON(graphJson);
+  expect(go).toThrow(/pkg.*same id/);
+  expect(go).toThrow(depGraphLib.Errors.ValidationError);
+});
+
+describe('schema backwards compatibility', () => {
+  test('1.0.0', () => {
+    const graphJson = helpers.loadFixture(
+      'old-schema-compat/simple-graph-1.0.0.json',
+    );
+    const go = () => depGraphLib.createFromJSON(graphJson);
+    expect(go).not.toThrow();
+  });
+});
