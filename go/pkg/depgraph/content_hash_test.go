@@ -3,6 +3,7 @@ package depgraph
 import (
 	"crypto/sha256"
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"testing"
 
@@ -133,6 +134,190 @@ func TestContentHash_WrongNodesOrderAAndB_DifferentHash(t *testing.T) {
 	b := mustParseContentHash(t, contentHashWrongOrderB)
 
 	assert.NotEqual(t, a.ContentHash(), b.ContentHash(), "graphs that differ by which branch reaches d vs e must have different hashes")
+}
+
+// TestContentHash_DifferentDepOrder_SameHash pins the contract that the content
+// hash describes the dependency relationships, not the order a resolver happened
+// to emit them in. Each subtest hashes a fixture and the same fixture with the
+// deps array of every node reversed: the two graphs are equivalent, so the
+// hashes must match. Without this, re-scanning an unchanged project can mint a
+// new dep-graph id purely because the deps came back in a different order.
+func TestContentHash_DifferentDepOrder_SameHash(t *testing.T) {
+	cases := []struct {
+		name  string
+		graph []byte
+	}{
+		{name: "maven graph with deps", graph: contentHashSimple},
+		{name: "maven graph with an extra child", graph: contentHashSimpleOneMoreChild},
+		{name: "graph with a cycle", graph: contentHashCyclesSimpleA},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			a := mustParseContentHash(t, tc.graph)
+			b := mustParseContentHash(t, reverseDepOrder(t, tc.graph))
+
+			hashA := a.ContentHash()
+			hashB := b.ContentHash()
+
+			require.NotNil(t, hashA)
+			require.NotNil(t, hashB)
+			assert.Equal(t, hashA, hashB, "reversing the deps of every node must not change the hash")
+		})
+	}
+}
+
+// TestContentHash_DifferentNodeOrder_SameHash is the sibling of the above for
+// the graph.nodes array: where the nodes are listed is a serialisation detail
+// and must not reach the hash.
+func TestContentHash_DifferentNodeOrder_SameHash(t *testing.T) {
+	a := mustParseContentHash(t, contentHashSimple)
+	b := mustParseContentHash(t, reverseNodeOrder(t, contentHashSimple))
+
+	assert.Equal(t, a.ContentHash(), b.ContentHash(), "reversing the graph.nodes array must not change the hash")
+}
+
+// TestContentHash_TiedSiblingsDifferentDepOrder_SameHash is the dep-ordering
+// case that the fixtures above cannot reach: two siblings resolving to the
+// *same* name@version but carrying different subtrees. Deps are ordered for
+// hashing by name@version alone, so these two siblings tie and their relative
+// order is decided by the order they were listed in. The two graphs below hold
+// the identical set of edges and differ only in that listing order.
+func TestContentHash_TiedSiblingsDifferentDepOrder_SameHash(t *testing.T) {
+	a := buildTiedSiblings(t, "c@1.0.0|1", "c@1.0.0|2")
+	b := buildTiedSiblings(t, "c@1.0.0|2", "c@1.0.0|1")
+
+	hashA := a.ContentHash()
+	hashB := b.ContentHash()
+
+	require.NotNil(t, hashA)
+	require.NotNil(t, hashB)
+	assert.Equal(t, hashA, hashB, "siblings that tie on name@version must not have their listing order leak into the hash")
+}
+
+// buildTiedSiblings returns root -> [first, second], where both children are
+// distinct nodes of pkg c@1.0.0 — one depending on d@0.0.1, the other on
+// d@0.0.2. Callers pass the two child node ids in either order to get two
+// listings of the same graph.
+func buildTiedSiblings(t *testing.T, first, second string) *DepGraph {
+	t.Helper()
+	dg := New()
+	dg.SchemaVersion = "1.3.0"
+	dg.PkgManager = PkgManager{Name: "test"}
+
+	dg.Pkgs = []Pkg{
+		{ID: "root@0.0.0", Info: PkgInfo{Name: "root", Version: "0.0.0"}},
+		{ID: "c@1.0.0", Info: PkgInfo{Name: "c", Version: "1.0.0"}},
+		{ID: "d@0.0.1", Info: PkgInfo{Name: "d", Version: "0.0.1"}},
+		{ID: "d@0.0.2", Info: PkgInfo{Name: "d", Version: "0.0.2"}},
+	}
+
+	dg.Graph.RootNodeID = "root-node"
+	dg.Graph.Nodes = []Node{
+		{NodeID: "root-node", PkgID: "root@0.0.0", Deps: []Dependency{{NodeID: first}, {NodeID: second}}},
+		{NodeID: "c@1.0.0|1", PkgID: "c@1.0.0", Deps: []Dependency{{NodeID: "d@0.0.1"}}},
+		{NodeID: "c@1.0.0|2", PkgID: "c@1.0.0", Deps: []Dependency{{NodeID: "d@0.0.2"}}},
+		{NodeID: "d@0.0.1", PkgID: "d@0.0.1", Deps: []Dependency{}},
+		{NodeID: "d@0.0.2", PkgID: "d@0.0.2", Deps: []Dependency{}},
+	}
+
+	return dg
+}
+
+// TestContentHash_DuplicateDepEdge_SameHash pins that listing the same edge
+// twice describes the same graph as listing it once. The JS implementation
+// stores edges in a graphlib Graph, where setEdge is idempotent, so equals()
+// cannot see a duplicate at all. BuildGraph appends every entry in Deps
+// without de-duplicating, so the duplicated child is hashed twice and the
+// digest moves — the two implementations disagree about the same document.
+func TestContentHash_DuplicateDepEdge_SameHash(t *testing.T) {
+	once := buildRootWithDeps(t, "a@1.0.0")
+	twice := buildRootWithDeps(t, "a@1.0.0", "a@1.0.0")
+
+	hashOnce := once.ContentHash()
+	hashTwice := twice.ContentHash()
+
+	require.NotNil(t, hashOnce)
+	require.NotNil(t, hashTwice)
+	assert.Equal(t, hashOnce, hashTwice, "a dependency listed twice must hash the same as listed once")
+}
+
+// buildRootWithDeps returns root -> deps, where every entry in deps names the
+// single child node a@1.0.0. Callers pass it once or repeatedly to produce a
+// graph with and without a duplicated edge.
+func buildRootWithDeps(t *testing.T, deps ...string) *DepGraph {
+	t.Helper()
+	dg := New()
+	dg.SchemaVersion = "1.3.0"
+	dg.PkgManager = PkgManager{Name: "test"}
+
+	dg.Pkgs = []Pkg{
+		{ID: "root@0.0.0", Info: PkgInfo{Name: "root", Version: "0.0.0"}},
+		{ID: "a@1.0.0", Info: PkgInfo{Name: "a", Version: "1.0.0"}},
+	}
+
+	d := make([]Dependency, len(deps))
+	for i, nodeID := range deps {
+		d[i] = Dependency{NodeID: nodeID}
+	}
+
+	dg.Graph.RootNodeID = "root-node"
+	dg.Graph.Nodes = []Node{
+		{NodeID: "root-node", PkgID: "root@0.0.0", Deps: d},
+		{NodeID: "a@1.0.0", PkgID: "a@1.0.0", Deps: []Dependency{}},
+	}
+
+	return dg
+}
+
+// reverseDepOrder returns the same dep-graph document with the deps array of
+// every node reversed. It rewrites the JSON rather than the parsed graph
+// because UnmarshalJSON already calls BuildGraph, so the adjacency the hash
+// walks is fixed by the time a *DepGraph is in hand.
+func reverseDepOrder(t *testing.T, data []byte) []byte {
+	t.Helper()
+	return rewriteGraph(t, data, func(graph map[string]any) {
+		for _, n := range graph["nodes"].([]any) {
+			node := n.(map[string]any)
+			deps, ok := node["deps"].([]any)
+			if !ok {
+				continue
+			}
+			node["deps"] = reversed(deps)
+		}
+	})
+}
+
+// reverseNodeOrder returns the same dep-graph document with the graph.nodes
+// array reversed.
+func reverseNodeOrder(t *testing.T, data []byte) []byte {
+	t.Helper()
+	return rewriteGraph(t, data, func(graph map[string]any) {
+		graph["nodes"] = reversed(graph["nodes"].([]any))
+	})
+}
+
+func rewriteGraph(t *testing.T, data []byte, mutate func(graph map[string]any)) []byte {
+	t.Helper()
+
+	var doc map[string]any
+	require.NoError(t, json.Unmarshal(data, &doc))
+
+	graph, ok := doc["graph"].(map[string]any)
+	require.True(t, ok, "fixture must have a graph object")
+	mutate(graph)
+
+	out, err := json.Marshal(doc)
+	require.NoError(t, err)
+	return out
+}
+
+func reversed(in []any) []any {
+	out := make([]any, len(in))
+	for i, v := range in {
+		out[len(in)-1-i] = v
+	}
+	return out
 }
 
 func TestContentHash_EmptyGraph_ReturnsNonNil(t *testing.T) {
