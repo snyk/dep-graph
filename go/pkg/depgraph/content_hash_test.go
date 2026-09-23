@@ -224,6 +224,52 @@ func buildTiedSiblings(t *testing.T, first, second string) *DepGraph {
 	return dg
 }
 
+// TestContentHash_DuplicateDepEdge_SameHash pins that listing the same edge
+// twice describes the same graph as listing it once. The JS implementation
+// stores edges in a graphlib Graph, where setEdge is idempotent, so equals()
+// cannot see a duplicate at all. BuildGraph appends every entry in Deps
+// without de-duplicating, so the duplicated child is hashed twice and the
+// digest moves — the two implementations disagree about the same document.
+func TestContentHash_DuplicateDepEdge_SameHash(t *testing.T) {
+	once := buildRootWithDeps(t, "a@1.0.0")
+	twice := buildRootWithDeps(t, "a@1.0.0", "a@1.0.0")
+
+	hashOnce := once.ContentHash()
+	hashTwice := twice.ContentHash()
+
+	require.NotNil(t, hashOnce)
+	require.NotNil(t, hashTwice)
+	assert.Equal(t, hashOnce, hashTwice, "a dependency listed twice must hash the same as listed once")
+}
+
+// buildRootWithDeps returns root -> deps, where every entry in deps names the
+// single child node a@1.0.0. Callers pass it once or repeatedly to produce a
+// graph with and without a duplicated edge.
+func buildRootWithDeps(t *testing.T, deps ...string) *DepGraph {
+	t.Helper()
+	dg := New()
+	dg.SchemaVersion = "1.3.0"
+	dg.PkgManager = PkgManager{Name: "test"}
+
+	dg.Pkgs = []Pkg{
+		{ID: "root@0.0.0", Info: PkgInfo{Name: "root", Version: "0.0.0"}},
+		{ID: "a@1.0.0", Info: PkgInfo{Name: "a", Version: "1.0.0"}},
+	}
+
+	d := make([]Dependency, len(deps))
+	for i, nodeID := range deps {
+		d[i] = Dependency{NodeID: nodeID}
+	}
+
+	dg.Graph.RootNodeID = "root-node"
+	dg.Graph.Nodes = []Node{
+		{NodeID: "root-node", PkgID: "root@0.0.0", Deps: d},
+		{NodeID: "a@1.0.0", PkgID: "a@1.0.0", Deps: []Dependency{}},
+	}
+
+	return dg
+}
+
 // reverseDepOrder returns the same dep-graph document with the deps array of
 // every node reversed. It rewrites the JSON rather than the parsed graph
 // because UnmarshalJSON already calls BuildGraph, so the adjacency the hash
