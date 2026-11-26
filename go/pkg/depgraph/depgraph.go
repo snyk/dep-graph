@@ -336,7 +336,7 @@ func hashOf(buf []byte) []byte {
 func sortDepsByPkgID(deps []*Node) []*Node {
 	sorted := make([]*Node, len(deps))
 	copy(sorted, deps)
-	sort.Slice(sorted, func(i, j int) bool {
+	sort.SliceStable(sorted, func(i, j int) bool {
 		return getPkgIDFromPkg(sorted[i].pkg) < getPkgIDFromPkg(sorted[j].pkg)
 	})
 	return sorted
