@@ -1,7 +1,75 @@
 import * as depGraphLib from '../../src';
 import * as helpers from '../helpers';
 
+const jarNodeId = 'com.example:core:jar@1.0.0';
+const classesDirNodeId = 'com.example:core:java-classes-directory@1.0.0';
+const slf4jApiId = 'org.slf4j:slf4j-api@2.0.9';
+
+function graphWithTiedSiblings(
+  rootDeps: string[],
+  nodeDependingOnSlf4j: string,
+): depGraphLib.DepGraphData {
+  const tiedNode = (nodeId: string) => ({
+    nodeId,
+    pkgId: 'com.example:core@1.0.0',
+    deps: nodeId === nodeDependingOnSlf4j ? [{ nodeId: slf4jApiId }] : [],
+  });
+
+  return {
+    schemaVersion: '1.3.0',
+    pkgManager: { name: 'gradle' },
+    pkgs: [
+      { id: 'root@0.0.0', info: { name: 'root', version: '0.0.0' } },
+      {
+        id: 'com.example:core@1.0.0',
+        info: { name: 'com.example:core', version: '1.0.0' },
+      },
+      {
+        id: slf4jApiId,
+        info: { name: 'org.slf4j:slf4j-api', version: '2.0.9' },
+      },
+    ],
+    graph: {
+      rootNodeId: 'root-node',
+      nodes: [
+        {
+          nodeId: 'root-node',
+          pkgId: 'root@0.0.0',
+          deps: rootDeps.map((nodeId) => ({ nodeId })),
+        },
+        tiedNode(jarNodeId),
+        tiedNode(classesDirNodeId),
+        { nodeId: slf4jApiId, pkgId: slf4jApiId, deps: [] },
+      ],
+    },
+  };
+}
+
 describe('equals', () => {
+  test('tied siblings listed in a different order', async () => {
+    const a = depGraphLib.createFromJSON(
+      graphWithTiedSiblings([jarNodeId, classesDirNodeId], jarNodeId),
+    );
+    const b = depGraphLib.createFromJSON(
+      graphWithTiedSiblings([classesDirNodeId, jarNodeId], jarNodeId),
+    );
+
+    expect(a.equals(b)).toBe(true);
+    expect(b.equals(a)).toBe(true);
+  });
+
+  test('tied siblings with swapped dependencies', async () => {
+    const a = depGraphLib.createFromJSON(
+      graphWithTiedSiblings([jarNodeId, classesDirNodeId], jarNodeId),
+    );
+    const b = depGraphLib.createFromJSON(
+      graphWithTiedSiblings([classesDirNodeId, jarNodeId], classesDirNodeId),
+    );
+
+    expect(a.equals(b)).toBe(false);
+    expect(b.equals(a)).toBe(false);
+  });
+
   test('same graphs', async () => {
     const a = depGraphLib.createFromJSON(
       helpers.loadFixture('equals/simple.json'),

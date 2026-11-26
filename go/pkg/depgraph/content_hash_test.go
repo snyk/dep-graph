@@ -5,7 +5,6 @@ import (
 	_ "embed"
 	"fmt"
 	"math/rand/v2"
-	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -231,46 +230,58 @@ func buildDiamondChain(t *testing.T, n int) *DepGraph {
 	return dg
 }
 
-func TestContentHash_TiedSiblingsUnderWideParent_SameHash(t *testing.T) {
-	rng := rand.New(rand.NewPCG(1, 2))
+const (
+	tiedPkgID        = "com.example:core@1.0.0"
+	jarNodeID        = "com.example:core:jar@1.0.0"
+	classesDirNodeID = "com.example:core:java-classes-directory@1.0.0"
+	slf4jAPIID       = "org.slf4j:slf4j-api@2.0.9"
+)
 
-	want := buildWideParentWithTiedSiblings(rng, 20).ContentHash()
-	require.NotNil(t, want)
+func TestContentHash_TiedSiblingsInAnyListingOrder_SameHash(t *testing.T) {
+	for _, untiedSiblings := range []int{0, 20} {
+		t.Run(fmt.Sprintf("%d untied siblings", untiedSiblings), func(t *testing.T) {
+			rng := rand.New(rand.NewPCG(1, 2))
 
-	for shuffle := range 50 {
-		got := buildWideParentWithTiedSiblings(rng, 20).ContentHash()
-		require.Equalf(t, want, got, "listing the untied siblings in a different order changed the hash (shuffle %d)", shuffle)
+			want := shuffleRootDeps(rng, buildGraphWithTiedSiblings(untiedSiblings, jarNodeID)).ContentHash()
+			require.NotNil(t, want)
+
+			for shuffle := range 50 {
+				got := shuffleRootDeps(rng, buildGraphWithTiedSiblings(untiedSiblings, jarNodeID)).ContentHash()
+				require.Equalf(t, want, got, "listing the root deps in a different order changed the hash (shuffle %d)", shuffle)
+			}
+		})
 	}
 }
 
-func buildWideParentWithTiedSiblings(rng *rand.Rand, untiedSiblings int) *DepGraph {
-	const (
-		tiedPkgID        = "org.slf4j:jcl-over-slf4j@1.7.36"
-		dependencyNodeID = "org.slf4j:jcl-over-slf4j@1.7.36"
-		constraintNodeID = "org.slf4j:jcl-over-slf4j@1.7.36:constraint"
-		slf4jAPIID       = "org.slf4j:slf4j-api@1.7.36"
-	)
+func TestContentHash_TiedSiblingsWithSwappedDependencies_DifferentHash(t *testing.T) {
+	jarDependsOnSlf4j := buildGraphWithTiedSiblings(0, jarNodeID)
+	classesDirDependsOnSlf4j := buildGraphWithTiedSiblings(0, classesDirNodeID)
 
+	assert.NotEqual(t, jarDependsOnSlf4j.ContentHash(), classesDirDependsOnSlf4j.ContentHash())
+}
+
+func buildGraphWithTiedSiblings(untiedSiblings int, nodeDependingOnSlf4j string) *DepGraph {
 	dg := New()
 	dg.SchemaVersion = "1.3.0"
 	dg.PkgManager = PkgManager{Name: "gradle"}
 	dg.Pkgs = []Pkg{
 		{ID: "root@0.0.0", Info: PkgInfo{Name: "root", Version: "0.0.0"}},
-		{ID: tiedPkgID, Info: PkgInfo{Name: "org.slf4j:jcl-over-slf4j", Version: "1.7.36"}},
-		{ID: slf4jAPIID, Info: PkgInfo{Name: "org.slf4j:slf4j-api", Version: "1.7.36"}},
-	}
-	nodes := []Node{
-		{NodeID: dependencyNodeID, PkgID: tiedPkgID, Deps: []Dependency{{NodeID: slf4jAPIID}}},
-		{
-			NodeID: constraintNodeID,
-			PkgID:  tiedPkgID,
-			Info:   &NodeInfo{Labels: map[string]string{"constraint": "true"}},
-			Deps:   []Dependency{},
-		},
-		{NodeID: slf4jAPIID, PkgID: slf4jAPIID, Deps: []Dependency{}},
+		{ID: tiedPkgID, Info: PkgInfo{Name: "com.example:core", Version: "1.0.0"}},
+		{ID: slf4jAPIID, Info: PkgInfo{Name: "org.slf4j:slf4j-api", Version: "2.0.9"}},
 	}
 
-	rootDeps := []Dependency{{NodeID: dependencyNodeID}, {NodeID: constraintNodeID}}
+	nodes := []Node{
+		{NodeID: jarNodeID, PkgID: tiedPkgID, Deps: []Dependency{}},
+		{NodeID: classesDirNodeID, PkgID: tiedPkgID, Deps: []Dependency{}},
+		{NodeID: slf4jAPIID, PkgID: slf4jAPIID, Deps: []Dependency{}},
+	}
+	for i := range nodes {
+		if nodes[i].NodeID == nodeDependingOnSlf4j {
+			nodes[i].Deps = []Dependency{{NodeID: slf4jAPIID}}
+		}
+	}
+
+	rootDeps := []Dependency{{NodeID: jarNodeID}, {NodeID: classesDirNodeID}}
 	for i := range untiedSiblings {
 		name := fmt.Sprintf("com.example:lib-%02d", i)
 		id := name + "@1.0.0"
@@ -278,7 +289,6 @@ func buildWideParentWithTiedSiblings(rng *rand.Rand, untiedSiblings int) *DepGra
 		nodes = append(nodes, Node{NodeID: id, PkgID: id, Deps: []Dependency{}})
 		rootDeps = append(rootDeps, Dependency{NodeID: id})
 	}
-	shuffleKeepingPairOrder(rng, rootDeps, dependencyNodeID, constraintNodeID)
 
 	dg.Graph = Graph{
 		RootNodeID: "root-node",
@@ -287,11 +297,8 @@ func buildWideParentWithTiedSiblings(rng *rand.Rand, untiedSiblings int) *DepGra
 	return dg
 }
 
-func shuffleKeepingPairOrder(rng *rand.Rand, deps []Dependency, firstNodeID, secondNodeID string) {
-	rng.Shuffle(len(deps), func(i, j int) { deps[i], deps[j] = deps[j], deps[i] })
-	first := slices.IndexFunc(deps, func(d Dependency) bool { return d.NodeID == firstNodeID })
-	second := slices.IndexFunc(deps, func(d Dependency) bool { return d.NodeID == secondNodeID })
-	if first > second {
-		deps[first], deps[second] = deps[second], deps[first]
-	}
+func shuffleRootDeps(rng *rand.Rand, dg *DepGraph) *DepGraph {
+	rootDeps := dg.Graph.Nodes[0].Deps
+	rng.Shuffle(len(rootDeps), func(i, j int) { rootDeps[i], rootDeps[j] = rootDeps[j], rootDeps[i] })
+	return dg
 }
