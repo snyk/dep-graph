@@ -4,6 +4,8 @@ import (
 	"crypto/sha256"
 	_ "embed"
 	"fmt"
+	"math/rand/v2"
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -227,4 +229,69 @@ func buildDiamondChain(t *testing.T, n int) *DepGraph {
 	addNode(fmt.Sprintf("m%d", n), mergePkg(n)) // leaf
 
 	return dg
+}
+
+func TestContentHash_TiedSiblingsUnderWideParent_SameHash(t *testing.T) {
+	rng := rand.New(rand.NewPCG(1, 2))
+
+	want := buildWideParentWithTiedSiblings(rng, 20).ContentHash()
+	require.NotNil(t, want)
+
+	for shuffle := range 50 {
+		got := buildWideParentWithTiedSiblings(rng, 20).ContentHash()
+		require.Equalf(t, want, got, "listing the untied siblings in a different order changed the hash (shuffle %d)", shuffle)
+	}
+}
+
+func buildWideParentWithTiedSiblings(rng *rand.Rand, untiedSiblings int) *DepGraph {
+	const (
+		tiedPkgID        = "org.slf4j:jcl-over-slf4j@1.7.36"
+		dependencyNodeID = "org.slf4j:jcl-over-slf4j@1.7.36"
+		constraintNodeID = "org.slf4j:jcl-over-slf4j@1.7.36:constraint"
+		slf4jAPIID       = "org.slf4j:slf4j-api@1.7.36"
+	)
+
+	dg := New()
+	dg.SchemaVersion = "1.3.0"
+	dg.PkgManager = PkgManager{Name: "gradle"}
+	dg.Pkgs = []Pkg{
+		{ID: "root@0.0.0", Info: PkgInfo{Name: "root", Version: "0.0.0"}},
+		{ID: tiedPkgID, Info: PkgInfo{Name: "org.slf4j:jcl-over-slf4j", Version: "1.7.36"}},
+		{ID: slf4jAPIID, Info: PkgInfo{Name: "org.slf4j:slf4j-api", Version: "1.7.36"}},
+	}
+	nodes := []Node{
+		{NodeID: dependencyNodeID, PkgID: tiedPkgID, Deps: []Dependency{{NodeID: slf4jAPIID}}},
+		{
+			NodeID: constraintNodeID,
+			PkgID:  tiedPkgID,
+			Info:   &NodeInfo{Labels: map[string]string{"constraint": "true"}},
+			Deps:   []Dependency{},
+		},
+		{NodeID: slf4jAPIID, PkgID: slf4jAPIID, Deps: []Dependency{}},
+	}
+
+	rootDeps := []Dependency{{NodeID: dependencyNodeID}, {NodeID: constraintNodeID}}
+	for i := range untiedSiblings {
+		name := fmt.Sprintf("com.example:lib-%02d", i)
+		id := name + "@1.0.0"
+		dg.Pkgs = append(dg.Pkgs, Pkg{ID: id, Info: PkgInfo{Name: name, Version: "1.0.0"}})
+		nodes = append(nodes, Node{NodeID: id, PkgID: id, Deps: []Dependency{}})
+		rootDeps = append(rootDeps, Dependency{NodeID: id})
+	}
+	shuffleKeepingPairOrder(rng, rootDeps, dependencyNodeID, constraintNodeID)
+
+	dg.Graph = Graph{
+		RootNodeID: "root-node",
+		Nodes:      append([]Node{{NodeID: "root-node", PkgID: "root@0.0.0", Deps: rootDeps}}, nodes...),
+	}
+	return dg
+}
+
+func shuffleKeepingPairOrder(rng *rand.Rand, deps []Dependency, firstNodeID, secondNodeID string) {
+	rng.Shuffle(len(deps), func(i, j int) { deps[i], deps[j] = deps[j], deps[i] })
+	first := slices.IndexFunc(deps, func(d Dependency) bool { return d.NodeID == firstNodeID })
+	second := slices.IndexFunc(deps, func(d Dependency) bool { return d.NodeID == secondNodeID })
+	if first > second {
+		deps[first], deps[second] = deps[second], deps[first]
+	}
 }
