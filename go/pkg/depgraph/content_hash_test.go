@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	_ "embed"
 	"fmt"
+	"math/rand/v2"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -226,5 +227,78 @@ func buildDiamondChain(t *testing.T, n int) *DepGraph {
 	}
 	addNode(fmt.Sprintf("m%d", n), mergePkg(n)) // leaf
 
+	return dg
+}
+
+const (
+	tiedPkgID        = "com.example:core@1.0.0"
+	jarNodeID        = "com.example:core:jar@1.0.0"
+	classesDirNodeID = "com.example:core:java-classes-directory@1.0.0"
+	slf4jAPIID       = "org.slf4j:slf4j-api@2.0.9"
+)
+
+func TestContentHash_TiedSiblingsInAnyListingOrder_SameHash(t *testing.T) {
+	for _, untiedSiblings := range []int{0, 20} {
+		t.Run(fmt.Sprintf("%d untied siblings", untiedSiblings), func(t *testing.T) {
+			rng := rand.New(rand.NewPCG(1, 2))
+
+			want := shuffleRootDeps(rng, buildGraphWithTiedSiblings(untiedSiblings, jarNodeID)).ContentHash()
+			require.NotNil(t, want)
+
+			for shuffle := range 50 {
+				got := shuffleRootDeps(rng, buildGraphWithTiedSiblings(untiedSiblings, jarNodeID)).ContentHash()
+				require.Equalf(t, want, got, "listing the root deps in a different order changed the hash (shuffle %d)", shuffle)
+			}
+		})
+	}
+}
+
+func TestContentHash_TiedSiblingsWithSwappedDependencies_DifferentHash(t *testing.T) {
+	jarDependsOnSlf4j := buildGraphWithTiedSiblings(0, jarNodeID)
+	classesDirDependsOnSlf4j := buildGraphWithTiedSiblings(0, classesDirNodeID)
+
+	assert.NotEqual(t, jarDependsOnSlf4j.ContentHash(), classesDirDependsOnSlf4j.ContentHash())
+}
+
+func buildGraphWithTiedSiblings(untiedSiblings int, nodeDependingOnSlf4j string) *DepGraph {
+	dg := New()
+	dg.SchemaVersion = "1.3.0"
+	dg.PkgManager = PkgManager{Name: "gradle"}
+	dg.Pkgs = []Pkg{
+		{ID: "root@0.0.0", Info: PkgInfo{Name: "root", Version: "0.0.0"}},
+		{ID: tiedPkgID, Info: PkgInfo{Name: "com.example:core", Version: "1.0.0"}},
+		{ID: slf4jAPIID, Info: PkgInfo{Name: "org.slf4j:slf4j-api", Version: "2.0.9"}},
+	}
+
+	nodes := []Node{
+		{NodeID: jarNodeID, PkgID: tiedPkgID, Deps: []Dependency{}},
+		{NodeID: classesDirNodeID, PkgID: tiedPkgID, Deps: []Dependency{}},
+		{NodeID: slf4jAPIID, PkgID: slf4jAPIID, Deps: []Dependency{}},
+	}
+	for i := range nodes {
+		if nodes[i].NodeID == nodeDependingOnSlf4j {
+			nodes[i].Deps = []Dependency{{NodeID: slf4jAPIID}}
+		}
+	}
+
+	rootDeps := []Dependency{{NodeID: jarNodeID}, {NodeID: classesDirNodeID}}
+	for i := range untiedSiblings {
+		name := fmt.Sprintf("com.example:lib-%02d", i)
+		id := name + "@1.0.0"
+		dg.Pkgs = append(dg.Pkgs, Pkg{ID: id, Info: PkgInfo{Name: name, Version: "1.0.0"}})
+		nodes = append(nodes, Node{NodeID: id, PkgID: id, Deps: []Dependency{}})
+		rootDeps = append(rootDeps, Dependency{NodeID: id})
+	}
+
+	dg.Graph = Graph{
+		RootNodeID: "root-node",
+		Nodes:      append([]Node{{NodeID: "root-node", PkgID: "root@0.0.0", Deps: rootDeps}}, nodes...),
+	}
+	return dg
+}
+
+func shuffleRootDeps(rng *rand.Rand, dg *DepGraph) *DepGraph {
+	rootDeps := dg.Graph.Nodes[0].Deps
+	rng.Shuffle(len(rootDeps), func(i, j int) { rootDeps[i], rootDeps[j] = rootDeps[j], rootDeps[i] })
 	return dg
 }

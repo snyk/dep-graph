@@ -5,7 +5,9 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"slices"
 	"sort"
+	"strings"
 )
 
 type (
@@ -310,7 +312,7 @@ func (dg *DepGraph) hashGraphRecursively(node *Node, path map[*Node]int, memo ma
 
 	minDepthFromCurrentNode := depth
 	currentNodeParticipatesInCycle := false
-	for _, dep := range sortDepsByPkgID(node.deps) {
+	for _, dep := range sortDepsByPkgIDThenNodeID(node.deps) {
 		childBytes, minDepthFromChild := dg.childDigest(dep, path, memo)
 		buf.Write(childBytes)
 		if minDepthFromChild < minDepthFromCurrentNode {
@@ -333,12 +335,27 @@ func hashOf(buf []byte) []byte {
 	return hash
 }
 
-func sortDepsByPkgID(deps []*Node) []*Node {
-	sorted := make([]*Node, len(deps))
-	copy(sorted, deps)
-	sort.Slice(sorted, func(i, j int) bool {
-		return getPkgIDFromPkg(sorted[i].pkg) < getPkgIDFromPkg(sorted[j].pkg)
+type depWithPkgID struct {
+	pkgID string
+	node  *Node
+}
+
+func sortDepsByPkgIDThenNodeID(deps []*Node) []*Node {
+	keyed := make([]depWithPkgID, len(deps))
+	for i, dep := range deps {
+		keyed[i] = depWithPkgID{pkgID: getPkgIDFromPkg(dep.pkg), node: dep}
+	}
+	slices.SortFunc(keyed, func(a, b depWithPkgID) int {
+		if byPkgID := strings.Compare(a.pkgID, b.pkgID); byPkgID != 0 {
+			return byPkgID
+		}
+		return strings.Compare(a.node.NodeID, b.node.NodeID)
 	})
+
+	sorted := make([]*Node, len(deps))
+	for i, dep := range keyed {
+		sorted[i] = dep.node
+	}
 	return sorted
 }
 

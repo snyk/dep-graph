@@ -12,6 +12,16 @@ interface GraphNode {
   info?: types.NodeInfo;
 }
 
+function compareNodeIds(a: NodeId, b: NodeId): number {
+  if (a < b) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+  return 0;
+}
+
 class DepGraphImpl implements types.DepGraphInternal {
   public static SCHEMA_VERSION = '1.3.0';
 
@@ -288,13 +298,15 @@ class DepGraphImpl implements types.DepGraphInternal {
       return false;
     }
 
-    // Sort dependencies by name@version string.
+    // Sort dependencies by name@version string, then by node ID.
     const sortFn =
       (graph: types.DepGraphInternal) => (idA: string, idB: string) => {
         const pkgA = graph.getNodePkg(idA);
         const pkgB = graph.getNodePkg(idB);
-        return DepGraphImpl.getPkgId(pkgA).localeCompare(
-          DepGraphImpl.getPkgId(pkgB),
+        return (
+          DepGraphImpl.getPkgId(pkgA).localeCompare(
+            DepGraphImpl.getPkgId(pkgB),
+          ) || compareNodeIds(idA, idB)
         );
       };
 
