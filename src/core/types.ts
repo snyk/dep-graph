@@ -88,11 +88,13 @@ export interface DepGraphData {
     rootNodeId: string;
     nodes: GraphNode[];
   };
+  rootIsPackage?: boolean;
 }
 
 export interface DepGraph {
   readonly pkgManager: PkgManager;
   readonly rootPkg: PkgInfo;
+  readonly rootIsPackage: boolean;
   getPkgs(): PkgInfo[];
   getDepPkgs(): PkgInfo[];
   getPkgNodes(pkg: Pkg): Node[];

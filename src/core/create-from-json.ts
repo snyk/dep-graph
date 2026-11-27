@@ -82,6 +82,7 @@ export function createFromJSON(
     pkgs,
     pkgNodes,
     depGraphData.pkgManager,
+    depGraphData.rootIsPackage,
   );
 }
 

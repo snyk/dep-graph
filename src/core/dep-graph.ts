@@ -34,6 +34,7 @@ class DepGraphImpl implements types.DepGraphInternal {
     private _pkgs: Record<PkgId, types.PkgInfo>,
     private _pkgNodes: Record<PkgId, Set<NodeId>>,
     private _pkgManager: types.PkgManager,
+    private _rootIsPackage?: boolean,
   ) {
     this._rootPkgId = (_graph.node(_rootNodeId) as GraphNode).pkgId;
 
@@ -51,6 +52,10 @@ class DepGraphImpl implements types.DepGraphInternal {
 
   get rootNodeId(): string {
     return this._rootNodeId;
+  }
+
+  get rootIsPackage(): boolean {
+    return this._rootIsPackage === true;
   }
 
   /**
@@ -239,7 +244,7 @@ class DepGraphImpl implements types.DepGraphInternal {
       info: this._pkgs[pkgId],
     }));
 
-    return {
+    const data: types.DepGraphData = {
       schemaVersion: DepGraphImpl.SCHEMA_VERSION,
       pkgManager: this._pkgManager,
       pkgs,
@@ -248,6 +253,10 @@ class DepGraphImpl implements types.DepGraphInternal {
         nodes,
       },
     };
+    if (this.rootIsPackage) {
+      data.rootIsPackage = true;
+    }
+    return data;
   }
 
   private nodeEquals(

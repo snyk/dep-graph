@@ -205,6 +205,43 @@ test('fromJSON no deps', () => {
   expect(depGraph.pkgManager.name).toEqual('pip');
 });
 
+describe('fromJSON rootIsPackage', () => {
+  test('keeps rootIsPackage when true', () => {
+    const graphJson: depGraphLib.DepGraphData = {
+      ...helpers.loadFixture('simple-graph.json'),
+      rootIsPackage: true,
+    };
+
+    const depGraph = depGraphLib.createFromJSON(graphJson);
+
+    expect(depGraph.rootIsPackage).toBe(true);
+    expect(depGraph.toJSON().rootIsPackage).toBe(true);
+  });
+
+  test('is false and not serialised when absent', () => {
+    const graphJson: depGraphLib.DepGraphData =
+      helpers.loadFixture('simple-graph.json');
+
+    const depGraph = depGraphLib.createFromJSON(graphJson);
+
+    expect(depGraph.rootIsPackage).toBe(false);
+    expect(depGraph.toJSON()).not.toHaveProperty('rootIsPackage');
+  });
+
+  test('does not affect equals()', () => {
+    const graphJson: depGraphLib.DepGraphData =
+      helpers.loadFixture('simple-graph.json');
+
+    const withRootIsPackage = depGraphLib.createFromJSON({
+      ...graphJson,
+      rootIsPackage: true,
+    });
+    const withoutRootIsPackage = depGraphLib.createFromJSON(graphJson);
+
+    expect(withRootIsPackage.equals(withoutRootIsPackage)).toBe(true);
+  });
+});
+
 test('fromJSON inside schemaVersion', () => {
   const graphJson: depGraphLib.DepGraphData =
     helpers.loadFixture('simple-graph.json');
