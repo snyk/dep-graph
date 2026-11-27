@@ -15,6 +15,10 @@ type (
 		Pkgs          []Pkg      `json:"pkgs"`
 		Graph         Graph      `json:"graph"`
 
+		// RootIsPackage reports whether the root node is a real package, such as an SBOM's subject component.
+		// When false, the root is an artificial node standing for the scanned project.
+		RootIsPackage bool `json:"rootIsPackage,omitempty"`
+
 		rootPkg  *Pkg             `json:"-"`
 		rootNode *Node            `json:"-"`
 		pkgIdx   map[string]*Pkg  `json:"-"`

@@ -135,6 +135,13 @@ func TestContentHash_WrongNodesOrderAAndB_DifferentHash(t *testing.T) {
 	assert.NotEqual(t, a.ContentHash(), b.ContentHash(), "graphs that differ by which branch reaches d vs e must have different hashes")
 }
 
+func TestContentHash_IgnoresRootIsPackage(t *testing.T) {
+	a := mustParseContentHash(t, []byte(minimalDepGraph))
+	b := mustParseContentHash(t, []byte(minimalDepGraphWithRootIsPackage))
+
+	assert.Equal(t, a.ContentHash(), b.ContentHash(), "rootIsPackage must not change the content hash")
+}
+
 func TestContentHash_EmptyGraph_ReturnsNonNil(t *testing.T) {
 	dg := New()
 	require.NoError(t, dg.BuildGraph())

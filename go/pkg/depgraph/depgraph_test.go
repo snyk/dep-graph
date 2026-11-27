@@ -39,6 +39,49 @@ func TestUnmarshalJSON(t *testing.T) {
 	assert.Equal(t, []Dependency{}, depgraph.Graph.Nodes[2].Deps)
 }
 
+const (
+	minimalDepGraph                  = `{"schemaVersion":"1.3.0","pkgManager":{"name":"npm"},"pkgs":[{"id":"app@1.0.0","info":{"name":"app","version":"1.0.0"}}],"graph":{"rootNodeId":"root-node","nodes":[{"nodeId":"root-node","pkgId":"app@1.0.0","deps":[]}]}}`
+	minimalDepGraphWithRootIsPackage = `{"schemaVersion":"1.3.0","pkgManager":{"name":"npm"},"pkgs":[{"id":"app@1.0.0","info":{"name":"app","version":"1.0.0"}}],"graph":{"rootNodeId":"root-node","nodes":[{"nodeId":"root-node","pkgId":"app@1.0.0","deps":[]}]},"rootIsPackage":true}`
+)
+
+func TestUnmarshalJSON_WithRootIsPackage_KeepsIt(t *testing.T) {
+	depGraph, err := UnmarshalJSON([]byte(minimalDepGraphWithRootIsPackage))
+	require.NoError(t, err)
+
+	assert.True(t, depGraph.RootIsPackage)
+}
+
+func TestUnmarshalJSON_WithoutRootIsPackage_IsFalse(t *testing.T) {
+	depGraph, err := UnmarshalJSON([]byte(minimalDepGraph))
+	require.NoError(t, err)
+
+	assert.False(t, depGraph.RootIsPackage)
+}
+
+func TestMarshalJSON_RootIsPackage(t *testing.T) {
+	t.Run("true is written", func(t *testing.T) {
+		depGraph, err := UnmarshalJSON([]byte(minimalDepGraph))
+		require.NoError(t, err)
+		depGraph.RootIsPackage = true
+
+		data, err := depGraph.MarshalJSON()
+		require.NoError(t, err)
+
+		assert.Contains(t, string(data), `"rootIsPackage":true`)
+	})
+
+	t.Run("false is omitted", func(t *testing.T) {
+		depGraph, err := UnmarshalJSON([]byte(minimalDepGraph))
+		require.NoError(t, err)
+
+		data, err := depGraph.MarshalJSON()
+		require.NoError(t, err)
+
+		assert.NotContains(t, string(data), `"rootIsPackage"`)
+		assert.Equal(t, minimalDepGraph, string(data))
+	})
+}
+
 func TestNewDepGraph(t *testing.T) {
 	depGraph := New()
 	assert.NotNil(t, depGraph.Pkgs)
