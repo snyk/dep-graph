@@ -5,4 +5,4 @@ metadata:
 spec:
   type: external-library
   lifecycle: "-"
-  owner: analysis-arch
+  owner: os-flows

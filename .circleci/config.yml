@@ -86,7 +86,7 @@ workflows:
       - security-scans:
           name: Security Scans
           context:
-            - team-analysis-arch
+            - codesec_os-flows
             - prodsec-orb-runtime
 
       - test_ts:
